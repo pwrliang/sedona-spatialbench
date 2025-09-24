@@ -19,53 +19,75 @@ title: SpatialBench Single Node Benchmarks
   under the License.
 -->
 
-This page presents the SpatialBench single-node benchmark results for SedonaDB, DuckDB, and GeoPandas. The benchmark was conducted on September 22, 2025, using SpatialBench v0.1.0 pre-release (commit 9094be8 on the main branch).
+This page presents the SpatialBench single-node benchmark results for SedonaDB, DuckDB, and GeoPandas. The benchmark was conducted on September 22, 2025, using SpatialBench v0.1.0 pre-release (commit `9094be8` on the main branch).
 
-Here are the results for v0.1 of the SpatialBench queries for scale factor 1 (SF1) and scale factor 10 (SF10):
+Here are the results from SpatialBench v0.1 for Queries 1–12 at scale factor 1 (SF1) and scale factor 10 (SF10).
 
 ![Scale Factor 1 benchmark results](image/sf1.png){ width="400" }
 ![Scale Factor 10 benchmark results](image/sf10.png){ width="400" }
 {: .grid }
 
-The remainder of this document summarizes the hardware and software versions, query methodologies for specific engines, and provides information on where to find the benchmark code.
-
 ## Hardware
 
-This benchmark was run on an AWS EC2 m7i.2xlarge instance, which has 8 CPUs and 32 GB of RAM. We encourage you to try running SpatialBench on different hardware configurations and share your results with the community.
+This benchmark was run on an AWS EC2 `m7i.2xlarge` instance, which has 8 CPUs and 32 GB of RAM. We encourage you to try running SpatialBench on different hardware configurations and share your results with the community.
 
-## Benchmark settings
+## Test Data
 
-Here are the software versions used in this benchmark:
+The datasets are generated using SpatialBench’s dbgen and stored in an AWS S3 bucket in pure Parquet format. Geometry columns are encoded in Well-Known Binary (WKB) using the Parquet BINARY type. All systems read Parquet files directly from the S3 bucket. No local pre-loading is involved. Each Parquet row group is 128 MB. To better reflect real-world scenarios, large Parquet files are split into smaller ones, each around 200–300 MB in size.
+
+We provide public datasets for Scale Factor 1 and 10 in the `us-west-2` region. You can access them here:
+
+=== "Scale Factor = 1"
+
+    ```txt
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/building/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/customer/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/driver/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/trip/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/vehicle/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf1/zone/
+    ```
+
+=== "Scale Factor = 10"
+
+    ```txt
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/building/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/customer/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/driver/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/trip/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/vehicle/
+    s3://wherobots-examples/data/spatialbench/SpatialBench_sf10/zone/
+    ```
+
+## Software
+
+The following software versions were used in this benchmark:
 
 * GeoPandas: 1.1.1
 * Shapely: 2.1.1
 * NumPy: 2.3.3
 * DuckDB: 1.4.0
-* SedonaDB: 0.1
+* SedonaDB: 0.1.0
 
-This benchmark report lists software versions, so it's easy to track how engine performance improves over time.  We use the default settings of all software unless otherwise noted. For DuckDB, we explicitly set enable_external_file_cache to false to focus on the cold start queries runtime, consistent with the other engines.
+This benchmark report specifies software versions to make it easier to track performance improvements over time. We use the default settings of all software unless otherwise noted. For DuckDB, we explicitly set `enable_external_file_cache` to `false` to focus on the cold start queries runtime, consistent with the other engines.
 
-The code execution runtime includes the entire query runtime for all engines. The query timeout is set to 1200 seconds.
+The reported runtimes include the entire query execution for each engine, including data loading. We used `COUNT` on every query result to trigger full execution, but did not write outputs to external files in order to avoid introducing additional overhead from data writing. A query timeout of `1200` seconds was applied.
 
-## GeoPandas query methodology
-
-The GeoPandas queries are written in Python, since GeoPandas does not support SQL. GeoPandas executes queries by loading data fully into memory and then processing it directly.
-
-Since GeoPandas runs in a single thread and lacks a query optimizer, any parallelization or optimization must be implemented manually. This benchmark implemented a straightforward implementation that mirrors the SQL queries used for other engines. If you're a GeoPandas expert, we'd be glad to collaborate on a more optimized and/or parallelized version.
+Since GeoPandas executes in a single thread and lacks a query optimizer, any parallelization or optimization must be implemented manually. For this benchmark, we did a straightforward Python implementation that mirrors the SQL queries run on other engines. If you are a GeoPandas expert, we would be happy to collaborate on a more optimized or parallelized version.
 
 ## Result analysis
 
-### Spatial filters (Q1–Q3, Q6)
+### Spatial filters and basic operations (Q1–Q6)
 
-DuckDB and SedonaDB achieve similar low-latency performance at both SF 1 and SF 10, while GeoPandas struggles to keep up at larger scales. The main reasons are the lack of a query optimizer to choose efficient execution strategies and the absence of multi-core parallelism. By contrast, DuckDB and SedonaDB leverage columnar data layouts, vectorized execution, multi-core parallelism, and query optimization to achieve strong performance.
+DuckDB and SedonaDB achieve similar low-latency performance at both SF 1 and SF 10, while GeoPandas struggles to keep up at larger scales. The main reasons are the lack of a query optimizer to choose efficient execution strategies and the absence of multi-core parallelism. By contrast, DuckDB and SedonaDB leverage columnar data layouts, vectorized execution, multi-core parallelism, and query optimization to achieve strong performance. However, SedonaDB faces challenges with spatial aggregation (Q5), where DuckDB performs significantly better. This is a known issue in SedonaDB and is planned for improvement.
 
-### Aggregation with spatial joins (Q4, Q10, Q11)
+### Geometric computations (Q7–Q9)
+
+SedonaDB is especially effective on intersection/IoU (Q9), showing substantial efficiency improvements. These queries focus on geometric operations like area calculations, distance computations, and spatial intersections.
+
+### Complex spatial joins and aggregations (Q10–Q11)
 
 SedonaDB consistently delivers strong results on heavier joins, particularly Q10 and Q11, aided by its adaptive spatial join strategy that picks the best algorithm per partition based on spatial statistics. DuckDB handles some join queries well but encounters scaling issues in certain cases, while GeoPandas completes SF 1 but not SF 10.
-
-### Geometric computations (Q5, Q7, Q9)
-
-SedonaDB is especially effective on intersection/IoU (Q9), showing substantial efficiency improvements, while Q5 (convex hull aggregation) highlights areas where DuckDB currently performs faster. SedonaDB's overhead in geometry copying in spatial aggregation is a known bottleneck and is planned for improvement.
 
 ### Nearest-neighbor joins (Q12)
 
@@ -73,27 +95,64 @@ SedonaDB completes KNN joins at both SF 1 and SF 10, thanks to its native operat
 
 ### Overall
 
-SedonaDB demonstrates balanced strengths across all categories and successfully scales to SF 10 on an AWS m7i.2xlarge instance. DuckDB delivers solid performance on simpler filters and certain geometric computations, but has room to improve on complex joins and KNN queries. GeoPandas, while not scaling as effectively in this benchmark, remains a widely used tool in the Python ecosystem; however, it currently requires manual optimization and parallelization to be deployed at scale.
+SedonaDB demonstrates balanced performance across all query types and scales effectively to SF 10. DuckDB excels at spatial filters and some geometric operations but faces challenges with complex joins and KNN queries. GeoPandas, while popular in the Python ecosystem, requires manual optimization and parallelization to handle larger datasets effectively.
 
 ## Benchmark code
 
 You can access and run the benchmark code in the [sedona-spatialbench GitHub](https://github.com/apache/sedona-spatialbench) repository.
 
-It's easy to generate the datasets locally or in the cloud.  You can also run the benchmarks locally or in the cloud.
+You can generate datasets and run benchmarks both locally and in cloud environments.
 
 The repository has an issue tracker where you can file bug reports or suggest code improvements.
 
+## Raw Benchmark Performance Numbers
+
+The following tables present the recorded benchmark results in full detail.
+
+=== "Scale Factor = 1"
+
+    | Query | SedonaDB | DuckDB | GeoPandas |
+    |-------|----------|--------|-----------|
+    | q1    | 0.66     | 0.96   | 12.78     |
+    | q2    | 8.07     | 9.95   | 20.74     |
+    | q3    | 0.80     | 1.17   | 13.59     |
+    | q4    | 8.41     | 9.83   | 25.24     |
+    | q5    | 5.10     | 1.80   | 47.08     |
+    | q6    | 8.59     | 9.36   | 24.43     |
+    | q7    | 1.66     | 1.82   | 137.00    |
+    | q8    | 1.10     | 1.08   | 16.08     |
+    | q9    | 0.23     | 50.15  | 0.28      |
+    | q10   | 18.79    | 207.84 | 46.13     |
+    | q11   | 32.98    | TIMEOUT| 51.01     |
+    | q12   | 14.55    | ERROR  | TIMEOUT   |
+
+
+=== "Scale Factor = 10"
+
+    | Query | SedonaDB | DuckDB | GeoPandas |
+    |-------|----------|--------|-----------|
+    | q1    | 3.04     | 4.58   | ERROR     |
+    | q2    | 8.89     | 8.26   | ERROR     |
+    | q3    | 4.09     | 5.17   | TIMEOUT   |
+    | q4    | 7.52     | 8.51   | ERROR     |
+    | q5    | 50.81    | 14.40  | ERROR     |
+    | q6    | 9.11     | 10.67  | ERROR     |
+    | q7    | 14.44    | 14.03  | ERROR     |
+    | q8    | 7.24     | 7.57   | TIMEOUT   |
+    | q9    | 0.38     | 942.98 | 0.49      |
+    | q10   | 42.02    | ERROR  | ERROR     |
+    | q11   | 97.52    | ERROR  | ERROR     |
+    | q12   | 145.66   | ERROR  | TIMEOUT   |
+
 ## Future work
 
-It would be great to include other engines and databases in the future:
+We plan to include additional engines and databases in future work, such as:
 
 * `dask-geopandas` for single-node parallelism across cores
 * An R geospatial engine
 
 If you're an expert in any of these technologies, we welcome you to take on this project or reach out to us about collaborating.
 
-Note that compute engines designed for multi-node environments are intentionally excluded from these single-node results for clarity and simplicity.
-
-Similarly, transactional databases such as PostGIS execute queries in fundamentally different ways than pure Python engines, like GeoPandas, or analytical engines, like SedonaDB and DuckDB. Since SpatialBench is primarily focused on analytical workloads, these systems are not yet included in this discussion.
+For clarity and simplicity, compute engines designed for multi-node environments are intentionally excluded from these single-node results. Likewise, transactional databases such as PostGIS execute queries in fundamentally different ways from pure Python engines (e.g., GeoPandas) or analytical engines (e.g., SedonaDB, DuckDB). Since SpatialBench is primarily focused on analytical workloads, these systems are not included in the current study.
 
 The overarching goal of the SpatialBench initiative is to provide the spatial community with a reliable set of benchmarks and to help accelerate the development of better tooling for users.
