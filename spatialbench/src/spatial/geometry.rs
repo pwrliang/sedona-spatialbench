@@ -1,11 +1,15 @@
-use crate::spatial::utils::{apply_affine, round_coordinates};
+use crate::spatial::utils::{
+    apply_affine, clamp_polygon_to_dateline, crosses_dateline, round_coordinates,
+    wrap_around_longitude,
+};
 use crate::spatial::{GeomType, SpatialConfig};
-use geo::{coord, Geometry, LineString, Point, Polygon};
+use geo::orient::Direction;
+use geo::{coord, Geometry, LineString, Orient, Point, Polygon};
 use rand::rngs::StdRng;
 use rand::Rng;
 use std::f64::consts::PI;
 
-const GEOMETRY_PRECISION: f64 = 1_000_000_000.0;
+pub const GEOMETRY_PRECISION: f64 = 1_000_000_000.0;
 
 pub fn emit_geom(
     center01: (f64, f64),
@@ -23,6 +27,7 @@ pub fn emit_geom(
 
 pub fn generate_point_geom(center: (f64, f64), m: &[f64; 6]) -> Geometry {
     let (x, y) = apply_affine(center.0, center.1, m);
+    let x = wrap_around_longitude(x);
     let (x, y) = round_coordinates(x, y, GEOMETRY_PRECISION);
     Geometry::Point(Point::new(x, y))
 }
@@ -51,7 +56,15 @@ pub fn generate_box_geom(
         .map(|(x, y)| coord! { x: x, y: y })
         .collect();
 
-    Geometry::Polygon(Polygon::new(LineString::from(coords), vec![]))
+    let mut polygon = Polygon::new(LineString::from(coords), vec![]);
+
+    // Handle polygons crossing the dateline
+    if crosses_dateline(&polygon) {
+        polygon = clamp_polygon_to_dateline(&polygon);
+    }
+
+    polygon = polygon.orient(Direction::Default);
+    Geometry::Polygon(polygon)
 }
 
 pub fn generate_polygon_geom(
@@ -79,9 +92,8 @@ pub fn generate_polygon_geom(
                 center.0 + config.polysize * ang.cos(),
                 center.1 + config.polysize * ang.sin(),
             );
-            let (x1, y1) = (x0.clamp(0.0, 1.0), y0.clamp(0.0, 1.0));
-            let (x2, y2) = apply_affine(x1, y1, m);
-            let (xr, yr) = round_coordinates(x2, y2, GEOMETRY_PRECISION);
+            let (x1, y1) = apply_affine(x0, y0, m);
+            let (xr, yr) = round_coordinates(x1, y1, GEOMETRY_PRECISION);
             coord! { x: xr, y: yr }
         })
         .collect::<Vec<_>>();
@@ -90,5 +102,13 @@ pub fn generate_polygon_geom(
         ring.push(first);
     }
 
-    Geometry::Polygon(Polygon::new(LineString::from(ring), vec![]))
+    let mut polygon = Polygon::new(LineString::from(ring), vec![]);
+
+    // Handle polygons crossing the dateline
+    if crosses_dateline(&polygon) {
+        polygon = clamp_polygon_to_dateline(&polygon);
+    }
+
+    polygon = polygon.orient(Direction::Default);
+    Geometry::Polygon(polygon)
 }
