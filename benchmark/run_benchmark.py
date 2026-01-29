@@ -92,11 +92,11 @@ class QueryTimeoutError(Exception):
 
 
 def _run_query_in_process(
-    result_queue: multiprocessing.Queue,
-    engine_class: type,
-    data_paths: dict[str, str],
-    query_name: str,
-    query_sql: str | None,
+        result_queue: multiprocessing.Queue,
+        engine_class: type,
+        data_paths: dict[str, str],
+        query_name: str,
+        query_sql: str | None,
 ):
     """Worker function to run a query in a separate process.
 
@@ -344,24 +344,327 @@ class SpatialPolarsBenchmark(BaseBenchmark):
         return len(result), result
 
 
+class SedonaSparkBenchmark(BaseBenchmark):
+    """Apache Sedona (Spark) benchmark runner."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "apache_sedona")
+        self._spark = None
+
+    def setup(self) -> None:
+        from sedona.spark import SedonaContext
+        import pyspark
+        from importlib.metadata import version
+
+        spark_ver = pyspark.__version__
+        sedona_ver = version("apache-sedona")
+
+        print(f"Detected PySpark: {spark_ver}, Sedona: {sedona_ver}")
+
+        # 1. Precise Version Mapping for Sedona 1.8.1+
+        # Sedona 1.8.x artifacts are: 3.3, 3.4, 3.5
+        if spark_ver.startswith("3.5"):
+            scala_compat = "3.5"
+        elif spark_ver.startswith("3.4"):
+            scala_compat = "3.4"
+        else:
+            # Fallback to 3.3 (The minimum supported by Sedona 1.8.1)
+            # This covers Spark 3.3.x and attempts compatibility for older versions
+            scala_compat = "3.3"
+
+        # 2. Construct Maven Coordinates
+        sedona_jar = f"org.apache.sedona:sedona-spark-shaded-{scala_compat}_2.12:{sedona_ver}"
+        geotools_jar = f"org.datasyslab:geotools-wrapper:{sedona_ver}-33.1"
+
+        packages = f"{sedona_jar},{geotools_jar}"
+        print(f"Requesting Spark Packages: {packages}")
+
+        # 3. Configure Builder
+        builder = SedonaContext.builder() \
+            .master("local[*]") \
+            .appName("SedonaBenchmark") \
+            .config("spark.driver.memory", "8g") \
+            .config("spark.sql.adaptive.enabled", "true") \
+            .config("spark.jars.packages", packages) \
+            .config("spark.kryo.registrator", "org.apache.sedona.core.serde.SedonaKryoRegistrator")
+        # --- OPTIMIZED CONFIGURATION ---
+        # builder = SedonaContext.builder() \
+        #     .master("local[*]") \
+        #     .appName("SedonaBenchmark") \
+        #     .config("spark.driver.memory", "32g") \
+        #     .config("spark.driver.maxResultSize", "8g") \
+        #     .config("spark.sql.shuffle.partitions", "48") \
+        #     .config("spark.default.parallelism", "48") \
+        #     .config("spark.memory.fraction", "0.8") \
+        #     .config("spark.sql.adaptive.enabled", "true") \
+        #     .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
+        #     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
+        #     .config("spark.kryo.registrator", "org.apache.sedona.core.serde.SedonaKryoRegistrator") \
+        #     .config("spark.jars.packages", packages)
+
+        # 4. Create Session
+        session = builder.getOrCreate()
+        self._spark = SedonaContext.create(session)
+
+        # 5. Load Tables
+        for table, path in self.data_paths.items():
+            df = self._spark.read.parquet(path)
+            df.createOrReplaceTempView(table)
+
+    def teardown(self) -> None:
+        if self._spark:
+            self._spark.stop()
+            self._spark = None
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        # Collect results to driver to ensure execution finishes
+        # For benchmarking huge results, count() is often preferred, but
+        # to_pandas() matches your other engines' behavior.
+        result_df = self._spark.sql(query)
+        pdf = result_df.toPandas()
+        return len(pdf), pdf
+
+
+class PgStromBenchmark(BaseBenchmark):
+    """PG-Strom (GPU Accelerated PostgreSQL) benchmark runner."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "pgstrom")
+        self._conn = None
+        self.skip_load = True
+
+    def setup(self) -> None:
+        import psycopg
+        import os
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+        import time
+
+        user = os.environ.get("USER")
+        try:
+            self._conn = psycopg.connect(f"host=localhost port=5433 dbname=spatialbench user={user}")
+            self._conn.autocommit = True
+        except psycopg.OperationalError as e:
+            print("Error connecting to PG-Strom. Is the server running on port 5433?")
+            raise e
+
+        self._conn.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+        self._conn.execute("CREATE EXTENSION IF NOT EXISTS pg_strom;")
+        try:
+            self._conn.execute("CREATE SERVER mystrom_parquet FOREIGN DATA WRAPPER arrow_fdw;")
+        except psycopg.errors.DuplicateObject:
+            pass
+            # Check if we can skip loading
+            if self.skip_load:
+                # Simple check: Does the 'trip' table exist?
+                exists = self._conn.execute("SELECT to_regclass('public.trip');").fetchone()[0]
+                if exists:
+                    print("\n=== SKIPPING DATA LOAD (Table 'trip' exists) ===\n")
+                    return
+                else:
+                    print("\n=== WARNING: skip_load=True but tables are missing. Forcing load. ===\n")
+        # 1. DEFINE MAPPINGS
+        target_mappings = {
+            "building": {"b_buildingkey": ["b_buildingkey"], "b_name": ["b_name"], "b_boundary": ["b_boundary"]},
+            "trip": {"t_tripkey": ["t_tripkey"], "t_custkey": ["t_custkey"], "t_driverkey": ["t_driverkey"],
+                     "t_vehiclekey": ["t_vehiclekey"], "t_pickuptime": ["t_pickuptime"],
+                     "t_dropofftime": ["t_dropofftime"], "t_fare": ["t_fare"], "t_tip": ["t_tip"],
+                     "t_totalamount": ["t_totalamount"], "t_distance": ["t_distance"], "t_pickuploc": ["t_pickuploc"],
+                     "t_dropoffloc": ["t_dropoffloc"]},
+            "vehicle": {"v_vehiclekey": ["v_vehiclekey"], "v_mfgr": ["v_mfgr"], "v_brand": ["v_brand"],
+                        "v_type": ["v_type"], "v_comment": ["v_comment"]},
+            "customer": {"c_custkey": ["c_custkey"], "c_name": ["c_name"], "c_address": ["c_address"],
+                         "c_region": ["c_region"], "c_nation": ["c_nation"], "c_phone": ["c_phone"]},
+            "driver": {"d_driverkey": ["d_driverkey"], "d_name": ["d_name"], "d_address": ["d_address"],
+                       "d_region": ["d_region"], "d_nation": ["d_nation"], "d_phone": ["d_phone"]},
+            "zone": {"z_zonekey": ["z_zonekey"], "z_gersid": ["z_gersid"], "z_country": ["z_country"],
+                     "z_region": ["z_region"], "z_name": ["z_name"], "z_subtype": ["z_subtype"],
+                     "z_boundary": ["z_boundary"]}
+        }
+        geo_cols = {"b_boundary", "t_pickuploc", "t_dropoffloc", "z_boundary"}
+
+        # 2. ROBUST CLEANUP (Handles both Tables and Views)
+        for table_name in self.data_paths.keys():
+            # Try dropping as view first
+            try:
+                self._conn.execute(f"DROP VIEW IF EXISTS {table_name} CASCADE;")
+            except psycopg.errors.WrongObjectType:
+                self._conn.execute("ROLLBACK;")  # Reset if failed
+
+            # Try dropping as table
+            try:
+                self._conn.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
+            except psycopg.errors.WrongObjectType:
+                self._conn.execute("ROLLBACK;")
+
+            # Clean staging
+            self._conn.execute(f"DROP FOREIGN TABLE IF EXISTS {table_name}_staging CASCADE;")
+
+        # 3. PROCESS TABLES
+        for table_name, raw_path in self.data_paths.items():
+            abs_path = os.path.abspath(raw_path)
+
+            # --- FILE DISCOVERY ---
+            parquet_files = []
+            if os.path.isdir(abs_path):
+                merged_file = os.path.join(abs_path, f"{table_name}.merged.parquet")
+                if os.path.exists(merged_file):
+                    print(f"--- Processing {table_name} (Using Merged File) ---")
+                    parquet_files = [merged_file]
+                else:
+                    shards = sorted([
+                        os.path.join(abs_path, f) for f in os.listdir(abs_path)
+                        if f.endswith(".parquet") and "fixed" not in f and "merged" not in f
+                    ])
+                    if len(shards) > 1:
+                        print(f"--- Processing {table_name} (Merging {len(shards)} files...) ---")
+                        try:
+                            tables = []
+                            for shard in shards:
+                                t = pq.read_table(shard)
+                                new_cols = []
+                                new_fields = []
+                                for i, field in enumerate(t.schema):
+                                    col = t.column(i)
+                                    typ = field.type
+                                    type_str = str(typ)
+                                    if 'view' in type_str:
+                                        if 'binary_view' in type_str:
+                                            col = col.cast(pa.binary());
+                                            typ = pa.binary()
+                                        elif 'string_view' in type_str:
+                                            col = col.cast(pa.string());
+                                            typ = pa.string()
+                                    new_cols.append(col);
+                                    new_fields.append(pa.field(field.name, typ))
+                                tables.append(pa.Table.from_arrays(new_cols, schema=pa.schema(new_fields)))
+                            if tables:
+                                merged_t = pa.concat_tables(tables)
+                                pq.write_table(merged_t, merged_file, compression='snappy')
+                                parquet_files = [merged_file]
+                        except Exception as e:
+                            print(f"   Merge failed: {e}. Using first shard only.")
+                            parquet_files = [shards[0]]
+                    elif shards:
+                        parquet_files = shards
+            else:
+                parquet_files = [abs_path]
+
+            if not parquet_files: continue
+
+            file_path = parquet_files[0]
+            staging_table = f"{table_name}_staging"
+
+            try:
+                schema = pq.read_schema(file_path)
+            except Exception as e:
+                print(f"Error reading schema: {e}")
+                continue
+
+            # 4. CREATE STAGING TABLE
+            col_defs = []
+            actual_columns = schema.names
+            text_columns = []
+
+            for name in schema.names:
+                field = schema.field(name)
+                type_str = str(field.type).lower()
+                dtype = "text"
+                if "int" in type_str:
+                    dtype = "bigint"
+                elif "decimal" in type_str:
+                    dtype = "numeric"
+                elif "double" in type_str or "float" in type_str:
+                    dtype = "double precision"
+                elif "timestamp" in type_str:
+                    dtype = "timestamp"
+                elif "binary" in type_str:
+                    dtype = "bytea"
+                else:
+                    text_columns.append(name)  # Track text columns
+
+                col_defs.append(f'"{name}" {dtype}')
+
+            self._conn.execute(f"""
+                CREATE FOREIGN TABLE {staging_table} (
+                    {', '.join(col_defs)}
+                ) SERVER mystrom_parquet
+                OPTIONS (file '{file_path}');
+            """)
+
+            # 5. LOAD INTO NATIVE TABLE
+            print(f"   -> Loading data into native table '{table_name}'...")
+
+            select_cols = []
+            if table_name in target_mappings:
+                mappings = target_mappings[table_name]
+                for target_col, candidates in mappings.items():
+                    match = next((c for c in candidates if c in actual_columns), None)
+                    if match:
+                        if target_col in geo_cols:
+                            select_cols.append(
+                                f"ST_SetSRID(ST_GeomFromWKB(\"{match}\"), 4326)::geometry AS {target_col}")
+                        else:
+                            select_cols.append(f"\"{match}\" AS {target_col}")
+            else:
+                select_cols = ["*"]
+
+            start_time = time.time()
+            self._conn.execute(f"CREATE TABLE {table_name} AS SELECT {', '.join(select_cols)} FROM {staging_table};")
+            duration = time.time() - start_time
+            print(f"   -> Load complete in {duration:.2f}s")
+
+            # 6. OPTIMIZE STORAGE (Force PLAIN for text to fix GPU crash)
+            if table_name in ['zone', 'building', 'customer']:  # Apply to tables with text fields
+                print(f"   -> Optimizing GPU storage for {table_name}...")
+                for col in target_mappings.get(table_name, {}):
+                    if col not in geo_cols and col != "z_zonekey" and col != "c_custkey":
+                        try:
+                            # We blindly try to set storage plain on text-like columns
+                            self._conn.execute(f"ALTER TABLE {table_name} ALTER COLUMN {col} SET STORAGE PLAIN;")
+                        except:
+                            pass
+
+                self._conn.execute(f"VACUUM FULL {table_name};")
+
+            self._conn.execute(f"DROP FOREIGN TABLE {staging_table} CASCADE;")
+            self._conn.execute(f"ANALYZE {table_name};")
+
+    def teardown(self) -> None:
+        if self._conn:
+            self._conn.close()
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, list]:
+        self._conn.execute("SET pg_strom.enabled = on;")
+        cursor = self._conn.execute(query)
+        res = cursor.fetchall()
+        return len(res), res
+
+
 def get_sql_queries(dialect: str) -> dict[str, str]:
     """Get SQL queries for a specific dialect from print_queries.py."""
-    from print_queries import DuckDBSpatialBenchBenchmark, SedonaDBSpatialBenchBenchmark
-
+    from print_queries import (
+        DuckDBSpatialBenchBenchmark,
+        SedonaDBSpatialBenchBenchmark,
+        SpatialBenchBenchmark,
+        PgStromSpatialBenchBenchmark
+    )
     dialects = {
         "duckdb": DuckDBSpatialBenchBenchmark,
         "sedonadb": SedonaDBSpatialBenchBenchmark,
+        "SedonaSpark": SpatialBenchBenchmark,
+        "PgStrom": PgStromSpatialBenchBenchmark
     }
     return dialects[dialect]().queries()
 
 
 def run_query_isolated(
-    engine_class: type,
-    engine_name: str,
-    data_paths: dict[str, str],
-    query_name: str,
-    query_sql: str | None,
-    timeout: int,
+        engine_class: type,
+        engine_name: str,
+        data_paths: dict[str, str],
+        query_name: str,
+        query_sql: str | None,
+        timeout: int,
 ) -> BenchmarkResult:
     """Run a single query in an isolated subprocess with hard timeout.
 
@@ -422,12 +725,12 @@ def run_query_isolated(
 
 
 def run_benchmark(
-    engine: str,
-    data_paths: dict[str, str],
-    queries: list[str] | None,
-    timeout: int,
-    scale_factor: float,
-    runs: int = 3,
+        engine: str,
+        data_paths: dict[str, str],
+        queries: list[str] | None,
+        timeout: int,
+        scale_factor: float,
+        runs: int = 3,
 ) -> BenchmarkSuite:
     """Generic benchmark runner for any engine.
 
@@ -464,6 +767,17 @@ def run_benchmark(
             "version_getter": lambda: pkg_version("spatial-polars"),
             "queries_getter": lambda: {f"q{i}": None for i in range(1, QUERY_COUNT + 1)},
         },
+        "apache_sedona": {
+            "class": SedonaSparkBenchmark,
+            "version_getter": lambda: pkg_version("apache-sedona"),
+            # Reuses the base class queries (Dialect: SedonaSpark)
+            "queries_getter": lambda: get_sql_queries("SedonaSpark"),
+        },
+        "pgstrom": {
+            "class": PgStromBenchmark,
+            "version_getter": lambda: "6.1.0",  # Hardcoded or fetch via SQL
+            "queries_getter": lambda: get_sql_queries("PgStrom"),
+        }
     }
 
     config = configs[engine]
@@ -610,7 +924,7 @@ def main():
     args = parser.parse_args()
 
     engines = [e.strip().lower() for e in args.engines.split(",")]
-    valid_engines = {"duckdb", "geopandas", "sedonadb", "spatial_polars"}
+    valid_engines = {"duckdb", "geopandas", "sedonadb", "spatial_polars", "apache_sedona", "pgstrom"}
 
     for e in engines:
         if e not in valid_engines:
@@ -641,6 +955,7 @@ if __name__ == "__main__":
     # Use 'spawn' on macOS to avoid issues with forking and native code
     # On Linux (GitHub Actions), 'fork' is default and usually works fine
     import platform
+
     if platform.system() == 'Darwin':
         try:
             multiprocessing.set_start_method('spawn', force=True)

@@ -417,12 +417,211 @@ ORDER BY dropoff_count DESC, c.c_custkey ASC
                """
 
 
+class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A PG-Strom-specific implementation of the SpatialBench benchmark.
+
+    PG-Strom uses PostGIS syntax but performs best when ST_GeomFromWKB is removed
+    to allow the GPU to access native geometry types directly.
+    """
+
+    def dialect(self) -> str:
+        """Return the dialect of the benchmark."""
+        return "PgStrom"
+
+    @staticmethod
+    def q1() -> str:
+        return """
+-- Q1: Find trips starting within 50km of Sedona city center
+SELECT
+   t.t_tripkey, ST_X(t.t_pickuploc) AS pickup_lon, ST_Y(t.t_pickuploc) AS pickup_lat, t.t_pickuptime,
+   ST_Distance(t.t_pickuploc, ST_GeomFromText('POINT (-111.7610 34.8697)', 4326)) AS distance_to_center
+FROM trip t
+WHERE ST_DWithin(t.t_pickuploc, ST_GeomFromText('POINT (-111.7610 34.8697)', 4326), 0.45)
+ORDER BY distance_to_center ASC, t.t_tripkey ASC
+               """
+
+    @staticmethod
+    def q2() -> str:
+        return """
+-- Q2: Count trips starting within Coconino County (Arizona) zone
+SELECT COUNT(*) AS trip_count_in_coconino_county
+FROM trip t
+WHERE ST_Intersects(t.t_pickuploc, (SELECT z.z_boundary FROM zone z WHERE z.z_name = 'Coconino County' LIMIT 1))
+               """
+
+    @staticmethod
+    def q3() -> str:
+        return """
+-- Q3: Monthly trip statistics within 15km radius of Sedona city center
+SELECT
+   DATE_TRUNC('month', t.t_pickuptime) AS pickup_month, COUNT(t.t_tripkey) AS total_trips,
+   AVG(t.t_distance) AS avg_distance, AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
+   AVG(t.t_fare) AS avg_fare
+FROM trip t
+WHERE ST_DWithin(
+             t.t_pickuploc,
+             ST_GeomFromText('POLYGON((-111.9060 34.7347, -111.6160 34.7347, -111.6160 35.0047, -111.9060 35.0047, -111.9060 34.7347))', 4326),
+             0.045
+     )
+GROUP BY pickup_month
+ORDER BY pickup_month
+"""
+
+    @staticmethod
+    def q4() -> str:
+        return """
+-- Q4: Zone distribution of top 1000 trips by tip amount
+SELECT z.z_zonekey, z.z_name, COUNT(*) AS trip_count
+FROM
+   zone z
+       JOIN (
+       SELECT t.t_pickuploc
+       FROM trip t
+       ORDER BY t.t_tip DESC, t.t_tripkey ASC
+           LIMIT 1000
+   ) top_trips ON ST_Within(top_trips.t_pickuploc, z.z_boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY trip_count DESC, z.z_zonekey ASC
+               """
+
+    @staticmethod
+    def q5() -> str:
+        return """
+-- Q5: Monthly travel patterns for repeat customers
+SELECT
+   c.c_custkey, c.c_name AS customer_name,
+   DATE_TRUNC('month', t.t_pickuptime) AS pickup_month,
+   ST_Area(ST_ConvexHull(ST_Collect(t.t_dropoffloc))) AS monthly_travel_hull_area,
+   COUNT(*) as dropoff_count
+FROM trip t JOIN customer c ON t.t_custkey = c.c_custkey
+GROUP BY c.c_custkey, c.c_name, pickup_month
+HAVING COUNT(*) > 5
+ORDER BY dropoff_count DESC, c.c_custkey ASC
+            """
+
+    @staticmethod
+    def q6() -> str:
+        return """
+-- Q6: Zone statistics for trips intersecting a bounding box
+SELECT
+   z.z_zonekey, z.z_name,
+   COUNT(t.t_tripkey) AS total_pickups, AVG(t.t_totalamount) AS avg_distance,
+   AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration
+FROM trip t, zone z
+WHERE ST_Intersects(ST_GeomFromText('POLYGON((-112.2110 34.4197, -111.3110 34.4197, -111.3110 35.3197, -112.2110 35.3197, -112.2110 34.4197))', 4326), z.z_boundary)
+ AND ST_Within(t.t_pickuploc, z.z_boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY total_pickups DESC, z.z_zonekey ASC
+               """
+
+    @staticmethod
+    def q7() -> str:
+        return """
+-- Q7: Detect potential route detours
+WITH trip_lengths AS (
+   SELECT
+       t.t_tripkey,
+       t.t_distance AS reported_distance_m,
+       ST_Length(ST_MakeLine(t.t_pickuploc, t.t_dropoffloc)) / 0.000009 AS line_distance_m
+   FROM trip t
+)
+SELECT
+   t.t_tripkey, t.reported_distance_m, t.line_distance_m,
+   t.reported_distance_m / NULLIF(t.line_distance_m, 0) AS detour_ratio
+FROM trip_lengths t
+ORDER BY detour_ratio DESC NULLS LAST, reported_distance_m DESC, t_tripkey ASC
+               """
+
+    @staticmethod
+    def q8() -> str:
+        return """
+-- Q8: Count nearby pickups for each building within 500m radius
+SELECT b.b_buildingkey, b.b_name, COUNT(*) AS nearby_pickup_count
+FROM trip t JOIN building b ON ST_DWithin(t.t_pickuploc, b.b_boundary, 0.0045)
+GROUP BY b.b_buildingkey, b.b_name
+ORDER BY nearby_pickup_count DESC, b.b_buildingkey ASC
+               """
+
+    @staticmethod
+    def q9() -> str:
+        return """
+-- Q9: Building Conflation (duplicate/overlap detection via IoU)
+WITH pairs AS (
+        SELECT
+            b1.b_buildingkey AS building_1,
+            b2.b_buildingkey AS building_2,
+            ST_Area(b1.b_boundary) AS area1,
+            ST_Area(b2.b_boundary) AS area2,
+            ST_Area(ST_Intersection(b1.b_boundary, b2.b_boundary)) AS overlap_area
+        FROM building b1
+        JOIN building b2 ON b1.b_buildingkey < b2.b_buildingkey
+           AND ST_Intersects(b1.b_boundary, b2.b_boundary)
+    )
+SELECT
+   building_1, building_2, area1, area2, overlap_area,
+   CASE
+       WHEN overlap_area = 0 THEN 0.0
+       WHEN (area1 + area2 - overlap_area) = 0 THEN 1.0
+       ELSE overlap_area / (area1 + area2 - overlap_area)
+       END AS iou
+FROM pairs
+ORDER BY iou DESC, building_1 ASC, building_2 ASC
+               """
+
+    @staticmethod
+    def q10() -> str:
+        return """
+-- Q10: Zone statistics for trips starting within each zone
+SELECT
+   z.z_zonekey, z.z_name AS pickup_zone, AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
+   AVG(t.t_distance) AS avg_distance, COUNT(t.t_tripkey) AS num_trips
+FROM zone z LEFT JOIN trip t ON ST_Within(t.t_pickuploc, z.z_boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC
+               """
+
+    @staticmethod
+    def q11() -> str:
+        return """
+-- Q11: Count trips that cross between different zones
+SELECT COUNT(*) AS cross_zone_trip_count
+FROM
+   trip t
+       JOIN zone pickup_zone ON ST_Within(t.t_pickuploc, pickup_zone.z_boundary)
+       JOIN zone dropoff_zone ON ST_Within(t.t_dropoffloc, dropoff_zone.z_boundary)
+WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
+               """
+
+    @staticmethod
+    def q12() -> str:
+        return """
+-- Q12 (PG-Strom): KNN using CROSS JOIN LATERAL and <-> operator
+SELECT
+   t.t_tripkey,
+   t.t_pickuploc,
+   nb.b_buildingkey,
+   nb.b_name AS building_name,
+   nb.distance_to_building
+FROM trip t
+CROSS JOIN LATERAL (
+   SELECT
+       b.b_buildingkey,
+       b.b_name,
+       ST_Distance(t.t_pickuploc, b.b_boundary) AS distance_to_building
+   FROM building b
+   ORDER BY t.t_pickuploc <-> b.b_boundary
+   LIMIT 5
+) AS nb
+ORDER BY nb.distance_to_building ASC, nb.b_buildingkey ASC
+               """
+
 def main():
     query_classes = {
         "SedonaSpark": SpatialBenchBenchmark,
         "Databricks": DatabricksSpatialBenchBenchmark,
         "DuckDB": DuckDBSpatialBenchBenchmark,
         "SedonaDB": SedonaDBSpatialBenchBenchmark,
+        "PgStrom": PgStromSpatialBenchBenchmark,
         "Geopandas": None,  # Special case, we will catch this below,
         "Spatial Polars": None,  # Special case, we will catch this below,
     }
