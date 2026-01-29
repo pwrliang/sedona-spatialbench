@@ -71,7 +71,7 @@ install_pgstrom() {
     echo "--- Installing PG-Strom Client ---"
     # PG-Strom requires a running Postgres server with the extension compiled/loaded.
     # This function only installs the Python adapter needed for the benchmark script.
-    pip install "psycopg[binary]"
+    pip install pyarrow "psycopg[binary]"
 }
 
 # --- Main Execution Loop ---
@@ -123,7 +123,6 @@ for engine in "${ENGINES[@]}"; do
         --timeout "$QUERY_TIMEOUT" \
         --runs "$BENCHMARK_RUNS" \
         --scale-factor "$SCALE_FACTOR" \
-        --queries "q12" \
         --output "${RESULTS_DIR}/${engine}_results.json"
 
     echo "Finished $engine"

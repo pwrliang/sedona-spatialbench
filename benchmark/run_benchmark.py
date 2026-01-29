@@ -454,15 +454,15 @@ class PgStromBenchmark(BaseBenchmark):
             self._conn.execute("CREATE SERVER mystrom_parquet FOREIGN DATA WRAPPER arrow_fdw;")
         except psycopg.errors.DuplicateObject:
             pass
-            # Check if we can skip loading
-            if self.skip_load:
-                # Simple check: Does the 'trip' table exist?
-                exists = self._conn.execute("SELECT to_regclass('public.trip');").fetchone()[0]
-                if exists:
-                    print("\n=== SKIPPING DATA LOAD (Table 'trip' exists) ===\n")
-                    return
-                else:
-                    print("\n=== WARNING: skip_load=True but tables are missing. Forcing load. ===\n")
+        # Check if we can skip loading
+        if self.skip_load:
+            # Simple check: Does the 'trip' table exist?
+            exists = self._conn.execute("SELECT to_regclass('public.trip');").fetchone()[0]
+            if exists:
+                print("\n=== SKIPPING DATA LOAD (Table 'trip' exists) ===\n")
+                return
+            else:
+                print("\n=== WARNING: skip_load=True but tables are missing. Forcing load. ===\n")
         # 1. DEFINE MAPPINGS
         target_mappings = {
             "building": {"b_buildingkey": ["b_buildingkey"], "b_name": ["b_name"], "b_boundary": ["b_boundary"]},

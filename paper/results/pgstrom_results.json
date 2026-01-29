@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-01-29T22:25:38.843296+00:00",
+  "results": [
+    {
+      "engine": "pgstrom",
+      "version": "6.1.0",
+      "scale_factor": 1.0,
+      "timestamp": "2026-01-29T18:46:06.052879+00:00",
+      "total_time": 789.1899999999999,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.18,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.8,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 0.18,
+          "row_count": 22,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 35.78,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 13.12,
+          "row_count": 316691,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 5.7,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 13.8,
+          "row_count": 6000000,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 673.23,
+          "row_count": 369,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 46.4,
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 3600,
+          "row_count": null,
+          "status": "timeout",
+          "error_message": "Query q10 timed out after 3600 seconds (process killed)"
+        },
+        {
+          "query": "q11",
+          "time_seconds": 3600,
+          "row_count": null,
+          "status": "timeout",
+          "error_message": "Query q11 timed out after 3600 seconds (process killed)"
+        },
+        {
+          "query": "q12",
+          "time_seconds": 3600,
+          "row_count": null,
+          "status": "timeout",
+          "error_message": "Query q12 timed out after 3600 seconds (process killed)"
+        }
+      ]
+    }
+  ]
+}
