@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-01-30T03:08:37.598489+00:00",
+  "results": [
+    {
+      "engine": "spatial_polars",
+      "version": "0.2.3",
+      "scale_factor": 1.0,
+      "timestamp": "2026-01-30T03:01:21.471025+00:00",
+      "total_time": 137.41,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 3.25,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 3.12,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 3.12,
+          "row_count": 22,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 3.82,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 7.94,
+          "row_count": 316691,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 7.86,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 6.57,
+          "row_count": 6000000,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 5.96,
+          "row_count": 369,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.08,
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 16.27,
+          "row_count": 156095,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 27.81,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q12",
+          "time_seconds": 51.61,
+          "row_count": 30000000,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

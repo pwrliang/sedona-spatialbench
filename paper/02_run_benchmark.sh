@@ -61,9 +61,9 @@ install_apache_sedona() {
     echo "--- Installing Apache Sedona (Spark) ---"
     # Installs PySpark and the Sedona bindings
     if [ -n "$APACHE_SEDONA_VERSION" ]; then
-        pip install "apache-sedona==$APACHE_SEDONA_VERSION" pyspark
+        pip install "apache-sedona==$APACHE_SEDONA_VERSION" "pyspark==3.5.4"
     else
-        pip install apache-sedona pyspark==3.5.4
+        pip install apache-sedona "pyspark==3.5.4"
     fi
 }
 
