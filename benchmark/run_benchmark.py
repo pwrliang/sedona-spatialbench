@@ -342,12 +342,20 @@ class SedonaDBGPUBenchmark(BaseBenchmark):
     def __init__(self, data_paths: dict[str, str]):
         super().__init__(data_paths, "sedonadb_gpu")
         self._sedona = None
+        self.default_batch_size = 100000
+        self.query_batch_sizes = {
+            "q2": self.default_batch_size,
+            "q4": self.default_batch_size,
+            "q6": self.default_batch_size,
+            "q9": self.default_batch_size,
+            "q10": 2000000,
+            "q11": 2000000,
+        }
 
     def setup(self) -> None:
         import sedonadb
         self._sedona = sedonadb.connect()
         self._sedona.sql("SET sedona.spatial_join.gpu.enable = true")
-        self._sedona.sql("SET datafusion.execution.batch_size = 100000")
         self._sedona.sql("SET sedona.spatial_join.gpu.pipeline_batches = 1")
         for table, path in self.data_paths.items():
             # SedonaDB needs glob pattern for directories
@@ -360,6 +368,8 @@ class SedonaDBGPUBenchmark(BaseBenchmark):
         self._sedona = None
 
     def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        current_batch_size = self.query_batch_sizes.get(query_name, self.default_batch_size)
+        self._sedona.sql(f"SET datafusion.execution.batch_size = {current_batch_size}")
         result = self._sedona.sql(query).to_pandas()
         return len(result), result
 
