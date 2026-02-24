@@ -122,6 +122,7 @@ for engine in "${ENGINES[@]}"; do
         --engines "$engine" \
         --timeout "$QUERY_TIMEOUT" \
         --runs "$BENCHMARK_RUNS" \
+        --queries "q2,q4,q6,q9,q10,q11" \
         --scale-factor "$SCALE_FACTOR" \
         --output "${RESULTS_DIR}/${engine}_results.json" \
         --queries "q2,q4,q6,q9,q10,q11"

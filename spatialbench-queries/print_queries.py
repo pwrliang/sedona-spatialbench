@@ -417,6 +417,41 @@ ORDER BY dropoff_count DESC, c.c_custkey ASC
                """
 
 
+class SedonaDBGPUSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A SedonaDB-specific implementation of the SpatialBench benchmark.
+
+    This class is used to run the SpatialBench benchmark using SedonaDB's spatial functions.
+    It inherits from the SpatialBenchBenchmark class and uses SedonaDB's spatial functions.
+    """
+
+    def dialect(self) -> str:
+        """Return the dialect of the benchmark."""
+        return "SedonaDB_GPU"
+
+    @staticmethod
+    def q2() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q2()
+
+    @staticmethod
+    def q4() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q4()
+
+    @staticmethod
+    def q6() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q6()
+
+    @staticmethod
+    def q9() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q9()
+
+    @staticmethod
+    def q10() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q10()
+
+    @staticmethod
+    def q11() -> str:
+        return "SET sedona.spatial_join.gpu.enable = true;\n" + SpatialBenchBenchmark.q11()
+
 class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
     """A PG-Strom-specific implementation of the SpatialBench benchmark.
 

@@ -315,6 +315,30 @@ class SedonaDBBenchmark(BaseBenchmark):
         return len(result), result
 
 
+class SedonaDBGPUBenchmark(BaseBenchmark):
+    """SedonaDB benchmark runner."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "sedonadb_gpu")
+        self._sedona = None
+
+    def setup(self) -> None:
+        import sedonadb
+        self._sedona = sedonadb.connect()
+        for table, path in self.data_paths.items():
+            # SedonaDB needs glob pattern for directories
+            parquet_path = path
+            if Path(path).is_dir():
+                parquet_path = str(Path(path) / "*.parquet")
+            self._sedona.read_parquet(parquet_path).to_view(table, overwrite=True)
+
+    def teardown(self) -> None:
+        self._sedona = None
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        result = self._sedona.sql(query).to_pandas()
+        return len(result), result
+
 class SpatialPolarsBenchmark(BaseBenchmark):
     """Spatial Polars benchmark runner."""
 
@@ -646,12 +670,14 @@ def get_sql_queries(dialect: str) -> dict[str, str]:
     from print_queries import (
         DuckDBSpatialBenchBenchmark,
         SedonaDBSpatialBenchBenchmark,
+        SedonaDBGPUSpatialBenchBenchmark,
         SpatialBenchBenchmark,
         PgStromSpatialBenchBenchmark
     )
     dialects = {
         "duckdb": DuckDBSpatialBenchBenchmark,
         "sedonadb": SedonaDBSpatialBenchBenchmark,
+        "sedonadb_gpu": SedonaDBGPUSpatialBenchBenchmark,
         "SedonaSpark": SpatialBenchBenchmark,
         "PgStrom": PgStromSpatialBenchBenchmark
     }
@@ -759,6 +785,11 @@ def run_benchmark(
         },
         "sedonadb": {
             "class": SedonaDBBenchmark,
+            "version_getter": lambda: pkg_version("sedonadb"),
+            "queries_getter": lambda: get_sql_queries("sedonadb"),
+        },
+        "sedonadb_gpu": {
+            "class": SedonaDBGPUBenchmark,
             "version_getter": lambda: pkg_version("sedonadb"),
             "queries_getter": lambda: get_sql_queries("sedonadb"),
         },
@@ -924,7 +955,7 @@ def main():
     args = parser.parse_args()
 
     engines = [e.strip().lower() for e in args.engines.split(",")]
-    valid_engines = {"duckdb", "geopandas", "sedonadb", "spatial_polars", "apache_sedona", "pgstrom"}
+    valid_engines = {"duckdb", "geopandas", "sedonadb", "sedonadb_gpu", "spatial_polars", "apache_sedona", "pgstrom"}
 
     for e in engines:
         if e not in valid_engines:
