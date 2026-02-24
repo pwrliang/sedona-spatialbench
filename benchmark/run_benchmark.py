@@ -91,17 +91,32 @@ class QueryTimeoutError(Exception):
     pass
 
 
+@contextmanager
+def timeout_handler(seconds: int, query_name: str):
+    def signal_handler(signum, frame):
+        raise QueryTimeoutError(f"Query {query_name} timed out after {seconds} seconds")
+
+    # Set the signal handler and a {seconds}-second alarm
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        # Disable the alarm
+        signal.alarm(0)
+
+
 def _run_query_in_process(
         result_queue: multiprocessing.Queue,
         engine_class: type,
         data_paths: dict[str, str],
         query_name: str,
         query_sql: str | None,
+        runs: int = 1,
 ):
-    """Worker function to run a query in a separate process.
+    """Worker function to run a query multiple times in a single isolated process.
 
-    This allows us to forcefully terminate queries that hang or consume
-    too much memory, which SIGALRM cannot do for native code.
+    This avoids cold-starting the engine for every single run of the same query.
     """
     try:
         # For Spatial Polars, ensure the package is imported first to register namespace
@@ -111,12 +126,18 @@ def _run_query_in_process(
         benchmark = engine_class(data_paths)
         benchmark.setup()
         try:
-            start_time = time.perf_counter()
-            row_count, _ = benchmark.execute_query(query_name, query_sql)
-            elapsed = time.perf_counter() - start_time
+            run_times = []
+            row_count = None
+            for _ in range(runs):
+                start_time = time.perf_counter()
+                current_row_count, _ = benchmark.execute_query(query_name, query_sql)
+                elapsed = time.perf_counter() - start_time
+                run_times.append(elapsed)
+                row_count = current_row_count  # Keep the row count from the last run
+
             result_queue.put({
                 "status": "success",
-                "time_seconds": round(elapsed, 2),
+                "time_seconds": run_times,  # Send back a list of times
                 "row_count": row_count,
                 "error_message": None,
             })
@@ -325,6 +346,9 @@ class SedonaDBGPUBenchmark(BaseBenchmark):
     def setup(self) -> None:
         import sedonadb
         self._sedona = sedonadb.connect()
+        self._sedona.sql("SET sedona.spatial_join.gpu.enable = true")
+        self._sedona.sql("SET datafusion.execution.batch_size = 100000")
+        self._sedona.sql("SET sedona.spatial_join.gpu.pipeline_batches = 1")
         for table, path in self.data_paths.items():
             # SedonaDB needs glob pattern for directories
             parquet_path = path
@@ -411,26 +435,10 @@ class SedonaSparkBenchmark(BaseBenchmark):
             .config("spark.sql.adaptive.enabled", "true") \
             .config("spark.jars.packages", packages) \
             .config("spark.kryo.registrator", "org.apache.sedona.core.serde.SedonaKryoRegistrator")
-        # --- OPTIMIZED CONFIGURATION ---
-        # builder = SedonaContext.builder() \
-        #     .master("local[*]") \
-        #     .appName("SedonaBenchmark") \
-        #     .config("spark.driver.memory", "32g") \
-        #     .config("spark.driver.maxResultSize", "8g") \
-        #     .config("spark.sql.shuffle.partitions", "48") \
-        #     .config("spark.default.parallelism", "48") \
-        #     .config("spark.memory.fraction", "0.8") \
-        #     .config("spark.sql.adaptive.enabled", "true") \
-        #     .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
-        #     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
-        #     .config("spark.kryo.registrator", "org.apache.sedona.core.serde.SedonaKryoRegistrator") \
-        #     .config("spark.jars.packages", packages)
 
-        # 4. Create Session
         session = builder.getOrCreate()
         self._spark = SedonaContext.create(session)
 
-        # 5. Load Tables
         for table, path in self.data_paths.items():
             df = self._spark.read.parquet(path)
             df.createOrReplaceTempView(table)
@@ -670,14 +678,13 @@ def get_sql_queries(dialect: str) -> dict[str, str]:
     from print_queries import (
         DuckDBSpatialBenchBenchmark,
         SedonaDBSpatialBenchBenchmark,
-        SedonaDBGPUSpatialBenchBenchmark,
         SpatialBenchBenchmark,
         PgStromSpatialBenchBenchmark
     )
     dialects = {
         "duckdb": DuckDBSpatialBenchBenchmark,
         "sedonadb": SedonaDBSpatialBenchBenchmark,
-        "sedonadb_gpu": SedonaDBGPUSpatialBenchBenchmark,
+        "sedonadb_gpu": SedonaDBSpatialBenchBenchmark,
         "SedonaSpark": SpatialBenchBenchmark,
         "PgStrom": PgStromSpatialBenchBenchmark
     }
@@ -691,53 +698,77 @@ def run_query_isolated(
         query_name: str,
         query_sql: str | None,
         timeout: int,
+        runs: int = 1,
 ) -> BenchmarkResult:
-    """Run a single query in an isolated subprocess with hard timeout.
+    """Run a query in an isolated subprocess with hard timeout.
 
-    This is more robust than SIGALRM because:
-    1. Native code (C++/Rust) can be forcefully terminated
-    2. Memory-hungry queries don't affect the main process
-    3. Crashed queries don't invalidate the benchmark runner
+    This passes 'runs' to the subprocess to ensure the engine is kept warm
+    and avoiding process-spawning overhead.
     """
     result_queue = multiprocessing.Queue()
     process = multiprocessing.Process(
         target=_run_query_in_process,
-        args=(result_queue, engine_class, data_paths, query_name, query_sql),
+        args=(result_queue, engine_class, data_paths, query_name, query_sql, runs),
     )
 
     process.start()
-    process.join(timeout=timeout)
+
+    # Scale total timeout by number of runs to accommodate the loop
+    total_timeout = timeout * runs
+    process.join(timeout=total_timeout)
 
     if process.is_alive():
         # Query exceeded timeout - forcefully terminate
         process.terminate()
-        process.join(timeout=5)  # Give it 5 seconds to terminate gracefully
+        process.join(timeout=5)
 
         if process.is_alive():
-            # Still alive - kill it
             process.kill()
             process.join(timeout=2)
 
         return BenchmarkResult(
             query=query_name,
             engine=engine_name,
-            time_seconds=timeout,
+            time_seconds=total_timeout,
             row_count=None,
             status="timeout",
-            error_message=f"Query {query_name} timed out after {timeout} seconds (process killed)",
+            error_message=f"Query {query_name} timed out after {total_timeout} seconds (process killed)",
         )
 
     # Process completed - get result from queue
     try:
         result_data = result_queue.get_nowait()
-        return BenchmarkResult(
-            query=query_name,
-            engine=engine_name,
-            time_seconds=result_data["time_seconds"],
-            row_count=result_data["row_count"],
-            status=result_data["status"],
-            error_message=result_data["error_message"],
-        )
+        if result_data["status"] == "success":
+            run_times = result_data["time_seconds"]
+
+            # Extract list of times, discarding warmup if requested
+            if runs > 1 and len(run_times) > 1:
+                measured_times = run_times[1:]
+                print("measured_times ", measured_times)
+                avg_time = sum(measured_times) / len(measured_times)
+            elif run_times:
+                avg_time = run_times[0]
+            else:
+                avg_time = 0.0
+
+            return BenchmarkResult(
+                query=query_name,
+                engine=engine_name,
+                time_seconds=round(avg_time, 2),
+                row_count=result_data["row_count"],
+                status=result_data["status"],
+                error_message=result_data["error_message"],
+            )
+        else:
+            # Propagate error from worker
+            return BenchmarkResult(
+                query=query_name,
+                engine=engine_name,
+                time_seconds=None,
+                row_count=None,
+                status=result_data["status"],
+                error_message=result_data["error_message"],
+            )
     except Exception:
         # Process died without putting result in queue
         return BenchmarkResult(
@@ -760,18 +791,13 @@ def run_benchmark(
 ) -> BenchmarkSuite:
     """Generic benchmark runner for any engine.
 
-    Each query runs in an isolated subprocess to ensure:
-    - Hard timeout enforcement (process can be killed)
-    - Memory isolation (one query can't OOM the runner)
-    - Crash isolation (one query crash doesn't affect others)
-
-    If runs > 1 and the first run succeeds, additional runs are performed
-    and the average time is reported for fair comparison.
+    The query now executes its loop (warmup + multiple runs) entirely inside
+    a single isolated subprocess to preserve engine state and cache without
+    requiring process re-spawning.
     """
 
     from importlib.metadata import version as pkg_version
 
-    # Engine configurations
     configs = {
         "duckdb": {
             "class": DuckDBBenchmark,
@@ -791,7 +817,7 @@ def run_benchmark(
         "sedonadb_gpu": {
             "class": SedonaDBGPUBenchmark,
             "version_getter": lambda: pkg_version("sedonadb"),
-            "queries_getter": lambda: get_sql_queries("sedonadb"),
+            "queries_getter": lambda: get_sql_queries("sedonadb_gpu"),
         },
         "spatial_polars": {
             "class": SpatialPolarsBenchmark,
@@ -801,7 +827,6 @@ def run_benchmark(
         "apache_sedona": {
             "class": SedonaSparkBenchmark,
             "version_getter": lambda: pkg_version("apache-sedona"),
-            # Reuses the base class queries (Dialect: SedonaSpark)
             "queries_getter": lambda: get_sql_queries("SedonaSpark"),
         },
         "pgstrom": {
@@ -822,7 +847,7 @@ def run_benchmark(
     print(f"{'=' * 60}")
     print(f"{display_name} version: {version}")
     if runs > 1:
-        print(f"Runs per query: {runs} (average will be reported)")
+        print(f"Runs per query: {runs} (first run excluded as warmup, average of remaining reported)")
 
     suite = BenchmarkSuite(engine=engine, scale_factor=scale_factor, version=version)
     all_queries = config["queries_getter"]()
@@ -834,7 +859,7 @@ def run_benchmark(
 
         print(f"  Running {query_name}...", end=" ", flush=True)
 
-        # First run
+        # Single subprocess call handles all runs internally
         result = run_query_isolated(
             engine_class=engine_class,
             engine_name=engine,
@@ -842,40 +867,14 @@ def run_benchmark(
             query_name=query_name,
             query_sql=query_sql,
             timeout=timeout,
+            runs=runs
         )
 
-        # If first run succeeded and we want multiple runs, do additional runs
-        if result.status == "success" and runs > 1:
-            run_times = [result.time_seconds]
-
-            for run_num in range(2, runs + 1):
-                additional_result = run_query_isolated(
-                    engine_class=engine_class,
-                    engine_name=engine,
-                    data_paths=data_paths,
-                    query_name=query_name,
-                    query_sql=query_sql,
-                    timeout=timeout,
-                )
-                if additional_result.status == "success":
-                    run_times.append(additional_result.time_seconds)
-                else:
-                    # If any subsequent run fails, just use successful runs
-                    break
-
-            # Calculate average of all successful runs
-            avg_time = round(sum(run_times) / len(run_times), 2)
-            result = BenchmarkResult(
-                query=query_name,
-                engine=engine,
-                time_seconds=avg_time,
-                row_count=result.row_count,
-                status="success",
-                error_message=None,
-            )
-            print(f"{avg_time}s avg ({len(run_times)} runs, {result.row_count} rows)")
-        elif result.status == "success":
-            print(f"{result.time_seconds}s ({result.row_count} rows)")
+        if result.status == "success":
+            if runs > 1:
+                print(f"{result.time_seconds}s avg ({runs - 1} measured runs, {result.row_count} rows)")
+            else:
+                print(f"{result.time_seconds}s ({result.row_count} rows)")
         else:
             print(f"{result.status.upper()}: {result.error_message}")
 
