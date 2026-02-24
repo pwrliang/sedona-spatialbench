@@ -1,53 +1,53 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-24T16:37:24.352042+00:00",
+  "generated_at": "2026-02-24T16:33:26.047756+00:00",
   "results": [
     {
-      "engine": "SedonaDB",
-      "version": "0.3.0a81",
-      "scale_factor": 10.0,
-      "timestamp": "2026-02-24T16:33:26.130051+00:00",
-      "total_time": 38.81,
+      "engine": "sedonadb_gpu",
+      "version": "0.3.0",
+      "scale_factor": 1.0,
+      "timestamp": "2026-02-24T16:32:42.222271+00:00",
+      "total_time": 6.29,
       "results": [
         {
           "query": "q2",
-          "time_seconds": 1.95,
+          "time_seconds": 0.43,
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 1.55,
-          "row_count": 243,
+          "time_seconds": 0.5,
+          "row_count": 258,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 3.19,
+          "time_seconds": 0.8,
           "row_count": 3,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q9",
-          "time_seconds": 0.12,
-          "row_count": 675,
+          "time_seconds": 0.03,
+          "row_count": 37,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 13.52,
-          "row_count": 454710,
+          "time_seconds": 1.76,
+          "row_count": 156095,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": 18.48,
+          "time_seconds": 2.77,
           "row_count": 1,
           "status": "success",
           "error_message": null

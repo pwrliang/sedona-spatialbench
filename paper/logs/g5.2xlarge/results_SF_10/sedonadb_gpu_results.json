@@ -4,8 +4,8 @@
   "generated_at": "2026-02-24T16:37:24.352042+00:00",
   "results": [
     {
-      "engine": "SedonaDB",
-      "version": "0.3.0a81",
+      "engine": "sedonadb_gpu",
+      "version": "0.3.0",
       "scale_factor": 10.0,
       "timestamp": "2026-02-24T16:33:26.130051+00:00",
       "total_time": 38.81,

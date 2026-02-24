@@ -1,7 +1,7 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-05T17:38:13.787237+00:00",
+  "generated_at": "2026-02-24T16:33:26.047756+00:00",
   "results": [
     {
       "engine": "DuckDB",
@@ -12,45 +12,45 @@
       "results": [
         {
           "query": "q2",
-          "time_seconds": 2.03,
+          "time_seconds": 0.43,
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 0.89,
-          "row_count": 243,
+          "time_seconds": 0.5,
+          "row_count": 258,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 2.89,
+          "time_seconds": 0.8,
           "row_count": 3,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q9",
-          "time_seconds": 962.83,
-          "row_count": 675,
+          "time_seconds": 0.03,
+          "row_count": 37,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 1427.69,
-          "row_count": 454702,
+          "time_seconds": 1.76,
+          "row_count": 156095,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": null,
-          "row_count": null,
-          "status": "error",
-          "error_message": "Query q11 crashed (process exit code: -9)"
+          "time_seconds": 2.77,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
         }
       ]
     }
