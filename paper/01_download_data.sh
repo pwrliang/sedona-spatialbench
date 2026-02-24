@@ -2,23 +2,24 @@
 set -e
 source config.env
 
-echo "=== Step 1: Downloading Data (SF${SCALE_FACTOR}) ==="
+for SCALE_FACTOR in "${SCALE_FACTORS[@]}"; do
+  echo "=== Step 1: Downloading Data (SF${SCALE_FACTOR}) ==="
 
-# Install downloader prerequisite
-pip install -q huggingface-hub
+  # Install downloader prerequisite
+  pip install -q huggingface-hub
 
-# Define directories
-TARGET_DIR="benchmark-data-sf${SCALE_FACTOR}"
-TEMP_HF_DIR="hf-data"
+  # Define directories
+  TARGET_DIR="benchmark-data-sf${SCALE_FACTOR}"
+  TEMP_HF_DIR="hf-data"
 
-if [ -d "$TARGET_DIR" ] && [ "$(ls -A $TARGET_DIR)" ]; then
-    echo "Data directory $TARGET_DIR already exists and is not empty. Skipping download."
-    echo "To force redownload, delete the directory: rm -rf $TARGET_DIR"
-else
-    echo "Downloading data from HF: ${HF_DATASET}/${HF_DATA_VERSION}..."
+  if [ -d "$TARGET_DIR" ] && [ "$(ls -A $TARGET_DIR)" ]; then
+      echo "Data directory $TARGET_DIR already exists and is not empty. Skipping download."
+      echo "To force redownload, delete the directory: rm -rf $TARGET_DIR"
+  else
+      echo "Downloading data from HF: ${HF_DATASET}/${HF_DATA_VERSION}..."
 
-    # Run the Python download logic inline
-    python -c "
+      # Run the Python download logic inline
+      python -c "
 from huggingface_hub import snapshot_download
 import os
 import shutil
@@ -37,23 +38,24 @@ snapshot_download(
 )
 "
 
-    # Organize data as the benchmark script expects it
-    echo "Organizing data..."
-    mkdir -p "$TARGET_DIR"
+      # Organize data as the benchmark script expects it
+      echo "Organizing data..."
+      mkdir -p "$TARGET_DIR"
 
-    # Determine source folder name logic based on YAML
-    if [ "$SCALE_FACTOR" = "0.1" ]; then
-        HF_SF="sf0.1"
-    else
-        HF_SF="sf${SCALE_FACTOR}"
-    fi
+      # Determine source folder name logic based on YAML
+      if [ "$SCALE_FACTOR" = "0.1" ]; then
+          HF_SF="sf0.1"
+      else
+          HF_SF="sf${SCALE_FACTOR}"
+      fi
 
-    # Move files
-    cp -r "${TEMP_HF_DIR}/${HF_DATA_VERSION}/${HF_SF}/"* "$TARGET_DIR/"
+      # Move files
+      cp -r "${TEMP_HF_DIR}/${HF_DATA_VERSION}/${HF_SF}/"* "$TARGET_DIR/"
 
-    # Cleanup temp
-    rm -rf "$TEMP_HF_DIR"
+      # Cleanup temp
+      rm -rf "$TEMP_HF_DIR"
 
-    echo "Data ready in $TARGET_DIR"
-    du -sh "$TARGET_DIR"
-fi
+      echo "Data ready in $TARGET_DIR"
+      du -sh "$TARGET_DIR"
+  fi
+done
