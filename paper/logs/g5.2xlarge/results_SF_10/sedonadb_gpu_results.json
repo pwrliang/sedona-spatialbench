@@ -1,32 +1,32 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-24T16:37:24.352042+00:00",
+  "generated_at": "2026-02-24T17:05:34.216907+00:00",
   "results": [
     {
       "engine": "sedonadb_gpu",
       "version": "0.3.0",
       "scale_factor": 10.0,
-      "timestamp": "2026-02-24T16:33:26.130051+00:00",
-      "total_time": 38.81,
+      "timestamp": "2026-02-24T17:01:25.582169+00:00",
+      "total_time": 39.99,
       "results": [
         {
           "query": "q2",
-          "time_seconds": 1.95,
+          "time_seconds": 2.03,
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 1.55,
+          "time_seconds": 1.34,
           "row_count": 243,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 3.19,
+          "time_seconds": 3.1,
           "row_count": 3,
           "status": "success",
           "error_message": null
@@ -40,14 +40,14 @@
         },
         {
           "query": "q10",
-          "time_seconds": 13.52,
+          "time_seconds": 13.78,
           "row_count": 454710,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": 18.48,
+          "time_seconds": 19.62,
           "row_count": 1,
           "status": "success",
           "error_message": null
