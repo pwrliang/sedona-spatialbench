@@ -95,7 +95,9 @@ for engine in "${ENGINES[@]}"; do
             install_geopandas
             ;;
         sedonadb)
-            install_sedona
+#            install_sedona
+            ;;
+        sedonadb_gpu)
             ;;
         spatial_polars)
             install_spatial_polars
