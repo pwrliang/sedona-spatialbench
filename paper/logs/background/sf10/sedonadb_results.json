@@ -4,7 +4,7 @@
   "generated_at": "2026-02-05T18:27:50.173431+00:00",
   "results": [
     {
-      "engine": "sedonadb",
+      "engine": "SedonaDB",
       "version": "0.3.0a81",
       "scale_factor": 10.0,
       "timestamp": "2026-02-05T18:22:32.800716+00:00",
