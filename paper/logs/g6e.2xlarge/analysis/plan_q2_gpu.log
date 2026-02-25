@@ -1,86 +1,86 @@
-[LIBGPUSPATIAL] [ 12151][09:05:35:529604][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
-[LIBGPUSPATIAL] [ 12151][09:05:35:751877][info  ] Init Memory Manager
-[LIBGPUSPATIAL] [ 12151][09:05:35:754182][info  ] Creating RMM pool memory resource with size 22511 MB
-[LIBGPUSPATIAL] [ 12151][09:05:35:801532][info  ] Initialize RTEngine
-[LIBGPUSPATIAL] [ 12151][09:05:36:856059][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12151][09:05:36:858798][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12151][09:05:37:073083][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 110.91 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12151][09:05:37:073117][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:37:073132][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:37:109677][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:37:109705][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.34 ms, FinishBuilding: 29.21 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:181119][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12147][09:05:37:182999][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12147][09:05:37:183036][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.08 ms, Prepare: 0.57 ms, RT: 4.88 ms, Copy res: 1.43 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:201485][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:201596][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:234331][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 18.10 ms, Refine: 32.51 ms, Copy Results: 0.30 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:311616][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12147][09:05:37:315351][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12147][09:05:37:315390][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.78 ms, Copy res: 3.31 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:328645][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:328908][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:334777][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.73 ms, Refine: 5.67 ms, Copy Results: 0.42 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:453316][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12147][09:05:37:454602][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12147][09:05:37:454633][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.87 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:476628][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:476846][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:485081][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 21.52 ms, Refine: 8.04 ms, Copy Results: 0.37 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:578647][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12147][09:05:37:579831][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12147][09:05:37:579862][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.79 ms, Copy res: 0.76 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:598790][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:598939][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:607185][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 17.69 ms, Refine: 8.06 ms, Copy Results: 0.29 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:706862][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12147][09:05:37:708066][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12147][09:05:37:708095][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.52 ms, RT: 0.78 ms, Copy res: 0.79 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:725303][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:725464][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:731225][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.72 ms, Refine: 5.49 ms, Copy Results: 0.39 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:827628][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:37:832341][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:37:832372][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.94 ms, Copy res: 4.21 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:847492][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:37:847982][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:37:875904][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.09 ms, Refine: 27.93 ms, Copy Results: 0.43 ms
-[LIBGPUSPATIAL] [ 12147][09:05:37:991999][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12147][09:05:37:993309][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12147][09:05:37:993340][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.91 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:009252][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:009465][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:014803][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.42 ms, Refine: 5.07 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:130697][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12147][09:05:38:131580][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12147][09:05:38:131617][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.74 ms, Copy res: 0.48 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:146238][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:146353][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:151870][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.30 ms, Refine: 5.38 ms, Copy Results: 0.21 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:237140][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12147][09:05:38:238449][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12147][09:05:38:238479][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.88 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:255679][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:255891][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:263300][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.56 ms, Refine: 7.33 ms, Copy Results: 0.26 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:345440][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12147][09:05:38:346437][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12147][09:05:38:346469][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.74 ms, Copy res: 0.59 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:360644][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:360773][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:365170][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.80 ms, Refine: 4.26 ms, Copy Results: 0.23 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:456678][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12147][09:05:38:458078][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12147][09:05:38:458107][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.98 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:475138][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:475378][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:481898][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.24 ms, Refine: 6.40 ms, Copy Results: 0.31 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:569466][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12147][09:05:38:570417][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12147][09:05:38:570452][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.55 ms
-[LIBGPUSPATIAL] [ 12147][09:05:38:583003][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:38:583114][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:38:587023][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 11.92 ms, Refine: 3.73 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52745][10:59:59:738469][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
+[LIBGPUSPATIAL] [ 52745][10:59:59:933537][info  ] Init Memory Manager
+[LIBGPUSPATIAL] [ 52745][10:59:59:933748][info  ] Creating RMM pool memory resource with size 22511 MB
+[LIBGPUSPATIAL] [ 52745][10:59:59:979519][info  ] Initialize RTEngine
+[LIBGPUSPATIAL] [ 52745][11:00:00:106861][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52745][11:00:00:109631][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52745][11:00:00:326464][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 113.06 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52745][11:00:00:326498][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:00:326512][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:00:340777][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:00:340805][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.35 ms, FinishBuilding: 6.92 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:412502][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52741][11:00:00:414402][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52741][11:00:00:414436][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.08 ms, Prepare: 0.56 ms, RT: 4.93 ms, Copy res: 1.44 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:429359][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:00:429487][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:00:458821][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.54 ms, Refine: 29.12 ms, Copy Results: 0.29 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:535804][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52741][11:00:00:539597][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52741][11:00:00:539630][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.50 ms, RT: 0.78 ms, Copy res: 3.37 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:553067][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:00:553332][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:00:559285][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.89 ms, Refine: 5.75 ms, Copy Results: 0.43 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:678632][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52741][11:00:00:679913][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52741][11:00:00:679944][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.86 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:701684][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:00:701916][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:00:710198][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 21.25 ms, Refine: 8.11 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:803119][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52741][11:00:00:804328][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52741][11:00:00:804365][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:819309][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:00:819473][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:00:827643][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.72 ms, Refine: 7.99 ms, Copy Results: 0.30 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:928324][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52741][11:00:00:929527][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52741][11:00:00:929568][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52741][11:00:00:952406][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:00:952569][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:00:958309][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 21.33 ms, Refine: 5.47 ms, Copy Results: 0.39 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:055510][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:01:060419][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:01:060464][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.97 ms, Copy res: 4.40 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:075428][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:075890][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:104451][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.93 ms, Refine: 28.53 ms, Copy Results: 0.44 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:220863][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52741][11:00:01:222158][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52741][11:00:01:222187][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.90 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:238098][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:238313][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:243751][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.36 ms, Refine: 5.16 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:359537][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52741][11:00:01:360453][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52741][11:00:01:360484][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.52 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:374552][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:374653][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:380114][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.76 ms, Refine: 5.32 ms, Copy Results: 0.20 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:465261][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52741][11:00:01:466571][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52741][11:00:01:466603][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:484041][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:484254][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:491856][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.75 ms, Refine: 7.53 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:572455][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52741][11:00:01:573423][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52741][11:00:01:573469][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.57 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:587853][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:587986][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:592431][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.99 ms, Refine: 4.30 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:681530][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52741][11:00:01:682944][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52741][11:00:01:682989][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.81 ms, Copy res: 0.99 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:700656][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:700878][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:707412][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.88 ms, Refine: 6.40 ms, Copy Results: 0.31 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:794633][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52741][11:00:01:795562][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52741][11:00:01:795593][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.54 ms
+[LIBGPUSPATIAL] [ 52741][11:00:01:809067][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:01:809181][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:01:813027][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.85 ms, Refine: 3.68 ms, Copy Results: 0.24 ms
 Testing Q2 Execution with GPU using External Tables
 No limits applied - using full dataset
 
@@ -140,21 +140,21 @@ Warmup Run
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.63µs, output_bytes=8.0 B]                    │
+│                   ┆ utput_rows=1, elapsed_compute=1.68µs, output_bytes=8.0 B]                    │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=2.038679ms, output_bytes=8.0 B]                    │
-│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 6.591µs, output_bytes=0.0 B]                                                 │
+│                   ┆ t_rows=1, elapsed_compute=1.857606ms, output_bytes=8.0 B]                    │
+│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=2 │
+│                   ┆ 0.139µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=650.131147ms, build_time=1.587135076s, join_time=1.009451771s, part │
+│                   ┆ ion_time=658.032449ms, build_time=602.526602ms, join_time=1.002144118s, part │
 │                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=105.22964ms, output_bytes=301.0 MB]  │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=106.373816ms, output_bytes=301.0 MB] │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -166,12 +166,12 @@ Warmup Run
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=285.003µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=173.866µs, time_elapsed_proc │
-│                   ┆ essing=86.972036ms, time_elapsed_scanning_total=860.760856ms, time_elapsed_s │
-│                   ┆ canning_until_data=14.042878ms]                                              │
+│                   ┆ a_load_time=296.463µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=188.997µs, time_elapsed_proc │
+│                   ┆ essing=93.41945ms, time_elapsed_scanning_total=876.469262ms, time_elapsed_sc │
+│                   ┆ anning_until_data=14.45725ms]                                                │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=26.257277ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=26.438948ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -186,192 +186,192 @@ Warmup Run
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=2.037794ms, page_i │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.976422ms, page_i │
 │                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=340.584µs, time_elapsed_processing=248.686007ms, time_ │
-│                   ┆ elapsed_scanning_total=1.500855766s, time_elapsed_scanning_until_data=253.07 │
-│                   ┆ 9149ms]                                                                      │
+│                   ┆  time_elapsed_opening=342.352µs, time_elapsed_processing=250.392749ms, time_ │
+│                   ┆ elapsed_scanning_total=1.495185271s, time_elapsed_scanning_until_data=253.76 │
+│                   ┆ 7148ms]                                                                      │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
-[LIBGPUSPATIAL] [ 12147][09:05:39:486572][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12147][09:05:39:486883][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12147][09:05:39:694881][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 108.48 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12147][09:05:39:694912][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:39:694928][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:39:705225][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:39:705249][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.36 ms, FinishBuilding: 2.94 ms
-[LIBGPUSPATIAL] [ 12151][09:05:39:781559][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12151][09:05:39:783354][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12151][09:05:39:783384][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.77 ms, Copy res: 1.38 ms
-[LIBGPUSPATIAL] [ 12151][09:05:39:798108][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:39:798219][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:39:803485][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.48 ms, Refine: 5.06 ms, Copy Results: 0.28 ms
-[LIBGPUSPATIAL] [ 12151][09:05:39:904667][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12151][09:05:39:907485][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12151][09:05:39:907517][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 2.42 ms
-[LIBGPUSPATIAL] [ 12151][09:05:39:921785][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:39:922053][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:39:927992][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.57 ms, Refine: 5.74 ms, Copy Results: 0.42 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:056201][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12151][09:05:40:057451][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12151][09:05:40:057483][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.79 ms, Copy res: 0.82 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:074079][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:074285][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:082324][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.70 ms, Refine: 7.83 ms, Copy Results: 0.37 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:177603][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12151][09:05:40:178753][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12151][09:05:40:178786][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.72 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:193298][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:193453][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:201560][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.42 ms, Refine: 7.92 ms, Copy Results: 0.30 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:295106][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12151][09:05:40:296292][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12151][09:05:40:296321][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.76 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:311719][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:311874][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:317570][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.87 ms, Refine: 5.42 ms, Copy Results: 0.39 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:416594][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:40:420951][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:40:420997][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.94 ms, Copy res: 3.86 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:436231][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:436714][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:465081][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.72 ms, Refine: 28.35 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:584769][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12151][09:05:40:586057][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12151][09:05:40:586084][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.89 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:601579][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:601802][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:607183][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.86 ms, Refine: 5.09 ms, Copy Results: 0.46 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:724641][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12151][09:05:40:725494][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12151][09:05:40:725521][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.46 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:739884][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:740011][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:745350][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.25 ms, Refine: 5.22 ms, Copy Results: 0.20 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:835081][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12151][09:05:40:836388][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12151][09:05:40:836426][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:854118][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:854331][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:861533][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.25 ms, Refine: 7.11 ms, Copy Results: 0.26 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:941043][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12151][09:05:40:941988][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12151][09:05:40:942013][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.55 ms
-[LIBGPUSPATIAL] [ 12151][09:05:40:956397][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:40:956511][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:40:961107][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.10 ms, Refine: 4.44 ms, Copy Results: 0.23 ms
-[LIBGPUSPATIAL] [ 12151][09:05:41:057542][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12151][09:05:41:058934][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12151][09:05:41:058977][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.79 ms, Copy res: 0.96 ms
-[LIBGPUSPATIAL] [ 12151][09:05:41:075968][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:41:076217][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:41:082650][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.44 ms, Refine: 6.31 ms, Copy Results: 0.33 ms
-[LIBGPUSPATIAL] [ 12151][09:05:41:169800][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12151][09:05:41:170721][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12151][09:05:41:170752][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.52 ms
-[LIBGPUSPATIAL] [ 12151][09:05:41:184241][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:41:184361][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:41:188150][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.69 ms, Refine: 3.63 ms, Copy Results: 0.23 ms
-[LIBGPUSPATIAL] [ 12151][09:05:42:147795][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12151][09:05:42:148135][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12151][09:05:42:359863][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 107.51 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12151][09:05:42:359895][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:42:359910][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:42:370133][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:42:370157][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.35 ms, FinishBuilding: 2.88 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:446317][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12147][09:05:42:447264][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12147][09:05:42:447293][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.75 ms, Copy res: 0.55 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:462157][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:42:462269][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:42:467631][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.81 ms, Refine: 5.15 ms, Copy Results: 0.28 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:562096][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12147][09:05:42:563596][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12147][09:05:42:563626][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 1.11 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:578971][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:42:579252][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:42:585264][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.62 ms, Refine: 5.82 ms, Copy Results: 0.43 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:719215][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12147][09:05:42:720470][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12147][09:05:42:720496][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.08 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.84 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:738319][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:42:738526][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:42:746548][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.90 ms, Refine: 7.82 ms, Copy Results: 0.36 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:848811][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12147][09:05:42:849994][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12147][09:05:42:850023][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.75 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:864862][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:42:865039][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:42:872976][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.49 ms, Refine: 7.75 ms, Copy Results: 0.30 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:967093][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12147][09:05:42:968286][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12147][09:05:42:968316][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.78 ms
-[LIBGPUSPATIAL] [ 12147][09:05:42:984013][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:42:984199][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:42:989917][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.12 ms, Refine: 5.48 ms, Copy Results: 0.38 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:091537][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:43:093922][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:43:093974][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.95 ms, Copy res: 1.86 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:108899][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:109404][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:137433][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.80 ms, Refine: 28.05 ms, Copy Results: 0.44 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:266346][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12147][09:05:43:267642][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12147][09:05:43:267679][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.89 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:284649][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:284886][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:290230][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.73 ms, Refine: 5.07 ms, Copy Results: 0.47 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:403019][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12147][09:05:43:403926][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12147][09:05:43:403976][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.12 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.50 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:418527][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:418649][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:424238][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.81 ms, Refine: 5.43 ms, Copy Results: 0.22 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:521663][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12147][09:05:43:522929][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12147][09:05:43:522967][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.84 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:540422][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:540627][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:547952][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.50 ms, Refine: 7.24 ms, Copy Results: 0.24 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:627727][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12147][09:05:43:628710][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12147][09:05:43:628740][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.74 ms, Copy res: 0.58 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:642996][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:643124][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:647728][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.86 ms, Refine: 4.45 ms, Copy Results: 0.24 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:738548][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12147][09:05:43:739935][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12147][09:05:43:739981][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.45 ms, RT: 0.80 ms, Copy res: 0.95 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:764124][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:764386][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:770987][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 23.42 ms, Refine: 6.47 ms, Copy Results: 0.33 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:856843][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12147][09:05:43:857779][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12147][09:05:43:857807][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.53 ms
-[LIBGPUSPATIAL] [ 12147][09:05:43:871392][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:43:871505][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:43:875409][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.30 ms, Refine: 3.73 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:02:728442][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52741][11:00:02:728798][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52741][11:00:02:937697][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 108.40 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52741][11:00:02:937736][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:02:937756][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:02:947920][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:02:947951][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.34 ms, FinishBuilding: 2.83 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:022988][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52745][11:00:03:024835][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52745][11:00:03:024867][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.12 ms, Prepare: 0.50 ms, RT: 0.78 ms, Copy res: 1.43 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:040365][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:040469][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:045671][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.65 ms, Refine: 4.99 ms, Copy Results: 0.28 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:148083][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52745][11:00:03:151045][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52745][11:00:03:151075][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 2.56 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:164760][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:165020][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:170851][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.43 ms, Refine: 5.63 ms, Copy Results: 0.42 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:299476][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52745][11:00:03:300778][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52745][11:00:03:300809][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.79 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:317121][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:317321][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:325351][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.72 ms, Refine: 7.83 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:425054][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52745][11:00:03:426248][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52745][11:00:03:426279][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.76 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:440885][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:441048][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:449011][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.45 ms, Refine: 7.78 ms, Copy Results: 0.31 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:546493][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52745][11:00:03:547692][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52745][11:00:03:547745][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.77 ms, Copy res: 0.81 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:563062][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:563206][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:568951][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.94 ms, Refine: 5.47 ms, Copy Results: 0.38 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:669548][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:03:673906][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:03:673938][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.94 ms, Copy res: 3.85 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:688307][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:688788][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:716924][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.07 ms, Refine: 28.12 ms, Copy Results: 0.44 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:835494][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52745][11:00:03:836806][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52745][11:00:03:836837][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.92 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:851571][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:851776][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:857147][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.19 ms, Refine: 5.09 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:968925][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52745][11:00:03:969839][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52745][11:00:03:969869][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.50 ms
+[LIBGPUSPATIAL] [ 52745][11:00:03:986902][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:03:987023][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:03:992341][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.75 ms, Refine: 5.20 ms, Copy Results: 0.20 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:075889][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52745][11:00:04:077201][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52745][11:00:04:077230][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:092916][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:04:093132][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:04:100424][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.18 ms, Refine: 7.21 ms, Copy Results: 0.26 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:183391][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52745][11:00:04:184345][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52745][11:00:04:184372][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.45 ms, RT: 0.75 ms, Copy res: 0.56 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:198357][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:04:198475][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:04:202909][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.66 ms, Refine: 4.28 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:300680][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52745][11:00:04:302070][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52745][11:00:04:302096][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.45 ms, RT: 0.79 ms, Copy res: 0.96 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:320051][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:04:320281][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:04:326748][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.24 ms, Refine: 6.34 ms, Copy Results: 0.31 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:418418][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52745][11:00:04:419349][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52745][11:00:04:419378][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.45 ms, RT: 0.75 ms, Copy res: 0.54 ms
+[LIBGPUSPATIAL] [ 52745][11:00:04:432736][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:04:432843][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:04:436814][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.56 ms, Refine: 3.81 ms, Copy Results: 0.23 ms
+[LIBGPUSPATIAL] [ 52745][11:00:05:388837][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52745][11:00:05:389151][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52745][11:00:05:601510][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 108.70 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52745][11:00:05:601548][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:05:601568][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:05:611823][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:05:611853][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.34 ms, FinishBuilding: 2.92 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:688001][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52741][11:00:05:688932][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52741][11:00:05:688977][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.48 ms, RT: 0.75 ms, Copy res: 0.53 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:703934][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:05:704066][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:05:709442][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.80 ms, Refine: 5.19 ms, Copy Results: 0.28 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:805397][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52741][11:00:05:806909][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52741][11:00:05:806949][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.45 ms, RT: 0.75 ms, Copy res: 1.12 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:822914][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:05:823200][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:05:829076][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.22 ms, Refine: 5.68 ms, Copy Results: 0.44 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:963700][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52741][11:00:05:965004][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52741][11:00:05:965034][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52741][11:00:05:983510][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:05:983715][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:05:991934][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.47 ms, Refine: 8.02 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:096593][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52741][11:00:06:097769][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52741][11:00:06:097800][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.74 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:111895][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:112071][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:120042][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.72 ms, Refine: 7.79 ms, Copy Results: 0.31 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:217848][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52741][11:00:06:219040][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52741][11:00:06:219066][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.77 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:235221][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:235388][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:241174][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.19 ms, Refine: 5.50 ms, Copy Results: 0.40 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:342235][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:06:344645][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:06:344676][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.95 ms, Copy res: 1.90 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:359728][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:360203][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:388411][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.85 ms, Refine: 28.18 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:515989][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52741][11:00:06:517307][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52741][11:00:06:517338][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.12 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.92 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:538486][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:538704][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:544084][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 19.88 ms, Refine: 5.08 ms, Copy Results: 0.47 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:657211][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52741][11:00:06:658101][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52741][11:00:06:658130][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.49 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:672317][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:672432][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:677773][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.40 ms, Refine: 5.21 ms, Copy Results: 0.20 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:763459][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52741][11:00:06:764776][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52741][11:00:06:764806][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.89 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:783043][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:783259][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:790565][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.23 ms, Refine: 7.22 ms, Copy Results: 0.26 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:872150][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52741][11:00:06:873127][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52741][11:00:06:873157][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.58 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:886187][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:06:886318][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:06:890759][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.64 ms, Refine: 4.28 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:06:982343][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52741][11:00:06:983777][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52741][11:00:06:983810][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.45 ms, RT: 0.80 ms, Copy res: 1.01 ms
+[LIBGPUSPATIAL] [ 52741][11:00:07:000070][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:07:000306][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:07:006973][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.44 ms, Refine: 6.51 ms, Copy Results: 0.33 ms
+[LIBGPUSPATIAL] [ 52741][11:00:07:092830][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52741][11:00:07:093768][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52741][11:00:07:093797][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.54 ms
+[LIBGPUSPATIAL] [ 52741][11:00:07:105857][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:07:105976][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:07:109747][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 11.79 ms, Refine: 3.62 ms, Copy Results: 0.24 ms
 Run # 1
 ┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
 │     plan_type     ┆                                     plan                                     │
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.6µs, output_bytes=8.0 B]                     │
+│                   ┆ utput_rows=1, elapsed_compute=1.56µs, output_bytes=8.0 B]                    │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=2.499415ms, output_bytes=8.0 B]                    │
+│                   ┆ t_rows=1, elapsed_compute=3.225269ms, output_bytes=8.0 B]                    │
 │                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 9.249µs, output_bytes=0.0 B]                                                 │
+│                   ┆ 9.866µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=649.078406ms, build_time=218.762299ms, join_time=964.815377ms, part │
+│                   ┆ ion_time=664.427593ms, build_time=219.612345ms, join_time=963.591183ms, part │
 │                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=105.586785ms, output_bytes=301.0 MB] │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=105.624943ms, output_bytes=301.0 MB] │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -383,12 +383,12 @@ Run # 1
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=701.129µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=210.969µs, time_elapsed_proc │
-│                   ┆ essing=90.21945ms, time_elapsed_scanning_total=862.081673ms, time_elapsed_sc │
-│                   ┆ anning_until_data=12.01865ms]                                                │
+│                   ┆ a_load_time=613.156µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=207.788µs, time_elapsed_proc │
+│                   ┆ essing=91.390947ms, time_elapsed_scanning_total=878.403825ms, time_elapsed_s │
+│                   ┆ canning_until_data=11.988264ms]                                              │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=35.255221ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=34.464055ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -403,11 +403,11 @@ Run # 1
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=2.132216ms, page_i │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=2.528143ms, page_i │
 │                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=870.592µs, time_elapsed_processing=288.827942ms, time_ │
-│                   ┆ elapsed_scanning_total=1.505990705s, time_elapsed_scanning_until_data=270.81 │
-│                   ┆ 3534ms]                                                                      │
+│                   ┆  time_elapsed_opening=1.041169ms, time_elapsed_processing=293.106274ms, time │
+│                   ┆ _elapsed_scanning_total=1.50979765s, time_elapsed_scanning_until_data=267.47 │
+│                   ┆ 415ms]                                                                       │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
 Run # 2
@@ -416,21 +416,21 @@ Run # 2
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.44µs, output_bytes=8.0 B]                    │
+│                   ┆ utput_rows=1, elapsed_compute=1.58µs, output_bytes=8.0 B]                    │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=2.329592ms, output_bytes=8.0 B]                    │
-│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 9.399µs, output_bytes=0.0 B]                                                 │
+│                   ┆ t_rows=1, elapsed_compute=3.060129ms, output_bytes=8.0 B]                    │
+│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=2 │
+│                   ┆ 1.783µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=690.000378ms, build_time=222.44898ms, join_time=986.311714ms, parti │
-│                   ┆ tion_probe_time=1ns]                                                         │
+│                   ┆ ion_time=683.449333ms, build_time=223.099681ms, join_time=978.227995ms, part │
+│                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=105.332852ms, output_bytes=301.0 MB] │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=105.689582ms, output_bytes=301.0 MB] │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -442,12 +442,12 @@ Run # 2
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=393.247µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=238.959µs, time_elapsed_proc │
-│                   ┆ essing=102.988087ms, time_elapsed_scanning_total=921.868843ms, time_elapsed_ │
-│                   ┆ scanning_until_data=14.88961ms]                                              │
+│                   ┆ a_load_time=387.568µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=217.959µs, time_elapsed_proc │
+│                   ┆ essing=99.148388ms, time_elapsed_scanning_total=916.154884ms, time_elapsed_s │
+│                   ┆ canning_until_data=18.090391ms]                                              │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=34.245203ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=34.385352ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -462,192 +462,192 @@ Run # 2
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.933198ms, page_i │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.738794ms, page_i │
 │                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=484.739µs, time_elapsed_processing=287.770081ms, time_ │
-│                   ┆ elapsed_scanning_total=1.527508107s, time_elapsed_scanning_until_data=278.31 │
-│                   ┆ 713ms]                                                                       │
+│                   ┆  time_elapsed_opening=323.043µs, time_elapsed_processing=290.403514ms, time_ │
+│                   ┆ elapsed_scanning_total=1.520413661s, time_elapsed_scanning_until_data=275.88 │
+│                   ┆ 1187ms]                                                                      │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
-[LIBGPUSPATIAL] [ 12147][09:05:44:837487][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12147][09:05:44:837790][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12147][09:05:45:052986][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 110.52 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12147][09:05:45:053015][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:45:053029][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:45:063244][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:45:063269][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.34 ms, FinishBuilding: 2.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:145441][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12151][09:05:45:146354][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12151][09:05:45:146383][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.75 ms, Copy res: 0.51 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:161135][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:161245][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:166702][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.50 ms, Refine: 5.26 ms, Copy Results: 0.27 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:268777][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12151][09:05:45:270247][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12151][09:05:45:270277][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 1.07 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:285992][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:286254][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:292176][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.24 ms, Refine: 5.71 ms, Copy Results: 0.44 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:423004][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12151][09:05:45:424293][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12151][09:05:45:424324][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.48 ms, RT: 0.78 ms, Copy res: 0.87 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:442775][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:442987][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:451095][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.68 ms, Refine: 7.92 ms, Copy Results: 0.36 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:550191][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12151][09:05:45:551359][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12151][09:05:45:551389][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.74 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:569413][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:569573][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:577823][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 17.31 ms, Refine: 8.06 ms, Copy Results: 0.30 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:680564][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12151][09:05:45:681735][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12151][09:05:45:681765][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.75 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:697431][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:697600][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:703411][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.22 ms, Refine: 5.55 ms, Copy Results: 0.39 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:807879][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:45:810211][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:45:810243][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.94 ms, Copy res: 1.83 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:825545][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:826034][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:45:854522][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.02 ms, Refine: 28.49 ms, Copy Results: 0.44 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:977885][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12151][09:05:45:979168][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12151][09:05:45:979197][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:45:999163][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:45:999378][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:004730][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 19.48 ms, Refine: 5.08 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:136821][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12151][09:05:46:137699][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12151][09:05:46:137730][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.48 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:155204][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:46:155327][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:160713][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 17.15 ms, Refine: 5.25 ms, Copy Results: 0.21 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:256716][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12151][09:05:46:258024][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12151][09:05:46:258053][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:274499][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:46:274707][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:282245][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.27 ms, Refine: 7.45 ms, Copy Results: 0.26 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:369517][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12151][09:05:46:370486][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12151][09:05:46:370515][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.58 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:384212][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:46:384332][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:388834][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.22 ms, Refine: 4.35 ms, Copy Results: 0.23 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:489182][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12151][09:05:46:490578][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12151][09:05:46:490606][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.97 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:508176][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:46:508416][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:514998][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.96 ms, Refine: 6.44 ms, Copy Results: 0.34 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:607047][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12151][09:05:46:607978][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12151][09:05:46:608010][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.53 ms
-[LIBGPUSPATIAL] [ 12151][09:05:46:621142][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:46:621252][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:46:625139][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.60 ms, Refine: 3.73 ms, Copy Results: 0.23 ms
-[LIBGPUSPATIAL] [ 12151][09:05:47:609820][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12151][09:05:47:610123][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12151][09:05:47:809705][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 103.45 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12151][09:05:47:809738][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:47:809754][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:47:819988][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12151][09:05:47:820014][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.35 ms, FinishBuilding: 2.89 ms
-[LIBGPUSPATIAL] [ 12147][09:05:47:926000][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12147][09:05:47:926941][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12147][09:05:47:926985][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.54 ms
-[LIBGPUSPATIAL] [ 12147][09:05:47:942517][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:47:942632][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:47:948035][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.78 ms, Refine: 5.19 ms, Copy Results: 0.28 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:040495][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12147][09:05:48:042010][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12147][09:05:48:042039][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 1.12 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:057047][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:057313][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:063256][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.19 ms, Refine: 5.72 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:188577][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12147][09:05:48:189854][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12147][09:05:48:189882][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.79 ms, Copy res: 0.85 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:206704][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:206905][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:215238][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.14 ms, Refine: 8.13 ms, Copy Results: 0.37 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:310757][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12147][09:05:48:311924][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12147][09:05:48:311967][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.80 ms, Copy res: 0.73 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:326551][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:326724][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:334706][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.90 ms, Refine: 7.82 ms, Copy Results: 0.29 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:430311][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12147][09:05:48:431484][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12147][09:05:48:431514][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.75 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:448590][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:448769][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:454572][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.51 ms, Refine: 5.55 ms, Copy Results: 0.39 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:556891][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:48:559239][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12147][09:05:48:559268][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.95 ms, Copy res: 1.84 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:573980][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:574460][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:602580][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.49 ms, Refine: 28.11 ms, Copy Results: 0.44 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:723146][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12147][09:05:48:724451][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12147][09:05:48:724483][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.91 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:741269][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:741497][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:746903][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.22 ms, Refine: 5.13 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:863984][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12147][09:05:48:864889][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12147][09:05:48:864919][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.47 ms, RT: 0.74 ms, Copy res: 0.50 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:879726][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:879830][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:885218][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.51 ms, Refine: 5.24 ms, Copy Results: 0.21 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:970404][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12147][09:05:48:971718][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12147][09:05:48:971749][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.89 ms
-[LIBGPUSPATIAL] [ 12147][09:05:48:988872][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:48:989079][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:48:996252][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.27 ms, Refine: 7.08 ms, Copy Results: 0.26 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:080152][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12147][09:05:49:081134][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12147][09:05:49:081166][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.57 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:095411][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:49:095545][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:49:100102][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.61 ms, Refine: 4.40 ms, Copy Results: 0.25 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:201109][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12147][09:05:49:202529][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12147][09:05:49:202561][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.99 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:219256][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:49:219498][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:49:226101][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.03 ms, Refine: 6.48 ms, Copy Results: 0.32 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:316454][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12147][09:05:49:317408][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12147][09:05:49:317440][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.75 ms, Copy res: 0.55 ms
-[LIBGPUSPATIAL] [ 12147][09:05:49:330791][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12147][09:05:49:330907][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12147][09:05:49:334798][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.93 ms, Refine: 3.73 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:08:068472][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52741][11:00:08:068783][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52741][11:00:08:284683][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 110.05 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52741][11:00:08:284716][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:08:284731][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:08:294885][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:08:294911][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.33 ms, FinishBuilding: 2.83 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:376526][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52745][11:00:08:377484][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52745][11:00:08:377514][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.75 ms, Copy res: 0.55 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:391526][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:08:391639][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:08:396904][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.75 ms, Refine: 5.06 ms, Copy Results: 0.28 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:491493][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52745][11:00:08:493010][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52745][11:00:08:493040][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 1.12 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:507319][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:08:507594][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:08:513465][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.26 ms, Refine: 5.67 ms, Copy Results: 0.42 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:637148][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52745][11:00:08:638444][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52745][11:00:08:638474][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.78 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:656130][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:08:656356][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:08:664393][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.66 ms, Refine: 7.86 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:762749][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52745][11:00:08:763924][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52745][11:00:08:763968][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.75 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:777778][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:08:777920][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:08:785826][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.59 ms, Refine: 7.71 ms, Copy Results: 0.30 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:894671][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52745][11:00:08:895861][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52745][11:00:08:895890][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52745][11:00:08:914187][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:08:914339][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:08:920064][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.31 ms, Refine: 5.46 ms, Copy Results: 0.38 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:023455][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:09:025717][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:09:025744][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.95 ms, Copy res: 1.75 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:043565][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:044040][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:071975][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.43 ms, Refine: 27.91 ms, Copy Results: 0.44 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:194512][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52745][11:00:09:195814][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52745][11:00:09:195844][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.91 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:212129][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:212356][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:217728][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.68 ms, Refine: 5.11 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:337355][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52745][11:00:09:338271][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52745][11:00:09:338299][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.52 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:352068][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:352170][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:357514][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.06 ms, Refine: 5.21 ms, Copy Results: 0.20 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:445668][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52745][11:00:09:446985][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52745][11:00:09:447015][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.89 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:462925][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:463151][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:470629][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.19 ms, Refine: 7.41 ms, Copy Results: 0.25 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:561242][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52745][11:00:09:563418][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52745][11:00:09:563448][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 1.78 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:578142][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:578260][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:582707][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.34 ms, Refine: 4.30 ms, Copy Results: 0.23 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:675121][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52745][11:00:09:676547][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52745][11:00:09:676579][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 1.00 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:698823][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:699056][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:705576][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 21.27 ms, Refine: 6.39 ms, Copy Results: 0.32 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:793299][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52745][11:00:09:794249][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52745][11:00:09:794278][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.55 ms
+[LIBGPUSPATIAL] [ 52745][11:00:09:806541][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:09:806649][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:09:810495][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 11.77 ms, Refine: 3.68 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52745][11:00:10:784811][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52745][11:00:10:785144][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52745][11:00:10:985687][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 104.34 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52745][11:00:10:985721][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:10:985736][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:10:995999][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52745][11:00:10:996023][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.35 ms, FinishBuilding: 2.92 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:110424][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52741][11:00:11:111378][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52741][11:00:11:111414][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.49 ms, RT: 0.77 ms, Copy res: 0.54 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:126294][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:126406][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:131640][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.12 ms, Refine: 5.02 ms, Copy Results: 0.28 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:217422][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52741][11:00:11:218912][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52741][11:00:11:218951][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.76 ms, Copy res: 1.10 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:233471][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:233728][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:239632][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.70 ms, Refine: 5.68 ms, Copy Results: 0.44 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:367598][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52741][11:00:11:368890][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52741][11:00:11:368920][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.79 ms, Copy res: 0.87 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:385222][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:385418][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:393883][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.73 ms, Refine: 8.26 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:492215][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52741][11:00:11:493415][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52741][11:00:11:493445][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:507941][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:508114][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:516126][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 12.54 ms, Refine: 7.82 ms, Copy Results: 0.31 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:612075][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52741][11:00:11:613281][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52741][11:00:11:613312][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.78 ms, Copy res: 0.79 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:628651][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:628814][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:634526][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.91 ms, Refine: 5.44 ms, Copy Results: 0.40 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:736578][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:11:738946][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52741][11:00:11:738997][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.95 ms, Copy res: 1.87 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:754883][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:755368][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:784113][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.30 ms, Refine: 28.62 ms, Copy Results: 0.53 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:912720][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52741][11:00:11:914043][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52741][11:00:11:914073][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.73 ms, Copy res: 0.92 ms
+[LIBGPUSPATIAL] [ 52741][11:00:11:931089][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:11:931311][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:11:936646][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.44 ms, Refine: 5.06 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:059402][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52741][11:00:12:060313][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52741][11:00:12:060344][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.76 ms, Copy res: 0.51 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:074753][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:12:074897][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:12:080402][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 14.10 ms, Refine: 5.38 ms, Copy Results: 0.21 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:175708][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52741][11:00:12:177016][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52741][11:00:12:177046][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.80 ms, Copy res: 0.88 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:194452][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:12:194670][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:12:202238][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.40 ms, Refine: 7.47 ms, Copy Results: 0.27 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:292754][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52741][11:00:12:293740][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52741][11:00:12:293766][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.50 ms, RT: 0.75 ms, Copy res: 0.56 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:311589][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:12:311728][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:12:316268][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 17.34 ms, Refine: 4.38 ms, Copy Results: 0.25 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:409671][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52741][11:00:12:411073][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52741][11:00:12:411103][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.97 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:429086][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:12:429331][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:12:435906][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 17.24 ms, Refine: 6.45 ms, Copy Results: 0.32 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:523421][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52741][11:00:12:524362][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52741][11:00:12:524392][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.76 ms, Copy res: 0.54 ms
+[LIBGPUSPATIAL] [ 52741][11:00:12:538412][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52741][11:00:12:538539][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52741][11:00:12:542534][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.67 ms, Refine: 3.83 ms, Copy Results: 0.24 ms
 Run # 3
 ┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
 │     plan_type     ┆                                     plan                                     │
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.5µs, output_bytes=8.0 B]                     │
+│                   ┆ utput_rows=1, elapsed_compute=1.59µs, output_bytes=8.0 B]                    │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=2.283405ms, output_bytes=8.0 B]                    │
+│                   ┆ t_rows=1, elapsed_compute=2.792418ms, output_bytes=8.0 B]                    │
 │                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 9.563µs, output_bytes=0.0 B]                                                 │
+│                   ┆ 9.927µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=687.590904ms, build_time=225.865311ms, join_time=1.004128697s, part │
+│                   ┆ ion_time=694.257307ms, build_time=226.527394ms, join_time=974.907542ms, part │
 │                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=110.198632ms, output_bytes=301.0 MB] │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=105.506052ms, output_bytes=301.0 MB] │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -659,12 +659,12 @@ Run # 3
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=610.456µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=238.839µs, time_elapsed_proc │
-│                   ┆ essing=106.053601ms, time_elapsed_scanning_total=924.888698ms, time_elapsed_ │
-│                   ┆ scanning_until_data=14.87961ms]                                              │
+│                   ┆ a_load_time=345.564µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=224.128µs, time_elapsed_proc │
+│                   ┆ essing=101.453685ms, time_elapsed_scanning_total=922.128624ms, time_elapsed_ │
+│                   ┆ scanning_until_data=14.761953ms]                                             │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=38.909228ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=40.426238ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -679,11 +679,11 @@ Run # 3
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.743742ms, page_i │
-│                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=489.969µs, time_elapsed_processing=326.891011ms, time_ │
-│                   ┆ elapsed_scanning_total=1.588032224s, time_elapsed_scanning_until_data=288.86 │
-│                   ┆ 0213ms]                                                                      │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.92358ms, page_in │
+│                   ┆ dex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns,  │
+│                   ┆ time_elapsed_opening=505.519µs, time_elapsed_processing=302.731558ms, time_e │
+│                   ┆ lapsed_scanning_total=1.537606837s, time_elapsed_scanning_until_data=279.791 │
+│                   ┆ 688ms]                                                                       │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
 Run # 4
@@ -692,21 +692,21 @@ Run # 4
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.7µs, output_bytes=8.0 B]                     │
+│                   ┆ utput_rows=1, elapsed_compute=1.8µs, output_bytes=8.0 B]                     │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=2.860888ms, output_bytes=8.0 B]                    │
-│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 8.389µs, output_bytes=0.0 B]                                                 │
+│                   ┆ t_rows=1, elapsed_compute=3.673503ms, output_bytes=8.0 B]                    │
+│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=2 │
+│                   ┆ 3.305µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=710.609239ms, build_time=210.283785ms, join_time=971.446058ms, part │
+│                   ┆ ion_time=694.995158ms, build_time=211.299733ms, join_time=1.006762167s, part │
 │                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=105.070778ms, output_bytes=301.0 MB] │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=105.218455ms, output_bytes=301.0 MB] │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -718,12 +718,12 @@ Run # 4
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=400.568µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=223.388µs, time_elapsed_proc │
-│                   ┆ essing=106.261968ms, time_elapsed_scanning_total=944.594117ms, time_elapsed_ │
-│                   ┆ scanning_until_data=15.767154ms]                                             │
+│                   ┆ a_load_time=364.657µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=212.568µs, time_elapsed_proc │
+│                   ┆ essing=106.356334ms, time_elapsed_scanning_total=937.867013ms, time_elapsed_ │
+│                   ┆ scanning_until_data=18.236717ms]                                             │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=26.860861ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=28.355782ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -738,113 +738,113 @@ Run # 4
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=2.387468ms, page_i │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=2.271784ms, page_i │
 │                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=516.449µs, time_elapsed_processing=321.066317ms, time_ │
-│                   ┆ elapsed_scanning_total=1.536461199s, time_elapsed_scanning_until_data=304.38 │
-│                   ┆ 4308ms]                                                                      │
+│                   ┆  time_elapsed_opening=511.87µs, time_elapsed_processing=316.533981ms, time_e │
+│                   ┆ lapsed_scanning_total=1.571796264s, time_elapsed_scanning_until_data=308.385 │
+│                   ┆ 477ms]                                                                       │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
-[LIBGPUSPATIAL] [ 12147][09:05:50:310343][info  ] Create RTSpatialIndex 0x7f486108e1a0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 12147][09:05:50:310658][info  ] Create RTSpatialRefiner 0x7f486384da80, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
-[LIBGPUSPATIAL] [ 12147][09:05:50:504467][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. PushBuild: 103.28 ms, FinishBuilding: 0.01 ms
-[LIBGPUSPATIAL] [ 12147][09:05:50:504498][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:50:504513][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), PushBuild, Rectangles 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:50:514723][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
-[LIBGPUSPATIAL] [ 12147][09:05:50:514748][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. PushBuild: 7.34 ms, FinishBuilding: 2.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:599823][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
-[LIBGPUSPATIAL] [ 12151][09:05:50:600744][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
-[LIBGPUSPATIAL] [ 12151][09:05:50:600775][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.75 ms, Copy res: 0.52 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:615853][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:50:615991][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:50:621178][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.81 ms, Refine: 5.01 ms, Copy Results: 0.27 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:723462][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
-[LIBGPUSPATIAL] [ 12151][09:05:50:724933][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
-[LIBGPUSPATIAL] [ 12151][09:05:50:724981][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 1.08 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:740937][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:50:741214][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:50:747098][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.31 ms, Refine: 5.70 ms, Copy Results: 0.42 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:888780][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
-[LIBGPUSPATIAL] [ 12151][09:05:50:890056][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
-[LIBGPUSPATIAL] [ 12151][09:05:50:890084][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.49 ms, RT: 0.78 ms, Copy res: 0.86 ms
-[LIBGPUSPATIAL] [ 12151][09:05:50:907287][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:50:907485][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:50:915687][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 16.56 ms, Refine: 8.00 ms, Copy Results: 0.36 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:015363][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
-[LIBGPUSPATIAL] [ 12151][09:05:51:016524][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
-[LIBGPUSPATIAL] [ 12151][09:05:51:016552][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.80 ms, Copy res: 0.73 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:030245][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:030395][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:038435][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.74 ms, Refine: 7.85 ms, Copy Results: 0.30 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:146927][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
-[LIBGPUSPATIAL] [ 12151][09:05:51:148117][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
-[LIBGPUSPATIAL] [ 12151][09:05:51:148147][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.48 ms, RT: 0.77 ms, Copy res: 0.75 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:163413][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:163565][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:169375][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 14.79 ms, Refine: 5.51 ms, Copy Results: 0.41 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:273948][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:51:276303][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
-[LIBGPUSPATIAL] [ 12151][09:05:51:276334][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.48 ms, RT: 0.94 ms, Copy res: 1.84 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:294705][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:295168][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:323256][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.82 ms, Refine: 28.05 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:443436][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
-[LIBGPUSPATIAL] [ 12151][09:05:51:444743][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
-[LIBGPUSPATIAL] [ 12151][09:05:51:444772][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.08 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.92 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:461015][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:461238][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:466600][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.68 ms, Refine: 5.09 ms, Copy Results: 0.45 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:583659][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
-[LIBGPUSPATIAL] [ 12151][09:05:51:584554][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
-[LIBGPUSPATIAL] [ 12151][09:05:51:584591][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.48 ms, RT: 0.74 ms, Copy res: 0.49 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:598233][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:598345][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:603656][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 12.92 ms, Refine: 5.18 ms, Copy Results: 0.20 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:693455][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
-[LIBGPUSPATIAL] [ 12151][09:05:51:694766][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
-[LIBGPUSPATIAL] [ 12151][09:05:51:694802][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.80 ms, Copy res: 0.88 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:710974][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:711173][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:718409][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.47 ms, Refine: 7.15 ms, Copy Results: 0.25 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:815733][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
-[LIBGPUSPATIAL] [ 12151][09:05:51:816695][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
-[LIBGPUSPATIAL] [ 12151][09:05:51:816724][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.57 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:830513][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:830632][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:835154][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 13.43 ms, Refine: 4.37 ms, Copy Results: 0.24 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:929481][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
-[LIBGPUSPATIAL] [ 12151][09:05:51:930884][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
-[LIBGPUSPATIAL] [ 12151][09:05:51:930913][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.79 ms, Copy res: 0.98 ms
-[LIBGPUSPATIAL] [ 12151][09:05:51:946897][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:51:947149][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:51:953666][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 15.41 ms, Refine: 6.40 ms, Copy Results: 0.33 ms
-[LIBGPUSPATIAL] [ 12151][09:05:52:039530][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
-[LIBGPUSPATIAL] [ 12151][09:05:52:040484][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
-[LIBGPUSPATIAL] [ 12151][09:05:52:040519][info  ] RTSpatialIndex 0x7f486108e1a0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.74 ms, Copy res: 0.55 ms
-[LIBGPUSPATIAL] [ 12151][09:05:52:052483][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
-[LIBGPUSPATIAL] [ 12151][09:05:52:052604][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 12151][09:05:52:056490][info  ] RTSpatialRefiner 0x7f486384da80 (Free 22005 MB), Profiling Results. Parse: 11.68 ms, Refine: 3.73 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52741][11:00:13:568603][info  ] Create RTSpatialIndex 0x78f8977f57b0, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 52741][11:00:13:568899][info  ] Create RTSpatialRefiner 0x78f8979d1de0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 52741][11:00:13:772870][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. PushBuild: 95.08 ms, FinishBuilding: 0.01 ms
+[LIBGPUSPATIAL] [ 52741][11:00:13:772904][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:13:772919][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), PushBuild, Rectangles 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:13:783152][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), FinishBuilding Index on Points, Total geoms: 6000000
+[LIBGPUSPATIAL] [ 52741][11:00:13:783177][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. PushBuild: 7.36 ms, FinishBuilding: 2.88 ms
+[LIBGPUSPATIAL] [ 52745][11:00:13:868642][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 325005
+[LIBGPUSPATIAL] [ 52745][11:00:13:869580][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 325005
+[LIBGPUSPATIAL] [ 52745][11:00:13:869612][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.76 ms, Copy res: 0.53 ms
+[LIBGPUSPATIAL] [ 52745][11:00:13:883698][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2689, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:13:883812][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 325005 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:13:889050][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.80 ms, Refine: 5.03 ms, Copy Results: 0.28 ms
+[LIBGPUSPATIAL] [ 52745][11:00:13:985735][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 6 MB, capacity 815600
+[LIBGPUSPATIAL] [ 52745][11:00:13:987229][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 815600
+[LIBGPUSPATIAL] [ 52745][11:00:13:987258][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 1.10 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:003150][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2431, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:003416][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 815600 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:009300][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.24 ms, Refine: 5.67 ms, Copy Results: 0.43 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:148876][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 617528
+[LIBGPUSPATIAL] [ 52745][11:00:14:150136][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 617528
+[LIBGPUSPATIAL] [ 52745][11:00:14:150161][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.51 ms, RT: 0.78 ms, Copy res: 0.84 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:168427][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2756, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:168629][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 617528 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:176684][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.63 ms, Refine: 7.85 ms, Copy Results: 0.36 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:277732][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 508540
+[LIBGPUSPATIAL] [ 52745][11:00:14:278912][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 508540
+[LIBGPUSPATIAL] [ 52745][11:00:14:278943][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.46 ms, RT: 0.81 ms, Copy res: 0.74 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:294599][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:294749][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 508540 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:302645][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.61 ms, Refine: 7.71 ms, Copy Results: 0.30 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:409009][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 3 MB, capacity 523852
+[LIBGPUSPATIAL] [ 52745][11:00:14:410195][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 523852
+[LIBGPUSPATIAL] [ 52745][11:00:14:410225][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.50 ms, RT: 0.77 ms, Copy res: 0.77 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:428716][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2832, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:428890][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 523852 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:434904][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 16.38 ms, Refine: 5.76 ms, Copy Results: 0.39 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:538736][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 11 MB, capacity 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:14:541046][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 1495810
+[LIBGPUSPATIAL] [ 52745][11:00:14:541076][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.94 ms, Copy res: 1.81 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:559846][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2372, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:560315][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 1495810 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:588276][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.90 ms, Refine: 27.94 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:723429][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 657192
+[LIBGPUSPATIAL] [ 52745][11:00:14:724748][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 657192
+[LIBGPUSPATIAL] [ 52745][11:00:14:724778][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.10 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.93 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:742020][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:742226][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 657192 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:747492][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.68 ms, Refine: 4.98 ms, Copy Results: 0.45 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:870744][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 291001
+[LIBGPUSPATIAL] [ 52745][11:00:14:871639][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 291001
+[LIBGPUSPATIAL] [ 52745][11:00:14:871669][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.48 ms, RT: 0.73 ms, Copy res: 0.50 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:885356][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2493, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:885460][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 291001 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:14:890906][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.06 ms, Refine: 5.31 ms, Copy Results: 0.20 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:978442][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 4 MB, capacity 633984
+[LIBGPUSPATIAL] [ 52745][11:00:14:979735][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 633984
+[LIBGPUSPATIAL] [ 52745][11:00:14:979763][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.81 ms, Copy res: 0.87 ms
+[LIBGPUSPATIAL] [ 52745][11:00:14:995885][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2783, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:14:996104][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 633984 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:15:003492][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.30 ms, Refine: 7.32 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:096449][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 372024
+[LIBGPUSPATIAL] [ 52745][11:00:15:097413][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12276, Results: 372024
+[LIBGPUSPATIAL] [ 52745][11:00:15:097443][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.46 ms, RT: 0.73 ms, Copy res: 0.57 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:111355][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12276, Loaded 2500, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:15:111472][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 372024 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:15:116036][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 13.41 ms, Refine: 4.40 ms, Copy Results: 0.24 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:219807][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 5 MB, capacity 730220
+[LIBGPUSPATIAL] [ 52745][11:00:15:221208][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 13740, Results: 730220
+[LIBGPUSPATIAL] [ 52745][11:00:15:221236][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.09 ms, Prepare: 0.47 ms, RT: 0.79 ms, Copy res: 0.98 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:239251][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 13740, Loaded 2791, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:15:239476][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 730220 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:15:245976][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 15.38 ms, Refine: 6.35 ms, Copy Results: 0.32 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:336929][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Allocate result buffer, memory consumption 2 MB, capacity 327037
+[LIBGPUSPATIAL] [ 52745][11:00:15:337870][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Probe Rectangles, Size: 12275, Results: 327037
+[LIBGPUSPATIAL] [ 52745][11:00:15:337899][info  ] RTSpatialIndex 0x78f8977f57b0 (Free 22005 MB), Profiling Results. Alloc: 0.11 ms, Prepare: 0.47 ms, RT: 0.73 ms, Copy res: 0.53 ms
+[LIBGPUSPATIAL] [ 52745][11:00:15:350054][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Loaded Geometries, ProbeArray 12275, Loaded 2420, Type MultiPolygon
+[LIBGPUSPATIAL] [ 52745][11:00:15:350163][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Evaluating 327037 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 52745][11:00:15:354027][info  ] RTSpatialRefiner 0x78f8979d1de0 (Free 22005 MB), Profiling Results. Parse: 11.71 ms, Refine: 3.70 ms, Copy Results: 0.24 ms
 Run # 5
 ┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
 │     plan_type     ┆                                     plan                                     │
 │        utf8       ┆                                     utf8                                     │
 ╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
 │ Plan with Metrics ┆ ProjectionExec: expr=[count(Int64(1))@0 as trip_count_in_county], metrics=[o │
-│                   ┆ utput_rows=1, elapsed_compute=1.6µs, output_bytes=8.0 B]                     │
+│                   ┆ utput_rows=1, elapsed_compute=1.911µs, output_bytes=8.0 B]                   │
 │                   ┆   AggregateExec: mode=Single, gby=[], aggr=[count(Int64(1))], metrics=[outpu │
-│                   ┆ t_rows=1, elapsed_compute=3.139344ms, output_bytes=8.0 B]                    │
-│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=1 │
-│                   ┆ 8.169µs, output_bytes=0.0 B]                                                 │
+│                   ┆ t_rows=1, elapsed_compute=3.476095ms, output_bytes=8.0 B]                    │
+│                   ┆     ProjectionExec: expr=[], metrics=[output_rows=3057046, elapsed_compute=2 │
+│                   ┆ 0.328µs, output_bytes=0.0 B]                                                 │
 │                   ┆       SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@0, geom@0), me │
 │                   ┆ trics=[output_rows=3057046, spill_count=0, spilled_bytes=0.0 B, spilled_rows │
 │                   ┆ =0, build_input_batches=60, build_input_rows=6000000, join_result_candidates │
 │                   ┆ =7297793, join_result_count=3057046, output_batches=48, probe_input_batches= │
 │                   ┆ 12, probe_input_rows=156095, build_input_total_size_bytes=900000480, build_m │
 │                   ┆ em_used=900000480, execution_mode=1, refiner_mem_used=0, build_input_collect │
-│                   ┆ ion_time=699.389583ms, build_time=204.493763ms, join_time=984.669122ms, part │
+│                   ┆ ion_time=741.178559ms, build_time=214.658326ms, join_time=1.004162526s, part │
 │                   ┆ ition_probe_time=1ns]                                                        │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@0) as geom], metric │
-│                   ┆ s=[output_rows=6000000, elapsed_compute=106.199052ms, output_bytes=301.0 MB] │
+│                   ┆ s=[output_rows=6000000, elapsed_compute=109.95928ms, output_bytes=301.0 MB]  │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, │
@@ -856,12 +856,12 @@ Run # 5
 │                   ┆ file_scan_errors=0, num_predicate_creation_errors=0, predicate_cache_inner_r │
 │                   ┆ ecords=0, predicate_cache_records=0, predicate_evaluation_errors=0, pushdown │
 │                   ┆ _rows_matched=0, pushdown_rows_pruned=0, bloom_filter_eval_time=4ns, metadat │
-│                   ┆ a_load_time=521.851µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
-│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=190.598µs, time_elapsed_proc │
-│                   ┆ essing=107.381769ms, time_elapsed_scanning_total=939.948033ms, time_elapsed_ │
-│                   ┆ scanning_until_data=17.431117ms]                                             │
+│                   ┆ a_load_time=636.467µs, page_index_eval_time=4ns, row_pushdown_eval_time=4ns, │
+│                   ┆  statistics_eval_time=4ns, time_elapsed_opening=249.5µs, time_elapsed_proces │
+│                   ┆ sing=110.979189ms, time_elapsed_scanning_total=986.523481ms, time_elapsed_sc │
+│                   ┆ anning_until_data=17.533697ms]                                               │
 │                   ┆         ProjectionExec: expr=[st_geomfromwkb(z_boundary@0) as geom], metrics │
-│                   ┆ =[output_rows=156095, elapsed_compute=27.555567ms, output_bytes=1337.3 MB]   │
+│                   ┆ =[output_rows=156095, elapsed_compute=28.287519ms, output_bytes=1337.3 MB]   │
 │                   ┆           DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialben │
 │                   ┆ ch/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedon │
 │                   ┆ a-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mn │
@@ -876,11 +876,11 @@ Run # 5
 │                   ┆ ytes_scanned=1383688762, file_open_errors=0, file_scan_errors=0, num_predica │
 │                   ┆ te_creation_errors=0, predicate_cache_inner_records=0, predicate_cache_recor │
 │                   ┆ ds=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushdown_rows_ │
-│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.515165ms, page_i │
+│                   ┆ pruned=0, bloom_filter_eval_time=12ns, metadata_load_time=1.634569ms, page_i │
 │                   ┆ ndex_eval_time=12ns, row_pushdown_eval_time=12ns, statistics_eval_time=12ns, │
-│                   ┆  time_elapsed_opening=305.752µs, time_elapsed_processing=336.010849ms, time_ │
-│                   ┆ elapsed_scanning_total=1.565965531s, time_elapsed_scanning_until_data=304.84 │
-│                   ┆ 8336ms]                                                                      │
+│                   ┆  time_elapsed_opening=312.533µs, time_elapsed_processing=342.169514ms, time_ │
+│                   ┆ elapsed_scanning_total=1.593809936s, time_elapsed_scanning_until_data=316.99 │
+│                   ┆ 8278ms]                                                                      │
 │                   ┆                                                                              │
 └───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
-Avg execution time (GPU mode): 2.694s
+Avg execution time (GPU mode): 2.708s
