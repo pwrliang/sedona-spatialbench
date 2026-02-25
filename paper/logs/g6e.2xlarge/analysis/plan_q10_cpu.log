@@ -1,0 +1,540 @@
+Testing Q10 Execution with CPU using External Tables
+No limits applied - using full dataset
+
+CPU mode enabled
+Target partitions set to: 1
+
+Creating external tables from Parquet files...
+External tables created successfully
+
+Creating geometry views...
+Views created successfully
+
+Execution plan for Q10 spatial join (CPU mode):
+┌───────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+│   plan_type   ┆                                       plan                                       │
+│      utf8     ┆                                       utf8                                       │
+╞═══════════════╪══════════════════════════════════════════════════════════════════════════════════╡
+│ logical_plan  ┆ Sort: avg_duration DESC NULLS LAST, z.z_zonekey ASC NULLS LAST                   │
+│               ┆   Projection: z.z_zonekey, z.z_name AS pickup_zone, avg(t.t_dropofftime - t.t_pi │
+│               ┆ ckuptime) AS avg_duration, avg(t.t_distance) AS avg_distance, count(t.t_tripkey) │
+│               ┆  AS num_trips                                                                    │
+│               ┆     Aggregate: groupBy=[[z.z_zonekey, z.z_name]], aggr=[[avg(t.t_dropofftime - t │
+│               ┆ .t_pickuptime), avg(t.t_distance), count(t.t_tripkey)]]                          │
+│               ┆       Projection: z.z_zonekey, z.z_name, t.t_tripkey, t.t_pickuptime, t.t_dropof │
+│               ┆ ftime, t.t_distance                                                              │
+│               ┆         SpatialJoin: join_type=Left, filter=st_within(t.geom, z.geom)            │
+│               ┆           SubqueryAlias: z                                                       │
+│               ┆             SubqueryAlias: zone_geom                                             │
+│               ┆               Projection: zone_table.z_zonekey, zone_table.z_name, st_geomfromwk │
+│               ┆ b(zone_table.z_boundary) AS geom                                                 │
+│               ┆                 TableScan: zone_table projection=[z_zonekey, z_name, z_boundary] │
+│               ┆           SubqueryAlias: t                                                       │
+│               ┆             SubqueryAlias: trip_geom                                             │
+│               ┆               Projection: trip_table.t_tripkey, trip_table.t_pickuptime, trip_ta │
+│               ┆ ble.t_dropofftime, trip_table.t_distance, st_geomfromwkb(trip_table.t_pickuploc) │
+│               ┆  AS geom                                                                         │
+│               ┆                 TableScan: trip_table projection=[t_tripkey, t_pickuptime, t_dro │
+│               ┆ pofftime, t_distance, t_pickuploc]                                               │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ physical_plan ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], pre │
+│               ┆ serve_partitioning=[false]                                                       │
+│               ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, avg(t │
+│               ┆ .t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3 as avg_d │
+│               ┆ istance, count(t.t_tripkey)@4 as num_trips]                                      │
+│               ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z_nam │
+│               ┆ e], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), count(t.t_tr │
+│               ┆ ipkey)]                                                                          │
+│               ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_trip │
+│               ┆ key@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t_dropoff │
+│               ┆ time, t_distance@3 as t_distance]                                                │
+│               ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), projecti │
+│               ┆ on=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zonekey@5, z_n │
+│               ┆ ame@6]                                                                           │
+│               ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as t_pi │
+│               ┆ ckuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance, st_geomf │
+│               ┆ romwkb(t_pickuploc@4) as geom]                                                   │
+│               ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialbench │
+│               ┆ /paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sedona-spat │
+│               ┆ ialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]]}, projectio │
+│               ┆ n=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickuploc], file_type=p │
+│               ┆ arquet                                                                           │
+│               ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name, st │
+│               ┆ _geomfromwkb(z_boundary@2) as geom]                                              │
+│               ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialbench │
+│               ┆ /paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sedona-spat │
+│               ┆ ialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784, mnt/data/sed │
+│               ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0..233867804, mnt/ │
+│               ┆ data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.4.parquet:0..2327464 │
+│               ┆ 25, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.5.parquet:0. │
+│               ┆ .235793511, ...]]}, projection=[z_zonekey, z_name, z_boundary], file_type=parque │
+│               ┆ t                                                                                │
+│               ┆                                                                                  │
+└───────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+
+Running Q10 query ...
+Query: Zone statistics for trips starting within each zone
+
+Warmup Run
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =76.071046ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=9.079µs, output_bytes=349.0 MB]                        │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=122.316103ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=7.469422ms, aggregation_time │
+│                   ┆ =53.22558ms, emitting_time=2.681052ms, time_calculating_group_ids=87.503142m │
+│                   ┆ s]                                                                           │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=673.303µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=640.726168ms, build_time=733.329167ms, join_t │
+│                   ┆ ime=4.873505204s, partition_probe_time=1ns]                                  │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=107.438599ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=298.334µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=178.716µs, time_elapsed_processing=253.499729ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.322139685s, time_elapsed_scanning_until_data=16 │
+│                   ┆ 8.061078ms]                                                                  │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=23.677016ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=1.812947ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=554.512µs, time_elapsed_processin │
+│                   ┆ g=313.883943ms, time_elapsed_scanning_total=7.634350614s, time_elapsed_scann │
+│                   ┆ ing_until_data=244.082796ms]                                                 │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Run # 1
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =35.923995ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=7.959µs, output_bytes=349.0 MB]                        │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=119.481588ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=5.606865ms, aggregation_time │
+│                   ┆ =49.157302ms, emitting_time=3.12615ms, time_calculating_group_ids=88.036317m │
+│                   ┆ s]                                                                           │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=650.702µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=639.9894ms, build_time=732.89695ms, join_time │
+│                   ┆ =4.860218022s, partition_probe_time=1ns]                                     │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=106.293044ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=540.873µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=217.798µs, time_elapsed_processing=246.848245ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.03744684s, time_elapsed_scanning_until_data=32. │
+│                   ┆ 693382ms]                                                                    │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=23.948888ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=2.070807ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=339.434µs, time_elapsed_processin │
+│                   ┆ g=446.507604ms, time_elapsed_scanning_total=7.700692571s, time_elapsed_scann │
+│                   ┆ ing_until_data=268.36331ms]                                                  │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Run # 2
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =62.266406ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=11.091µs, output_bytes=349.0 MB]                       │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=127.331728ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=5.549743ms, aggregation_time │
+│                   ┆ =65.06545ms, emitting_time=1.57279ms, time_calculating_group_ids=92.435836ms │
+│                   ┆ ]                                                                            │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=632.808µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=717.167841ms, build_time=735.234593ms, join_t │
+│                   ┆ ime=4.917478795s, partition_probe_time=1ns]                                  │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=106.426249ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=411.527µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=232.399µs, time_elapsed_processing=316.233724ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.202843336s, time_elapsed_scanning_until_data=40 │
+│                   ┆ .96789ms]                                                                    │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=23.921938ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=2.283054ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=326.372µs, time_elapsed_processin │
+│                   ┆ g=419.604292ms, time_elapsed_scanning_total=7.771270468s, time_elapsed_scann │
+│                   ┆ ing_until_data=252.085605ms]                                                 │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Run # 3
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =43.955465ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=8.331µs, output_bytes=349.0 MB]                        │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=118.869296ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=5.483766ms, aggregation_time │
+│                   ┆ =45.782092ms, emitting_time=1.599111ms, time_calculating_group_ids=90.075594 │
+│                   ┆ ms]                                                                          │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=628.862µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=738.718373ms, build_time=748.83621ms, join_ti │
+│                   ┆ me=4.960784777s, partition_probe_time=1ns]                                   │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=107.166034ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=948.218µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=414.885µs, time_elapsed_processing=334.197858ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.260833858s, time_elapsed_scanning_until_data=48 │
+│                   ┆ .385243ms]                                                                   │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=24.522062ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=1.746471ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=606.444µs, time_elapsed_processin │
+│                   ┆ g=507.246088ms, time_elapsed_scanning_total=7.896515304s, time_elapsed_scann │
+│                   ┆ ing_until_data=295.587199ms]                                                 │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Run # 4
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =35.371702ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=9.831µs, output_bytes=349.0 MB]                        │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=120.189117ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=5.78578ms, aggregation_time= │
+│                   ┆ 50.384874ms, emitting_time=1.683305ms, time_calculating_group_ids=88.913283m │
+│                   ┆ s]                                                                           │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=675.603µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=687.118981ms, build_time=742.367893ms, join_t │
+│                   ┆ ime=5.014708286s, partition_probe_time=1ns]                                  │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=106.973413ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=424.908µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=239.779µs, time_elapsed_processing=304.413733ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.154725803s, time_elapsed_scanning_until_data=32 │
+│                   ┆ .932523ms]                                                                   │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=24.259949ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=2.102007ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=325.313µs, time_elapsed_processin │
+│                   ┆ g=510.459561ms, time_elapsed_scanning_total=7.969060136s, time_elapsed_scann │
+│                   ┆ ing_until_data=279.748443ms]                                                 │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Run # 5
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│     plan_type     ┆                                     plan                                     │
+│        utf8       ┆                                     utf8                                     │
+╞═══════════════════╪══════════════════════════════════════════════════════════════════════════════╡
+│ Plan with Metrics ┆ SortExec: expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], │
+│                   ┆  preserve_partitioning=[false], metrics=[output_rows=156095, elapsed_compute │
+│                   ┆ =42.805228ms, output_bytes=94.0 MB, spill_count=0, spilled_bytes=0.0 B, spil │
+│                   ┆ led_rows=0, batches_split=0]                                                 │
+│                   ┆   ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, a │
+│                   ┆ vg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3  │
+│                   ┆ as avg_distance, count(t.t_tripkey)@4 as num_trips], metrics=[output_rows=15 │
+│                   ┆ 6095, elapsed_compute=9.811µs, output_bytes=349.0 MB]                        │
+│                   ┆     AggregateExec: mode=Single, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z │
+│                   ┆ _name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), coun │
+│                   ┆ t(t.t_tripkey)], metrics=[output_rows=156095, elapsed_compute=119.988014ms,  │
+│                   ┆ output_bytes=349.0 MB, spill_count=0, spilled_bytes=0.0 B, spilled_rows=0, p │
+│                   ┆ eak_mem_used=22584840, aggregate_arguments_time=5.641428ms, aggregation_time │
+│                   ┆ =42.526426ms, emitting_time=2.893191ms, time_calculating_group_ids=90.858716 │
+│                   ┆ ms]                                                                          │
+│                   ┆       ProjectionExec: expr=[z_zonekey@4 as z_zonekey, z_name@5 as z_name, t_ │
+│                   ┆ tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime, t_dropofftime@2 as t │
+│                   ┆ _dropofftime, t_distance@3 as t_distance], metrics=[output_rows=3186042, ela │
+│                   ┆ psed_compute=626.148µs, output_bytes=290.6 MB]                               │
+│                   ┆         SpatialJoinExec: join_type=Right, on=ST_within(geom@4, geom@2), proj │
+│                   ┆ ection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_distance@3, z_zoneke │
+│                   ┆ y@5, z_name@6], metrics=[output_rows=3186042, spill_count=0, spilled_bytes=0 │
+│                   ┆ .0 B, spilled_rows=0, build_input_batches=736, build_input_rows=6000000, joi │
+│                   ┆ n_result_candidates=7297793, join_result_count=3057046, output_batches=402,  │
+│                   ┆ probe_input_batches=24, probe_input_rows=156095, build_input_total_size_byte │
+│                   ┆ s=1140005888, build_mem_used=1616005936, execution_mode=2, refiner_mem_used= │
+│                   ┆ 0, build_input_collection_time=647.860265ms, build_time=732.835536ms, join_t │
+│                   ┆ ime=4.882363383s, partition_probe_time=1ns]                                  │
+│                   ┆           ProjectionExec: expr=[t_tripkey@0 as t_tripkey, t_pickuptime@1 as  │
+│                   ┆ t_pickuptime, t_dropofftime@2 as t_dropofftime, t_distance@3 as t_distance,  │
+│                   ┆ st_geomfromwkb(t_pickuploc@4) as geom], metrics=[output_rows=6000000, elapse │
+│                   ┆ d_compute=106.974704ms, output_bytes=850.9 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/trip/trip.1.parquet:0..182361649, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/trip/trip.2.parquet:0..182311531]] │
+│                   ┆ }, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickupl │
+│                   ┆ oc], file_type=parquet, metrics=[output_rows=6000000, elapsed_compute=1ns, o │
+│                   ┆ utput_bytes=850.9 MB, files_ranges_pruned_statistics=2 total → 2 matched, ro │
+│                   ┆ w_groups_pruned_statistics=4 total → 4 matched, row_groups_pruned_bloom_filt │
+│                   ┆ er=4 total → 4 matched, page_index_rows_pruned=0 total → 0 matched, batches_ │
+│                   ┆ split=0, bytes_scanned=221129798, file_open_errors=0, file_scan_errors=0, nu │
+│                   ┆ m_predicate_creation_errors=0, predicate_cache_inner_records=0, predicate_ca │
+│                   ┆ che_records=0, predicate_evaluation_errors=0, pushdown_rows_matched=0, pushd │
+│                   ┆ own_rows_pruned=0, bloom_filter_eval_time=4ns, metadata_load_time=854.755µs, │
+│                   ┆  page_index_eval_time=4ns, row_pushdown_eval_time=4ns, statistics_eval_time= │
+│                   ┆ 4ns, time_elapsed_opening=422.156µs, time_elapsed_processing=255.423586ms, t │
+│                   ┆ ime_elapsed_scanning_total=1.056353833s, time_elapsed_scanning_until_data=28 │
+│                   ┆ .050786ms]                                                                   │
+│                   ┆           ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as z_name │
+│                   ┆ , st_geomfromwkb(z_boundary@2) as geom], metrics=[output_rows=156095, elapse │
+│                   ┆ d_compute=24.564402ms, output_bytes=1445.0 MB]                               │
+│                   ┆             DataSourceExec: file_groups={1 group: [[mnt/data/sedona-spatialb │
+│                   ┆ ench/paper/benchmark-data-sf1/zone/zone.1.parquet:0..222212698, mnt/data/sed │
+│                   ┆ ona-spatialbench/paper/benchmark-data-sf1/zone/zone.2.parquet:0..237881784,  │
+│                   ┆ mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone.3.parquet:0. │
+│                   ┆ .233867804, mnt/data/sedona-spatialbench/paper/benchmark-data-sf1/zone/zone. │
+│                   ┆ 4.parquet:0..232746425, mnt/data/sedona-spatialbench/paper/benchmark-data-sf │
+│                   ┆ 1/zone/zone.5.parquet:0..235793511, ...]]}, projection=[z_zonekey, z_name, z │
+│                   ┆ _boundary], file_type=parquet, metrics=[output_rows=156095, elapsed_compute= │
+│                   ┆ 1ns, output_bytes=1445.0 MB, files_ranges_pruned_statistics=6 total → 6 matc │
+│                   ┆ hed, row_groups_pruned_statistics=12 total → 12 matched, row_groups_pruned_b │
+│                   ┆ loom_filter=12 total → 12 matched, page_index_rows_pruned=0 total → 0 matche │
+│                   ┆ d, batches_split=0, bytes_scanned=1387029129, file_open_errors=0, file_scan_ │
+│                   ┆ errors=0, num_predicate_creation_errors=0, predicate_cache_inner_records=0,  │
+│                   ┆ predicate_cache_records=0, predicate_evaluation_errors=0, pushdown_rows_matc │
+│                   ┆ hed=0, pushdown_rows_pruned=0, bloom_filter_eval_time=12ns, metadata_load_ti │
+│                   ┆ me=2.424568ms, page_index_eval_time=12ns, row_pushdown_eval_time=12ns, stati │
+│                   ┆ stics_eval_time=12ns, time_elapsed_opening=586.792µs, time_elapsed_processin │
+│                   ┆ g=546.319789ms, time_elapsed_scanning_total=7.898322183s, time_elapsed_scann │
+│                   ┆ ing_until_data=291.863682ms]                                                 │
+│                   ┆                                                                              │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+Avg execution time (CPU mode): 9.809s

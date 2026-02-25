@@ -91,7 +91,12 @@ def test_q2_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target_
     print("Running Q2 query ...")
     print("Query: Count trips in County using spatial join")
     print()
+    start_time = time.time()
     for i in range(repeat + 1):
+        if i == 0:
+            print("Warmup Run")
+        else:
+            print("Run #", i)
         if i == 1:  # Start counting after warmup
             start_time = time.time()
         result = ctx.sql("""EXPLAIN ANALYZE
