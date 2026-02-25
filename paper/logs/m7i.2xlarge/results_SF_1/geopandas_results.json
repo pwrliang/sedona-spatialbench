@@ -1,0 +1,58 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-02-25T07:35:23.083651+00:00",
+  "results": [
+    {
+      "engine": "geopandas",
+      "version": "1.1.2",
+      "scale_factor": 1.0,
+      "timestamp": "2026-02-25T07:22:38.393302+00:00",
+      "total_time": 125.81,
+      "results": [
+        {
+          "query": "q2",
+          "time_seconds": 12.45,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 15.67,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 16.9,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.05,
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 36.86,
+          "row_count": 156095,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 43.88,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}
