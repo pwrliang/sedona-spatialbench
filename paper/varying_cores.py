@@ -18,6 +18,42 @@ DEVICE_LABEL_MAP = {
 }
 
 
+def print_raw_data(all_data):
+    """Prints tabular raw data to the console for easy paper referencing."""
+    print("\n" + "=" * 70)
+    print(" RAW DATA FOR PAPER REFERENCE")
+    print("=" * 70)
+
+    for query in ['q2', 'q11']:
+        print(f"\n--- {query.upper()} Execution Times (seconds) ---")
+
+        # Determine all unique core counts across all devices
+        all_cores = sorted(list(set(core for data in all_data.values() for core in data['cores'])))
+
+        # Print Header
+        header = f"{'GPU':<10} | " + " | ".join([f"{c} Cores" for c in all_cores])
+        print(header)
+        print("-" * len(header))
+
+        # Print Rows
+        for device in sorted(all_data.keys()):
+            data = all_data[device]
+            row = f"{device:<10} | "
+
+            core_to_time = dict(zip(data['cores'], data[query]))
+
+            times = []
+            for c in all_cores:
+                if c in core_to_time:
+                    times.append(f"{core_to_time[c]:<7.3f}")
+                else:
+                    times.append(f"{'N/A':<7}")
+
+            row += " | ".join(times)
+            print(row)
+
+    print("\n" + "=" * 70 + "\n")
+
 def apply_professional_styling(ax, subfigure_title, use_log_y):
     """Helper function to apply consistent styling to axes."""
     # Styling Spines
@@ -117,6 +153,8 @@ def main():
     if not all_data:
         print("No valid data found to plot.")
         return
+    # --- Print raw data to console ---
+    print_raw_data(all_data)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7.5))
 
