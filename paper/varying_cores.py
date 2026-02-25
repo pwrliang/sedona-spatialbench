@@ -3,6 +3,7 @@ import json
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.ticker as ticker
 
 # --- Configuration for Research Quality Figures ---
 sns.set_theme(style="whitegrid", context="paper", font_scale=2.5)
@@ -17,7 +18,7 @@ DEVICE_LABEL_MAP = {
 }
 
 
-def apply_professional_styling(ax, subfigure_title):
+def apply_professional_styling(ax, subfigure_title, use_log_y):
     """Helper function to apply consistent styling to axes."""
     # Styling Spines
     for spine in ax.spines.values():
@@ -30,25 +31,37 @@ def apply_professional_styling(ax, subfigure_title):
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
     ax.xaxis.grid(True, linestyle='--', alpha=0.7)
 
+    # Log scale formatting if enabled
+    if use_log_y:
+        ax.set_yscale('log')
+        # Format the log ticks as normal numbers (e.g., 1, 2, 3) instead of 10^0
+        formatter = ticker.ScalarFormatter()
+        formatter.set_scientific(False)
+        ax.yaxis.set_major_formatter(formatter)
+        ax.yaxis.set_minor_formatter(formatter)
+
     # Label styling - appending the subfigure title beneath the x-axis label
     ax.set_xlabel(f'Number of Cores\n\n{subfigure_title}', fontweight='bold')
-    ax.set_ylabel('Execution Time (s)', fontweight='bold')
+    ax.set_ylabel('Execution Time (s)' + (' (Log Scale)' if use_log_y else ''), fontweight='bold')
 
     # Legend
     ax.legend(loc='best', frameon=False, fontsize=16, title="GPU")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot benchmark results for devices matching a prefix.")
+    parser = argparse.ArgumentParser(description="Plot benchmark results for devices matching prefixes.")
     parser.add_argument("root_dir", help="Root directory containing the device logs (e.g., 'logs/')")
-    parser.add_argument("--prefix", required=True, help="Prefix of the device directories to include (e.g., 'g')")
-    parser.add_argument("--output", default="benchmark_scaling_comparison.png", help="Output image filename")
+    parser.add_argument("--prefix", required=True,
+                        help="Comma-separated prefixes of the device directories to include (e.g., 'g6e,g6')")
+    parser.add_argument("--output", default="benchmark_scaling_comparison.pdf", help="Output image filename")
+    parser.add_argument("--log-y", action="store_true", help="Use a logarithmic scale for the Y-axis")
     args = parser.parse_args()
 
     max_cores = 8
     scale_factor = 1
     file_name = "sedonadb_gpu_results.json"
 
+    prefixes = tuple(p.strip() for p in args.prefix.split(','))
     all_data = {}
 
     if not os.path.exists(args.root_dir):
@@ -56,10 +69,10 @@ def main():
         return
 
     device_dirs = [d for d in os.listdir(args.root_dir)
-                   if d.startswith(args.prefix) and os.path.isdir(os.path.join(args.root_dir, d))]
+                   if d.startswith(prefixes) and os.path.isdir(os.path.join(args.root_dir, d))]
 
     if not device_dirs:
-        print(f"No directories found in '{args.root_dir}' starting with prefix '{args.prefix}'.")
+        print(f"No directories found in '{args.root_dir}' starting with prefixes '{args.prefix}'.")
         return
 
     print(f"Found devices matching '{args.prefix}': {', '.join(device_dirs)}")
@@ -95,10 +108,9 @@ def main():
                             q2_times.append(q2_time)
                             q11_times.append(q11_time)
                     except (json.JSONDecodeError, IndexError, AttributeError):
-                        pass  # Silently skip malformed files to keep output clean
+                        pass
 
         if cores:
-            # Map the raw directory name to the paper-ready GPU name
             display_name = DEVICE_LABEL_MAP.get(device_name, device_name)
             all_data[display_name] = {'cores': cores, 'q2': q2_times, 'q11': q11_times}
 
@@ -106,37 +118,49 @@ def main():
         print("No valid data found to plot.")
         return
 
-    # Increase figure size to accommodate the larger font_scale and bottom titles
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7.5))
 
-    # Use the Set2 color palette
     color_palette = sns.color_palette("Set2")
     markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'X']
+    linestyles = ['-', '--', '-.', ':']
 
     # Sort the display names so the legend is consistent
     for i, display_name in enumerate(sorted(all_data.keys())):
         data = all_data[display_name]
-        marker = markers[i % len(markers)]
+
+        # Cycle through properties
         color = color_palette[i % len(color_palette)]
+        marker = markers[i % len(markers)]
+        linestyle = linestyles[i % 2]  # Alternates between solid and dashed
+
+        # Make alternate markers hollow (white face) so overlaps show through
+        markerfacecolor = 'white' if i % 2 != 0 else color
+        markeredgecolor = color
+        markeredgewidth = 2.5 if i % 2 != 0 else 1
 
         # Left plot: Q2
-        ax1.plot(data['cores'], data['q2'], marker=marker, markersize=12, linewidth=3.5,
-                 linestyle='-', color=color, label=display_name)
+        ax1.plot(data['cores'], data['q2'],
+                 marker=marker, markersize=12, linewidth=3.5,
+                 linestyle=linestyle, color=color,
+                 markerfacecolor=markerfacecolor, markeredgecolor=markeredgecolor, markeredgewidth=markeredgewidth,
+                 label=display_name)
 
         # Right plot: Q11
-        ax2.plot(data['cores'], data['q11'], marker=marker, markersize=12, linewidth=3.5,
-                 linestyle='-', color=color, label=display_name)
+        ax2.plot(data['cores'], data['q11'],
+                 marker=marker, markersize=12, linewidth=3.5,
+                 linestyle=linestyle, color=color,
+                 markerfacecolor=markerfacecolor, markeredgecolor=markeredgecolor, markeredgewidth=markeredgewidth,
+                 label=display_name)
 
-    # Apply professional styling and bottom titles
-    apply_professional_styling(ax1, "(a) Q2: Execution Time vs CPU Cores")
+    # Apply styling
+    apply_professional_styling(ax1, "(a) Q2: Execution Time vs CPU Cores", args.log_y)
     ax1.set_xticks(range(1, max_cores + 1))
 
-    apply_professional_styling(ax2, "(b) Q11: Execution Time vs CPU Cores")
+    apply_professional_styling(ax2, "(b) Q11: Execution Time vs CPU Cores", args.log_y)
     ax2.set_xticks(range(1, max_cores + 1))
 
-    # Adjust layout and save
     plt.tight_layout()
-    plt.savefig(args.output, dpi=300)  # Ensure high DPI for paper submission
+    plt.savefig(args.output, dpi=300)
     print(f"\nPlot successfully saved as '{args.output}'")
 
 
