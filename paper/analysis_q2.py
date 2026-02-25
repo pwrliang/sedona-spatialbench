@@ -99,7 +99,7 @@ def test_q2_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target_
             print("Run #", i)
         if i == 1:  # Start counting after warmup
             start_time = time.time()
-        result = ctx.sql("""EXPLAIN ANALYZE
+        result = ctx.sql("""EXPLAIN ANALYZE FORMAT PGJSON
                          SELECT COUNT(*) AS trip_count_in_county
                          FROM zone_geom z
                                   JOIN trip_geom t
