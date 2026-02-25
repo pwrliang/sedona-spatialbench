@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Q10: Zone Statistics for Trips Starting Within Each Zone
-Tests GPU spatial join with LEFT JOIN to preserve all zones
-Analyzes trip patterns including duration, distance, and volume per zone
+Q11: Count Trips Crossing Between Different Zones
+Tests GPU spatial join with double zone join
+Identifies inter-zone travel patterns by counting trips that start and end in different zones
 """
 import sys
 import time
@@ -10,9 +10,9 @@ import argparse
 import sedonadb
 
 
-def test_q10_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target_partitions=None, zone_limit=None,
+def test_q11_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target_partitions=None, zone_limit=None,
                                   trip_limit=None):
-    print(f"Testing Q10 Execution with {mode.upper()} using External Tables")
+    print(f"Testing Q11 Execution with {mode.upper()} using External Tables")
     if zone_limit or trip_limit:
         print(f"Limits: zone={zone_limit if zone_limit else 'none'}, trip={trip_limit if trip_limit else 'none'}")
     else:
@@ -60,14 +60,14 @@ def test_q10_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target
 
     ctx.sql(f"""
         CREATE OR REPLACE VIEW zone_geom AS
-        SELECT z_zonekey, z_name, ST_GeomFromWKB(z_boundary) as geom
+        SELECT z_zonekey, ST_GeomFromWKB(z_boundary) as geom
         FROM zone_table
         {zone_limit_clause}
     """)
 
     ctx.sql(f"""
         CREATE OR REPLACE VIEW trip_geom AS
-        SELECT t_tripkey, t_pickuptime, t_dropofftime, t_distance, ST_GeomFromWKB(t_pickuploc) as geom
+        SELECT ST_GeomFromWKB(t_pickuploc) as pickup_geom, ST_GeomFromWKB(t_dropoffloc) as dropoff_geom
         FROM trip_table
         {trip_limit_clause}
     """)
@@ -76,30 +76,25 @@ def test_q10_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target
     print()
 
     # Show execution plan (should display GpuSpatialJoinExec when GPU is enabled)
-    print(f"Execution plan for Q10 spatial join ({mode.upper()} mode):")
+    print(f"Execution plan for Q11 spatial join ({mode.upper()} mode):")
     plan = ctx.sql("""
         EXPLAIN
-        SELECT
-            z.z_zonekey,
-            z.z_name AS pickup_zone,
-            AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
-            AVG(t.t_distance) AS avg_distance,
-            COUNT(t.t_tripkey) AS num_trips
+        SELECT COUNT(*) AS cross_zone_trip_count
         FROM
-            zone_geom z
-            LEFT JOIN trip_geom t
-            ON ST_Within(t.geom, z.geom)
-        GROUP BY z.z_zonekey, z.z_name
-        ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC
+            trip_geom t
+            JOIN zone_geom pickup_zone
+                ON ST_Within(t.pickup_geom, pickup_zone.geom)
+            JOIN zone_geom dropoff_zone
+                ON ST_Within(t.dropoff_geom, dropoff_zone.geom)
+        WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
     """)
     plan.show()
     print()
 
-    # Execute the Q10 query
-    print("Running Q10 query ...")
-    print("Query: Zone statistics for trips starting within each zone")
+    # Execute the Q11 query
+    print("Running Q11 query ...")
+    print("Query: Count trips crossing between different zones")
     print()
-
     start_time = time.time()
     for i in range(repeat + 1):
         if i == 0:
@@ -109,18 +104,16 @@ def test_q10_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target
         if i == 1:  # Start counting after warmup
             start_time = time.time()
         result = ctx.sql("""EXPLAIN ANALYZE
-                         SELECT z.z_zonekey,
-                                z.z_name                              AS pickup_zone,
-                                AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
-                                AVG(t.t_distance)                     AS avg_distance,
-                                COUNT(t.t_tripkey)                    AS num_trips
-                         FROM zone_geom z
-                                  LEFT JOIN trip_geom t
-                                            ON ST_Within(t.geom, z.geom)
-                         GROUP BY z.z_zonekey, z.z_name
-                         ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC
+                         SELECT COUNT(*) AS cross_zone_trip_count
+                         FROM trip_geom t
+                                  JOIN zone_geom pickup_zone
+                                       ON ST_Within(t.pickup_geom, pickup_zone.geom)
+                                  JOIN zone_geom dropoff_zone
+                                       ON ST_Within(t.dropoff_geom, dropoff_zone.geom)
+                         WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
                          """)
         result.show()
+
     elapsed = (time.time() - start_time) / repeat
 
     print(f"Avg execution time ({mode.upper()} mode): {elapsed:.3f}s")
@@ -129,7 +122,7 @@ def test_q10_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Q10 Spatial Join Performance Test')
+    parser = argparse.ArgumentParser(description='Q11 Spatial Join Performance Test')
     parser.add_argument('--data-prefix', '-d', type=str, default=None,
                         help='Prefix path of spatial-bench, e.g., "sf1" folder containing trip and zone (default: None)')
     parser.add_argument('mode', nargs='?', default='gpu', choices=['gpu', 'cpu'],
@@ -145,5 +138,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     sys.exit(
-        test_q10_with_external_tables(args.data_prefix, args.mode, args.repeat, args.partitions, args.zone_limit,
+        test_q11_with_external_tables(args.data_prefix, args.mode, args.repeat, args.partitions, args.zone_limit,
                                       args.trip_limit))
