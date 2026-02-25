@@ -97,12 +97,6 @@ def draw_subplot(ax, cpu_metrics, gpu_metrics, title):
 
         bottoms += vals
 
-    # Add the Total Time label at the very top of each stack
-    totals = [cpu_metrics['Total'], gpu_metrics['Total']]
-    for i, total in enumerate(totals):
-        ax.text(i, bottoms[i] + (max_total * 0.02), f'Total: {total:.2f}s',
-                ha='center', va='bottom', fontsize=14, fontweight='bold', color='black')
-
     # Apply professional styling to Spines
     for spine in ax.spines.values():
         spine.set_edgecolor('black')
