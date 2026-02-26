@@ -20,25 +20,25 @@ DEVICE_LABEL_MAP = {
 
 def print_raw_data(all_data):
     """Prints tabular raw data to the console for easy paper referencing."""
-    print("\n" + "=" * 70)
+    print("\n" + "=" * 75)
     print(" RAW DATA FOR PAPER REFERENCE")
-    print("=" * 70)
+    print("=" * 75)
 
     for query in ['q2', 'q11']:
         print(f"\n--- {query.upper()} Execution Times (seconds) ---")
 
-        # Determine all unique core counts across all devices
+        # Determine all unique core counts across all devices/engines
         all_cores = sorted(list(set(core for data in all_data.values() for core in data['cores'])))
 
-        # Print Header
-        header = f"{'GPU':<10} | " + " | ".join([f"{c} Cores" for c in all_cores])
+        # Print Header (Increased width to 15 to fit "CPU (Device)")
+        header = f"{'Engine/GPU':<15} | " + " | ".join([f"{c} Cores" for c in all_cores])
         print(header)
         print("-" * len(header))
 
         # Print Rows
         for device in sorted(all_data.keys()):
             data = all_data[device]
-            row = f"{device:<10} | "
+            row = f"{device:<15} | "
 
             core_to_time = dict(zip(data['cores'], data[query]))
 
@@ -52,36 +52,30 @@ def print_raw_data(all_data):
             row += " | ".join(times)
             print(row)
 
-    print("\n" + "=" * 70 + "\n")
+    print("\n" + "=" * 75 + "\n")
+
 
 def apply_professional_styling(ax, subfigure_title, use_log_y):
     """Helper function to apply consistent styling to axes."""
-    # Styling Spines
     for spine in ax.spines.values():
         spine.set_edgecolor('black')
         spine.set_linewidth(1.2)
         spine.set_visible(True)
 
-    # Grid styling
     ax.set_axisbelow(True)
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
     ax.xaxis.grid(True, linestyle='--', alpha=0.7)
 
-    # Log scale formatting if enabled
     if use_log_y:
         ax.set_yscale('log')
-        # Format the log ticks as normal numbers (e.g., 1, 2, 3) instead of 10^0
         formatter = ticker.ScalarFormatter()
         formatter.set_scientific(False)
         ax.yaxis.set_major_formatter(formatter)
         ax.yaxis.set_minor_formatter(formatter)
 
-    # Label styling - appending the subfigure title beneath the x-axis label
     ax.set_xlabel(f'Number of Cores\n\n{subfigure_title}', fontweight='bold')
     ax.set_ylabel('Execution Time (s)' + (' (Log Scale)' if use_log_y else ''), fontweight='bold')
-
-    # Legend
-    ax.legend(loc='best', frameon=False, fontsize=16, title="GPU")
+    ax.legend(loc='best', frameon=False, fontsize=16, title="Hardware")
 
 
 def main():
@@ -89,13 +83,18 @@ def main():
     parser.add_argument("root_dir", help="Root directory containing the device logs (e.g., 'logs/')")
     parser.add_argument("--prefix", required=True,
                         help="Comma-separated prefixes of the device directories to include (e.g., 'g6e,g6')")
-    parser.add_argument("--output", default="benchmark_scaling_comparison.pdf", help="Output image filename")
+    parser.add_argument("--output", default="benchmark_scaling_comparison.png", help="Output image filename")
     parser.add_argument("--log-y", action="store_true", help="Use a logarithmic scale for the Y-axis")
     args = parser.parse_args()
 
     max_cores = 8
     scale_factor = 1
-    file_name = "sedonadb_gpu_results.json"
+
+    # List of tuples: (filename, label_prefix)
+    target_files = [
+        ("sedonadb_gpu_results.json", ""),  # GPU execution
+        ("sedonadb_results.json", "CPU (")  # CPU execution
+    ]
 
     prefixes = tuple(p.strip() for p in args.prefix.split(','))
     all_data = {}
@@ -111,67 +110,68 @@ def main():
         print(f"No directories found in '{args.root_dir}' starting with prefixes '{args.prefix}'.")
         return
 
-    print(f"Found devices matching '{args.prefix}': {', '.join(device_dirs)}")
-
     # Parse the JSON files
     for device_name in device_dirs:
         log_dir = os.path.join(args.root_dir, device_name)
 
-        cores = []
-        q2_times = []
-        q11_times = []
+        for file_name, label_prefix in target_files:
+            cores = []
+            q2_times = []
+            q11_times = []
 
-        for core in range(1, max_cores + 1):
-            folder_name = f"results_SF_{scale_factor}_CPU_LIMIT_{core}"
-            file_path = os.path.join(log_dir, folder_name, file_name)
+            for core in range(1, max_cores + 1):
+                folder_name = f"results_SF_{scale_factor}_CPU_LIMIT_{core}"
+                file_path = os.path.join(log_dir, folder_name, file_name)
 
-            if os.path.exists(file_path):
-                with open(file_path, 'r') as f:
-                    try:
-                        data = json.load(f)
-                        query_results = data.get("results", [])[0].get("results", [])
+                if os.path.exists(file_path):
+                    with open(file_path, 'r') as f:
+                        try:
+                            data = json.load(f)
+                            query_results = data.get("results", [])[0].get("results", [])
 
-                        q2_time, q11_time = None, None
+                            q2_time, q11_time = None, None
 
-                        for q in query_results:
-                            if q.get("query") == "q2":
-                                q2_time = q.get("time_seconds")
-                            elif q.get("query") == "q11":
-                                q11_time = q.get("time_seconds")
+                            for q in query_results:
+                                if q.get("query") == "q2":
+                                    q2_time = q.get("time_seconds")
+                                elif q.get("query") == "q11":
+                                    q11_time = q.get("time_seconds")
 
-                        if q2_time is not None and q11_time is not None:
-                            cores.append(core)
-                            q2_times.append(q2_time)
-                            q11_times.append(q11_time)
-                    except (json.JSONDecodeError, IndexError, AttributeError):
-                        pass
+                            if q2_time is not None and q11_time is not None:
+                                cores.append(core)
+                                q2_times.append(q2_time)
+                                q11_times.append(q11_time)
+                        except (json.JSONDecodeError, IndexError, AttributeError):
+                            pass
 
-        if cores:
-            display_name = DEVICE_LABEL_MAP.get(device_name, device_name)
-            all_data[display_name] = {'cores': cores, 'q2': q2_times, 'q11': q11_times}
+            if cores:
+                base_name = DEVICE_LABEL_MAP.get(device_name, device_name)
+                # If it's a CPU run, wrap it in "CPU ()" to differentiate from the GPU on the same instance
+                display_name = f"{label_prefix}{base_name})" if label_prefix else base_name
+
+                all_data[display_name] = {'cores': cores, 'q2': q2_times, 'q11': q11_times}
 
     if not all_data:
         print("No valid data found to plot.")
         return
+
     # --- Print raw data to console ---
     print_raw_data(all_data)
 
+    # --- Plotting logic ---
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7.5))
 
     color_palette = sns.color_palette("Set2")
     markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'X']
     linestyles = ['-', '--', '-.', ':']
 
-    # Sort the display names so the legend is consistent
     for i, display_name in enumerate(sorted(all_data.keys())):
         data = all_data[display_name]
 
-        # Cycle through properties
         color = color_palette[i % len(color_palette)]
         marker = markers[i % len(markers)]
-        linestyle = linestyles[i % 2]  # Alternates between solid and dashed
+        linestyle = linestyles[i % 2]
 
-        # Make alternate markers hollow (white face) so overlaps show through
         markerfacecolor = 'white' if i % 2 != 0 else color
         markeredgecolor = color
         markeredgewidth = 2.5 if i % 2 != 0 else 1
@@ -190,7 +190,6 @@ def main():
                  markerfacecolor=markerfacecolor, markeredgecolor=markeredgecolor, markeredgewidth=markeredgewidth,
                  label=display_name)
 
-    # Apply styling
     apply_professional_styling(ax1, "(a) Q2: Execution Time vs CPU Cores", args.log_y)
     ax1.set_xticks(range(1, max_cores + 1))
 
@@ -199,7 +198,7 @@ def main():
 
     plt.tight_layout()
     plt.savefig(args.output, dpi=300)
-    print(f"\nPlot successfully saved as '{args.output}'")
+    print(f"Plot successfully saved as '{args.output}'")
 
 
 if __name__ == "__main__":
