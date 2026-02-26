@@ -1,0 +1,30 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-02-25T22:34:12.464113+00:00",
+  "results": [
+    {
+      "engine": "sedonadb",
+      "version": "0.3.0a165",
+      "scale_factor": 1.0,
+      "timestamp": "2026-02-25T22:33:06.852350+00:00",
+      "total_time": 10.76,
+      "results": [
+        {
+          "query": "q2",
+          "time_seconds": 0.52,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 10.24,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}
