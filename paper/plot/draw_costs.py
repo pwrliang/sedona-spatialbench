@@ -60,7 +60,11 @@ def generate_combined_cost_figure(csv_file):
     df_long['Query_Num'] = df_long['Query'].str.extract(r'(\d+)').astype(int)
     df_long = df_long.sort_values(by=['Query_Num', 'Device']).drop(columns=['Query_Num'])
 
+    print(df_long)
+
     df_total = df_long.groupby('Device')['Cost_USD'].sum().reset_index()
+
+    print("Total Cost", df_total)
 
     # --- PLOTTING SETUP ---
     sns.set_theme(style="whitegrid", context="paper", font_scale=1.5)
