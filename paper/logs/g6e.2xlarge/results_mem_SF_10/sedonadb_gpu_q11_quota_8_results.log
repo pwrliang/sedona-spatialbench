@@ -1,0 +1,383 @@
+Data paths:
+  building: benchmark-data-sf10/building
+  customer: benchmark-data-sf10/customer
+  driver: benchmark-data-sf10/driver
+  trip: benchmark-data-sf10/trip
+  vehicle: benchmark-data-sf10/vehicle
+  zone: benchmark-data-sf10/zone
+
+============================================================
+Running Sedonadb Gpu Benchmark
+============================================================
+Sedonadb Gpu version: 0.3.0
+  Running q11... [LIBGPUSPATIAL] [ 55122][17:30:38:095919][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
+[LIBGPUSPATIAL] [ 55122][17:30:38:252077][info  ] Init Memory Manager
+[LIBGPUSPATIAL] [ 55122][17:30:38:252251][info  ] Creating RMM pool memory resource with size 22511 MB
+[LIBGPUSPATIAL] [ 55122][17:30:38:297749][info  ] Initialize RTEngine
+[LIBGPUSPATIAL] [ 55122][17:30:38:425499][info  ] Create RTSpatialIndex 0x70501400a800, fast_build = 0, compact = 0, concurrency = 8
+[LIBGPUSPATIAL] [ 55122][17:30:38:428452][info  ] Create RTSpatialRefiner 0x705017d29fd0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 8, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.08
+[LIBGPUSPATIAL] [ 55122][17:30:38:948460][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1946 MB), FinishBuilding Refiner, Total geoms: 454710
+[LIBGPUSPATIAL] [ 55122][17:30:38:948505][info  ] RTSpatialIndex 0x70501400a800 (Used 1946 MB), PushBuild, Rectangles 454710
+[LIBGPUSPATIAL] [ 55122][17:30:38:950375][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), FinishBuilding Index on Rectangles, Total geoms: 454710
+[LIBGPUSPATIAL] [ 55121][17:30:39:223235][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646781
+[LIBGPUSPATIAL] [ 55121][17:30:39:237329][info  ] RTSpatialIndex 0x70501400a800 (Used 2053 MB), Probe Points, Size: 1333333, Results: 1646781
+[LIBGPUSPATIAL] [ 55123][17:30:39:245445][info  ] RTSpatialIndex 0x70501400a800 (Used 2061 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645951
+[LIBGPUSPATIAL] [ 55126][17:30:39:245660][info  ] RTSpatialIndex 0x70501400a800 (Used 2057 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647885
+[LIBGPUSPATIAL] [ 55122][17:30:39:247515][info  ] RTSpatialIndex 0x70501400a800 (Used 2063 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646756
+[LIBGPUSPATIAL] [ 55120][17:30:39:248482][info  ] RTSpatialIndex 0x70501400a800 (Used 2097 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646306
+[LIBGPUSPATIAL] [ 55124][17:30:39:249134][info  ] RTSpatialIndex 0x70501400a800 (Used 2103 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648934
+[LIBGPUSPATIAL] [ 55127][17:30:39:249465][info  ] RTSpatialIndex 0x70501400a800 (Used 2110 MB), Allocate result buffer, memory consumption 12 MB, capacity 1644220
+[LIBGPUSPATIAL] [ 55125][17:30:39:250700][info  ] RTSpatialIndex 0x70501400a800 (Used 2135 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645337
+[LIBGPUSPATIAL] [ 55122][17:30:39:257855][info  ] RTSpatialIndex 0x70501400a800 (Used 2164 MB), Probe Points, Size: 1333333, Results: 1646756
+[LIBGPUSPATIAL] [ 55123][17:30:39:262338][info  ] RTSpatialIndex 0x70501400a800 (Used 2154 MB), Probe Points, Size: 1333333, Results: 1645951
+[LIBGPUSPATIAL] [ 55126][17:30:39:263126][info  ] RTSpatialIndex 0x70501400a800 (Used 2154 MB), Probe Points, Size: 1333333, Results: 1647885
+[LIBGPUSPATIAL] [ 55120][17:30:39:263892][info  ] RTSpatialIndex 0x70501400a800 (Used 2154 MB), Probe Points, Size: 1333333, Results: 1646306
+[LIBGPUSPATIAL] [ 55124][17:30:39:265382][info  ] RTSpatialIndex 0x70501400a800 (Used 2154 MB), Probe Points, Size: 1333333, Results: 1648934
+[LIBGPUSPATIAL] [ 55127][17:30:39:265973][info  ] RTSpatialIndex 0x70501400a800 (Used 2154 MB), Probe Points, Size: 1333333, Results: 1644220
+[LIBGPUSPATIAL] [ 55125][17:30:39:266559][info  ] RTSpatialIndex 0x70501400a800 (Used 2141 MB), Probe Points, Size: 1333333, Results: 1645337
+[LIBGPUSPATIAL] [ 55121][17:30:39:273080][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840316, Type Point
+[LIBGPUSPATIAL] [ 55121][17:30:39:274960][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2030 MB), Evaluating 1646781 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55121][17:30:39:300698][info  ] Unique multi-polygons 27800, memory quota 188 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:39:342885][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2261 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840229, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:39:346075][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2225 MB), Loaded Geometries, ProbeArray 1333333, Loaded 838626, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:39:346652][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2232 MB), Evaluating 1644220 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:39:347838][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2232 MB), Evaluating 1646756 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:39:348505][info  ] Unique multi-polygons 27757, memory quota 186 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:39:352229][info  ] Unique multi-polygons 28027, memory quota 185 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55124][17:30:39:352869][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2429 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840623, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:39:359165][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2435 MB), Evaluating 1648934 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:39:360508][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2244 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839762, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:39:365220][info  ] Unique multi-polygons 27961, memory quota 186 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:39:383511][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2447 MB), Evaluating 1647885 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55125][17:30:39:384814][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2573 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839184, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:39:386090][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2579 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839769, Type Point
+[LIBGPUSPATIAL] [ 55125][17:30:39:391116][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2753 MB), Evaluating 1645337 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:39:391159][info  ] Unique multi-polygons 27972, memory quota 181 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55123][17:30:39:392445][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2756 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839464, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:39:392892][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2763 MB), Evaluating 1646306 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55123][17:30:39:393461][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2769 MB), Evaluating 1645951 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55125][17:30:39:393831][info  ] Unique multi-polygons 28133, memory quota 185 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:39:409081][info  ] Unique multi-polygons 27923, memory quota 186 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55123][17:30:39:413005][info  ] Unique multi-polygons 27959, memory quota 186 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55121][17:30:39:750431][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646511
+[LIBGPUSPATIAL] [ 55121][17:30:39:760006][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1646511
+[LIBGPUSPATIAL] [ 55121][17:30:39:796683][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839963, Type Point
+[LIBGPUSPATIAL] [ 55121][17:30:39:798116][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1646511 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55121][17:30:39:798980][info  ] Unique multi-polygons 27657, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:39:877295][info  ] RTSpatialIndex 0x70501400a800 (Used 1990 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647532
+[LIBGPUSPATIAL] [ 55127][17:30:39:877611][info  ] RTSpatialIndex 0x70501400a800 (Used 2002 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647944
+[LIBGPUSPATIAL] [ 55127][17:30:39:881055][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Probe Points, Size: 1333333, Results: 1647944
+[LIBGPUSPATIAL] [ 55122][17:30:39:882579][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1647532
+[LIBGPUSPATIAL] [ 55122][17:30:39:926643][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2041 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840142, Type Point
+[LIBGPUSPATIAL] [ 55122][17:30:39:927439][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Evaluating 1647532 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:39:928493][info  ] Unique multi-polygons 27830, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:39:929322][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2050 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839691, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:39:930115][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2056 MB), Evaluating 1647944 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55127][17:30:39:938169][info  ] Unique multi-polygons 28031, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:39:975491][info  ] RTSpatialIndex 0x70501400a800 (Used 2090 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646922
+[LIBGPUSPATIAL] [ 55124][17:30:39:989891][info  ] RTSpatialIndex 0x70501400a800 (Used 2161 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647217
+[LIBGPUSPATIAL] [ 55126][17:30:39:992932][info  ] RTSpatialIndex 0x70501400a800 (Used 2187 MB), Probe Points, Size: 1333333, Results: 1646922
+[LIBGPUSPATIAL] [ 55125][17:30:40:002669][info  ] RTSpatialIndex 0x70501400a800 (Used 2107 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648531
+[LIBGPUSPATIAL] [ 55124][17:30:40:008054][info  ] RTSpatialIndex 0x70501400a800 (Used 2054 MB), Probe Points, Size: 1333333, Results: 1647217
+[LIBGPUSPATIAL] [ 55120][17:30:40:008368][info  ] RTSpatialIndex 0x70501400a800 (Used 2054 MB), Allocate result buffer, memory consumption 12 MB, capacity 1650372
+[LIBGPUSPATIAL] [ 55123][17:30:40:008977][info  ] RTSpatialIndex 0x70501400a800 (Used 2031 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647434
+[LIBGPUSPATIAL] [ 55125][17:30:40:013935][info  ] RTSpatialIndex 0x70501400a800 (Used 2050 MB), Probe Points, Size: 1333333, Results: 1648531
+[LIBGPUSPATIAL] [ 55123][17:30:40:014733][info  ] RTSpatialIndex 0x70501400a800 (Used 2057 MB), Probe Points, Size: 1333333, Results: 1647434
+[LIBGPUSPATIAL] [ 55120][17:30:40:020395][info  ] RTSpatialIndex 0x70501400a800 (Used 2066 MB), Probe Points, Size: 1333333, Results: 1650372
+[LIBGPUSPATIAL] [ 55126][17:30:40:035583][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2097 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839419, Type Point
+[LIBGPUSPATIAL] [ 55126][17:30:40:036708][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2120 MB), Evaluating 1646922 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:40:037618][info  ] Unique multi-polygons 27979, memory quota 187 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55124][17:30:40:057640][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2140 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839385, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:40:058215][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2147 MB), Evaluating 1647217 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55124][17:30:40:058918][info  ] Unique multi-polygons 28033, memory quota 187 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:40:070600][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2164 MB), Loaded Geometries, ProbeArray 1333333, Loaded 841222, Type Point
+[LIBGPUSPATIAL] [ 55125][17:30:40:071791][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2170 MB), Evaluating 1648531 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55123][17:30:40:072574][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2176 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839980, Type Point
+[LIBGPUSPATIAL] [ 55123][17:30:40:073144][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2183 MB), Evaluating 1647434 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55123][17:30:40:077688][info  ] Unique multi-polygons 28078, memory quota 187 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:40:090796][info  ] Unique multi-polygons 27847, memory quota 187 MB, estimated BVH size 308 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:40:090806][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2137 MB), Loaded Geometries, ProbeArray 1333333, Loaded 841526, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:40:092192][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2147 MB), Evaluating 1650372 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:40:093376][info  ] Unique multi-polygons 28128, memory quota 186 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55121][17:30:40:265971][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1641655
+[LIBGPUSPATIAL] [ 55121][17:30:40:270761][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1641655
+[LIBGPUSPATIAL] [ 55121][17:30:40:309432][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 838064, Type Point
+[LIBGPUSPATIAL] [ 55121][17:30:40:310517][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1641655 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55121][17:30:40:311291][info  ] Unique multi-polygons 28017, memory quota 188 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:40:466514][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647602
+[LIBGPUSPATIAL] [ 55122][17:30:40:470219][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1647602
+[LIBGPUSPATIAL] [ 55127][17:30:40:478086][info  ] RTSpatialIndex 0x70501400a800 (Used 1998 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646504
+[LIBGPUSPATIAL] [ 55127][17:30:40:481188][info  ] RTSpatialIndex 0x70501400a800 (Used 2011 MB), Probe Points, Size: 1333333, Results: 1646504
+[LIBGPUSPATIAL] [ 55122][17:30:40:506931][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2041 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840413, Type Point
+[LIBGPUSPATIAL] [ 55122][17:30:40:507735][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Evaluating 1647602 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:40:512023][info  ] Unique multi-polygons 27940, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:40:531874][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2071 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839426, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:40:532604][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2087 MB), Evaluating 1646504 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:40:551323][info  ] RTSpatialIndex 0x70501400a800 (Used 2067 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646166
+[LIBGPUSPATIAL] [ 55127][17:30:40:552024][info  ] Unique multi-polygons 27627, memory quota 187 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:40:557229][info  ] RTSpatialIndex 0x70501400a800 (Used 2079 MB), Probe Points, Size: 1333333, Results: 1646166
+[LIBGPUSPATIAL] [ 55124][17:30:40:591160][info  ] RTSpatialIndex 0x70501400a800 (Used 2047 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648251
+[LIBGPUSPATIAL] [ 55123][17:30:40:596531][info  ] RTSpatialIndex 0x70501400a800 (Used 2062 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645557
+[LIBGPUSPATIAL] [ 55124][17:30:40:607304][info  ] RTSpatialIndex 0x70501400a800 (Used 2051 MB), Probe Points, Size: 1333333, Results: 1648251
+[LIBGPUSPATIAL] [ 55123][17:30:40:609060][info  ] RTSpatialIndex 0x70501400a800 (Used 2040 MB), Probe Points, Size: 1333333, Results: 1645557
+[LIBGPUSPATIAL] [ 55126][17:30:40:624799][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2051 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840209, Type Point
+[LIBGPUSPATIAL] [ 55126][17:30:40:625783][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2063 MB), Evaluating 1646166 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:40:626654][info  ] Unique multi-polygons 27841, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:40:627946][info  ] RTSpatialIndex 0x70501400a800 (Used 2073 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646116
+[LIBGPUSPATIAL] [ 55120][17:30:40:628467][info  ] RTSpatialIndex 0x70501400a800 (Used 2123 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648005
+[LIBGPUSPATIAL] [ 55125][17:30:40:640725][info  ] RTSpatialIndex 0x70501400a800 (Used 2273 MB), Probe Points, Size: 1333333, Results: 1646116
+[LIBGPUSPATIAL] [ 55124][17:30:40:646629][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2256 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840587, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:40:646844][info  ] RTSpatialIndex 0x70501400a800 (Used 2256 MB), Probe Points, Size: 1333333, Results: 1648005
+[LIBGPUSPATIAL] [ 55124][17:30:40:647528][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2233 MB), Evaluating 1648251 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55124][17:30:40:648688][info  ] Unique multi-polygons 27851, memory quota 186 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55123][17:30:40:655668][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2127 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839929, Type Point
+[LIBGPUSPATIAL] [ 55123][17:30:40:656361][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2133 MB), Evaluating 1645557 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55123][17:30:40:667205][info  ] Unique multi-polygons 27739, memory quota 187 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:40:682713][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2173 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839804, Type Point
+[LIBGPUSPATIAL] [ 55125][17:30:40:683356][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2179 MB), Evaluating 1646116 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55125][17:30:40:684136][info  ] Unique multi-polygons 27682, memory quota 187 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:40:702369][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2176 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840413, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:40:702998][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2183 MB), Evaluating 1648005 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:40:706611][info  ] Unique multi-polygons 27907, memory quota 187 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55121][17:30:40:803315][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646753
+[LIBGPUSPATIAL] [ 55121][17:30:40:806122][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1646753
+[LIBGPUSPATIAL] [ 55121][17:30:40:842674][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840101, Type Point
+[LIBGPUSPATIAL] [ 55121][17:30:40:843837][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1646753 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55121][17:30:40:844709][info  ] Unique multi-polygons 28203, memory quota 188 MB, estimated BVH size 307 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:41:047027][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646457
+[LIBGPUSPATIAL] [ 55122][17:30:41:049422][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1646457
+[LIBGPUSPATIAL] [ 55127][17:30:41:067605][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648385
+[LIBGPUSPATIAL] [ 55127][17:30:41:071779][info  ] RTSpatialIndex 0x70501400a800 (Used 2028 MB), Probe Points, Size: 1333333, Results: 1648385
+[LIBGPUSPATIAL] [ 55122][17:30:41:082260][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2024 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839697, Type Point
+[LIBGPUSPATIAL] [ 55122][17:30:41:083212][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2030 MB), Evaluating 1646457 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:41:083922][info  ] Unique multi-polygons 27930, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:41:116527][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840314, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:41:117144][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2053 MB), Evaluating 1648385 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55127][17:30:41:120209][info  ] Unique multi-polygons 28147, memory quota 188 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:41:182690][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1646862
+[LIBGPUSPATIAL] [ 55126][17:30:41:187666][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1646862
+[LIBGPUSPATIAL] [ 55123][17:30:41:201103][info  ] RTSpatialIndex 0x70501400a800 (Used 2009 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648121
+[LIBGPUSPATIAL] [ 55125][17:30:41:201424][info  ] RTSpatialIndex 0x70501400a800 (Used 2021 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645207
+[LIBGPUSPATIAL] [ 55123][17:30:41:204137][info  ] RTSpatialIndex 0x70501400a800 (Used 2034 MB), Probe Points, Size: 1333333, Results: 1648121
+[LIBGPUSPATIAL] [ 55125][17:30:41:206730][info  ] RTSpatialIndex 0x70501400a800 (Used 2031 MB), Probe Points, Size: 1333333, Results: 1645207
+[LIBGPUSPATIAL] [ 55124][17:30:41:213453][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645742
+[LIBGPUSPATIAL] [ 55124][17:30:41:216432][info  ] RTSpatialIndex 0x70501400a800 (Used 2034 MB), Probe Points, Size: 1333348, Results: 1645742
+[LIBGPUSPATIAL] [ 55126][17:30:41:247150][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2132 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839890, Type Point
+[LIBGPUSPATIAL] [ 55126][17:30:41:247756][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2139 MB), Evaluating 1646862 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:41:248515][info  ] Unique multi-polygons 27970, memory quota 187 MB, estimated BVH size 307 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:41:252639][info  ] RTSpatialIndex 0x70501400a800 (Used 2274 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645329
+[LIBGPUSPATIAL] [ 55123][17:30:41:260775][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2144 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840308, Type Point
+[LIBGPUSPATIAL] [ 55123][17:30:41:261339][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2150 MB), Evaluating 1648121 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:41:262943][info  ] RTSpatialIndex 0x70501400a800 (Used 2157 MB), Probe Points, Size: 1333333, Results: 1645329
+[LIBGPUSPATIAL] [ 55123][17:30:41:279707][info  ] Unique multi-polygons 28005, memory quota 187 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55124][17:30:41:282767][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2464 MB), Loaded Geometries, ProbeArray 1333348, Loaded 839633, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:41:283338][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2470 MB), Evaluating 1645742 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55124][17:30:41:285574][info  ] Unique multi-polygons 28150, memory quota 184 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:41:289957][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2315 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839661, Type Point
+[LIBGPUSPATIAL] [ 55125][17:30:41:290588][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2230 MB), Evaluating 1645207 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55125][17:30:41:310545][info  ] Unique multi-polygons 27762, memory quota 187 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:41:313052][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2281 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839287, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:41:313645][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2288 MB), Evaluating 1645329 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:41:314407][info  ] Unique multi-polygons 27625, memory quota 186 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55121][17:30:41:380132][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645749
+[LIBGPUSPATIAL] [ 55121][17:30:41:382595][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1645749
+[LIBGPUSPATIAL] [ 55121][17:30:41:415638][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839308, Type Point
+[LIBGPUSPATIAL] [ 55121][17:30:41:416241][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1645749 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55121][17:30:41:416966][info  ] Unique multi-polygons 27726, memory quota 188 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:41:814505][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647709
+[LIBGPUSPATIAL] [ 55122][17:30:41:819977][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1647709
+[LIBGPUSPATIAL] [ 55127][17:30:41:830334][info  ] RTSpatialIndex 0x70501400a800 (Used 1998 MB), Allocate result buffer, memory consumption 12 MB, capacity 1644146
+[LIBGPUSPATIAL] [ 55127][17:30:41:836075][info  ] RTSpatialIndex 0x70501400a800 (Used 2011 MB), Probe Points, Size: 1333333, Results: 1644146
+[LIBGPUSPATIAL] [ 55122][17:30:41:868176][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2041 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839838, Type Point
+[LIBGPUSPATIAL] [ 55122][17:30:41:868944][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Evaluating 1647709 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:41:869677][info  ] Unique multi-polygons 27796, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:41:891237][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2050 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839022, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:41:891811][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2056 MB), Evaluating 1644146 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55127][17:30:41:892790][info  ] Unique multi-polygons 27804, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55125][17:30:41:982948][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647960
+[LIBGPUSPATIAL] [ 55125][17:30:41:985285][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1647960
+[LIBGPUSPATIAL] [ 55120][17:30:42:011171][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Allocate result buffer, memory consumption 12 MB, capacity 1649333
+[LIBGPUSPATIAL] [ 55120][17:30:42:013530][info  ] RTSpatialIndex 0x70501400a800 (Used 2028 MB), Probe Points, Size: 1333333, Results: 1649333
+[LIBGPUSPATIAL] [ 55125][17:30:42:023990][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2024 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840128, Type Point
+[LIBGPUSPATIAL] [ 55125][17:30:42:024875][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2030 MB), Evaluating 1647960 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55125][17:30:42:025643][info  ] Unique multi-polygons 27836, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55124][17:30:42:056373][info  ] RTSpatialIndex 0x70501400a800 (Used 2060 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648837
+[LIBGPUSPATIAL] [ 55120][17:30:42:071547][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2080 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840768, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:42:072144][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2086 MB), Evaluating 1649333 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:42:072899][info  ] Unique multi-polygons 27774, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:42:076645][info  ] RTSpatialIndex 0x70501400a800 (Used 2098 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645024
+[LIBGPUSPATIAL] [ 55124][17:30:42:101753][info  ] RTSpatialIndex 0x70501400a800 (Used 2233 MB), Probe Points, Size: 1333333, Results: 1648837
+[LIBGPUSPATIAL] [ 55126][17:30:42:106733][info  ] RTSpatialIndex 0x70501400a800 (Used 2210 MB), Probe Points, Size: 1333333, Results: 1645024
+[LIBGPUSPATIAL] [ 55124][17:30:42:170342][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2041 MB), Loaded Geometries, ProbeArray 1333333, Loaded 841005, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:42:170926][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Evaluating 1648837 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55124][17:30:42:171649][info  ] Unique multi-polygons 27902, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:42:176545][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2050 MB), Loaded Geometries, ProbeArray 1333333, Loaded 838838, Type Point
+[LIBGPUSPATIAL] [ 55126][17:30:42:177135][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2056 MB), Evaluating 1645024 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:42:188598][info  ] Unique multi-polygons 27870, memory quota 188 MB, estimated BVH size 306 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55123][17:30:42:226192][info  ] RTSpatialIndex 0x70501400a800 (Used 2086 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645498
+[LIBGPUSPATIAL] [ 55123][17:30:42:238015][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1645498
+[LIBGPUSPATIAL] [ 55123][17:30:42:287265][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839691, Type Point
+[LIBGPUSPATIAL] [ 55123][17:30:42:287839][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1645498 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55123][17:30:42:288590][info  ] Unique multi-polygons 27910, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55122][17:30:42:642112][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1647674
+[LIBGPUSPATIAL] [ 55122][17:30:42:644631][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1647674
+[LIBGPUSPATIAL] [ 55127][17:30:42:687347][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Allocate result buffer, memory consumption 12 MB, capacity 1649779
+[LIBGPUSPATIAL] [ 55127][17:30:42:693576][info  ] RTSpatialIndex 0x70501400a800 (Used 2028 MB), Probe Points, Size: 1333333, Results: 1649779
+[LIBGPUSPATIAL] [ 55122][17:30:42:718984][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2041 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840257, Type Point
+[LIBGPUSPATIAL] [ 55122][17:30:42:719584][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2047 MB), Evaluating 1647674 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55122][17:30:42:720333][info  ] Unique multi-polygons 27834, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55127][17:30:42:737739][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2050 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840703, Type Point
+[LIBGPUSPATIAL] [ 55127][17:30:42:738374][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2057 MB), Evaluating 1649779 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55127][17:30:42:739151][info  ] Unique multi-polygons 27934, memory quota 188 MB, estimated BVH size 305 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55120][17:30:42:808166][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1644920
+[LIBGPUSPATIAL] [ 55120][17:30:42:810613][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1644920
+[LIBGPUSPATIAL] [ 55120][17:30:42:851154][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 838831, Type Point
+[LIBGPUSPATIAL] [ 55120][17:30:42:851917][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1644920 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55120][17:30:42:852647][info  ] Unique multi-polygons 28010, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55124][17:30:42:877025][info  ] RTSpatialIndex 0x70501400a800 (Used 2025 MB), Allocate result buffer, memory consumption 12 MB, capacity 1648825
+[LIBGPUSPATIAL] [ 55124][17:30:42:895689][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1648825
+[LIBGPUSPATIAL] [ 55124][17:30:42:956004][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 840818, Type Point
+[LIBGPUSPATIAL] [ 55124][17:30:42:956606][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1648825 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55124][17:30:42:957336][info  ] Unique multi-polygons 27734, memory quota 188 MB, estimated BVH size 304 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:43:126869][info  ] RTSpatialIndex 0x70501400a800 (Used 1980 MB), Allocate result buffer, memory consumption 12 MB, capacity 1645320
+[LIBGPUSPATIAL] [ 55126][17:30:43:133504][info  ] RTSpatialIndex 0x70501400a800 (Used 1992 MB), Probe Points, Size: 1333333, Results: 1645320
+[LIBGPUSPATIAL] [ 55126][17:30:43:183653][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2005 MB), Loaded Geometries, ProbeArray 1333333, Loaded 839240, Type Point
+[LIBGPUSPATIAL] [ 55126][17:30:43:184248][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2011 MB), Evaluating 1645320 Geometry Pairs with Predicate Contains
+[LIBGPUSPATIAL] [ 55126][17:30:43:185117][info  ] Unique multi-polygons 27848, memory quota 188 MB, estimated BVH size 303 MB, n_batches 2
+[LIBGPUSPATIAL] [ 55126][17:30:43:467062][info  ] Create RTSpatialIndex 0x70501400a800, fast_build = 0, compact = 0, concurrency = 8
+[LIBGPUSPATIAL] [ 55126][17:30:43:467425][info  ] Create RTSpatialRefiner 0x705017d29fd0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 8, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.08
+[LIBGPUSPATIAL] [ 55126][17:30:44:595805][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 623 MB), FinishBuilding Refiner, Total geoms: 31140888
+[LIBGPUSPATIAL] [ 55126][17:30:44:595848][info  ] RTSpatialIndex 0x70501400a800 (Used 623 MB), PushBuild, Rectangles 31140888
+[LIBGPUSPATIAL] [ 55126][17:30:44:653510][info  ] RTSpatialIndex 0x70501400a800 (Used 1698 MB), FinishBuilding Index on Points, Total geoms: 31140888
+[LIBGPUSPATIAL] [ 55120][17:30:44:813505][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 31 MB, capacity 4163912
+[LIBGPUSPATIAL] [ 55122][17:30:44:832293][info  ] RTSpatialIndex 0x70501400a800 (Used 1643 MB), Allocate result buffer, memory consumption 49 MB, capacity 6462532
+[LIBGPUSPATIAL] [ 55127][17:30:44:836741][info  ] RTSpatialIndex 0x70501400a800 (Used 1694 MB), Allocate result buffer, memory consumption 23 MB, capacity 3035989
+[LIBGPUSPATIAL] [ 55120][17:30:44:838198][info  ] RTSpatialIndex 0x70501400a800 (Used 1705 MB), Probe Rectangles, Size: 27195, Results: 4163912
+[LIBGPUSPATIAL] [ 55126][17:30:44:844118][info  ] RTSpatialIndex 0x70501400a800 (Used 1686 MB), Allocate result buffer, memory consumption 20 MB, capacity 2733975
+[LIBGPUSPATIAL] [ 55127][17:30:44:854226][info  ] RTSpatialIndex 0x70501400a800 (Used 1724 MB), Probe Rectangles, Size: 27195, Results: 3035989
+[LIBGPUSPATIAL] [ 55124][17:30:44:854231][info  ] RTSpatialIndex 0x70501400a800 (Used 1724 MB), Allocate result buffer, memory consumption 30 MB, capacity 4037327
+[LIBGPUSPATIAL] [ 55121][17:30:44:858663][info  ] RTSpatialIndex 0x70501400a800 (Used 1767 MB), Allocate result buffer, memory consumption 14 MB, capacity 1900022
+[LIBGPUSPATIAL] [ 55126][17:30:44:860111][info  ] RTSpatialIndex 0x70501400a800 (Used 1859 MB), Probe Rectangles, Size: 27195, Results: 2733975
+[LIBGPUSPATIAL] [ 55125][17:30:44:863491][info  ] RTSpatialIndex 0x70501400a800 (Used 1842 MB), Allocate result buffer, memory consumption 22 MB, capacity 2951453
+[LIBGPUSPATIAL] [ 55122][17:30:44:870148][info  ] RTSpatialIndex 0x70501400a800 (Used 1842 MB), Probe Rectangles, Size: 27195, Results: 6462532
+[LIBGPUSPATIAL] [ 55124][17:30:44:875050][info  ] RTSpatialIndex 0x70501400a800 (Used 1875 MB), Probe Rectangles, Size: 27195, Results: 4037327
+[LIBGPUSPATIAL] [ 55121][17:30:44:875717][info  ] RTSpatialIndex 0x70501400a800 (Used 1875 MB), Probe Rectangles, Size: 27195, Results: 1900022
+[LIBGPUSPATIAL] [ 55123][17:30:44:890219][info  ] RTSpatialIndex 0x70501400a800 (Used 2015 MB), Allocate result buffer, memory consumption 34 MB, capacity 4457108
+[LIBGPUSPATIAL] [ 55120][17:30:44:903331][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2136 MB), Loaded Geometries, ProbeArray 27195, Loaded 5820, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55120][17:30:44:909420][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2380 MB), Evaluating 4163912 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55120][17:30:44:910298][info  ] Unique multi-polygons 5820, memory quota 185 MB, estimated BVH size 26 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55125][17:30:44:924346][info  ] RTSpatialIndex 0x70501400a800 (Used 2405 MB), Probe Rectangles, Size: 27195, Results: 2951453
+[LIBGPUSPATIAL] [ 55126][17:30:44:954400][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2443 MB), Loaded Geometries, ProbeArray 27195, Loaded 5816, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55127][17:30:44:954400][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2443 MB), Loaded Geometries, ProbeArray 27195, Loaded 5737, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55123][17:30:44:965688][info  ] RTSpatialIndex 0x70501400a800 (Used 2443 MB), Probe Rectangles, Size: 27195, Results: 4457108
+[LIBGPUSPATIAL] [ 55126][17:30:44:970121][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2476 MB), Evaluating 2733975 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55127][17:30:44:971079][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2476 MB), Evaluating 3035989 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55121][17:30:44:975592][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2474 MB), Loaded Geometries, ProbeArray 27195, Loaded 5825, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55122][17:30:44:975759][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2481 MB), Loaded Geometries, ProbeArray 27195, Loaded 5789, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55121][17:30:44:976635][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2484 MB), Evaluating 1900022 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55127][17:30:44:976999][info  ] Unique multi-polygons 5737, memory quota 184 MB, estimated BVH size 28 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55126][17:30:44:977011][info  ] Unique multi-polygons 5816, memory quota 184 MB, estimated BVH size 27 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55121][17:30:44:977303][info  ] Unique multi-polygons 5825, memory quota 183 MB, estimated BVH size 29 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55122][17:30:44:983160][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2551 MB), Evaluating 6462532 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55122][17:30:44:984876][info  ] Unique multi-polygons 5789, memory quota 183 MB, estimated BVH size 27 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55124][17:30:44:990284][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2584 MB), Loaded Geometries, ProbeArray 27195, Loaded 5706, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55124][17:30:44:994646][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2718 MB), Evaluating 4037327 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55124][17:30:44:998065][info  ] Unique multi-polygons 5706, memory quota 181 MB, estimated BVH size 27 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55125][17:30:45:004746][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2725 MB), Loaded Geometries, ProbeArray 27195, Loaded 5871, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55125][17:30:45:006322][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2737 MB), Evaluating 2951453 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55125][17:30:45:006836][info  ] Unique multi-polygons 5871, memory quota 181 MB, estimated BVH size 27 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55123][17:30:45:062267][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2622 MB), Loaded Geometries, ProbeArray 27195, Loaded 5779, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55123][17:30:45:077760][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2480 MB), Evaluating 4457108 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55123][17:30:45:089345][info  ] Unique multi-polygons 5779, memory quota 186 MB, estimated BVH size 26 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55121][17:30:45:557320][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 20 MB, capacity 2720871
+[LIBGPUSPATIAL] [ 55121][17:30:45:566168][info  ] RTSpatialIndex 0x70501400a800 (Used 1631 MB), Probe Rectangles, Size: 27195, Results: 2720871
+[LIBGPUSPATIAL] [ 55121][17:30:45:597581][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1730 MB), Loaded Geometries, ProbeArray 27195, Loaded 5770, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55121][17:30:45:598740][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1741 MB), Evaluating 2720871 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55121][17:30:45:599457][info  ] Unique multi-polygons 5770, memory quota 191 MB, estimated BVH size 28 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55125][17:30:45:649892][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 25 MB, capacity 3380882
+[LIBGPUSPATIAL] [ 55125][17:30:45:657788][info  ] RTSpatialIndex 0x70501400a800 (Used 1636 MB), Probe Rectangles, Size: 27195, Results: 3380882
+[LIBGPUSPATIAL] [ 55124][17:30:45:678908][info  ] RTSpatialIndex 0x70501400a800 (Used 1740 MB), Allocate result buffer, memory consumption 22 MB, capacity 2934184
+[LIBGPUSPATIAL] [ 55124][17:30:45:685231][info  ] RTSpatialIndex 0x70501400a800 (Used 1762 MB), Probe Rectangles, Size: 27195, Results: 2934184
+[LIBGPUSPATIAL] [ 55125][17:30:45:700509][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1856 MB), Loaded Geometries, ProbeArray 27195, Loaded 5670, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55125][17:30:45:705524][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1869 MB), Evaluating 3380882 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55125][17:30:45:706225][info  ] Unique multi-polygons 5670, memory quota 190 MB, estimated BVH size 28 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55124][17:30:45:719520][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1869 MB), Loaded Geometries, ProbeArray 27195, Loaded 5742, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55124][17:30:45:720610][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1880 MB), Evaluating 2934184 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55124][17:30:45:721326][info  ] Unique multi-polygons 5742, memory quota 190 MB, estimated BVH size 26 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55127][17:30:45:755707][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 90 MB, capacity 11889359
+[LIBGPUSPATIAL] [ 55127][17:30:45:819149][info  ] RTSpatialIndex 0x70501400a800 (Used 1701 MB), Probe Rectangles, Size: 27195, Results: 11889359
+[LIBGPUSPATIAL] [ 55126][17:30:45:852770][info  ] RTSpatialIndex 0x70501400a800 (Used 1833 MB), Allocate result buffer, memory consumption 28 MB, capacity 3707555
+[LIBGPUSPATIAL] [ 55126][17:30:45:864250][info  ] RTSpatialIndex 0x70501400a800 (Used 1861 MB), Probe Rectangles, Size: 27195, Results: 3707555
+[LIBGPUSPATIAL] [ 55127][17:30:45:872016][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1957 MB), Loaded Geometries, ProbeArray 27195, Loaded 5663, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55127][17:30:45:876015][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2003 MB), Evaluating 11889359 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55127][17:30:45:881575][info  ] Unique multi-polygons 5663, memory quota 188 MB, estimated BVH size 27 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55126][17:30:46:014333][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2003 MB), Loaded Geometries, ProbeArray 27195, Loaded 5702, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55126][17:30:46:015752][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 2017 MB), Evaluating 3707555 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55126][17:30:46:016530][info  ] Unique multi-polygons 5702, memory quota 188 MB, estimated BVH size 26 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55121][17:30:46:088664][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 6 MB, capacity 814503
+[LIBGPUSPATIAL] [ 55121][17:30:46:092549][info  ] RTSpatialIndex 0x70501400a800 (Used 1615 MB), Probe Rectangles, Size: 2449, Results: 814503
+[LIBGPUSPATIAL] [ 55121][17:30:46:100755][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1628 MB), Loaded Geometries, ProbeArray 2449, Loaded 540, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55121][17:30:46:101093][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1631 MB), Evaluating 814503 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55121][17:30:46:101422][info  ] Unique multi-polygons 540, memory quota 192 MB, estimated BVH size 3 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55123][17:30:46:145337][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 24 MB, capacity 3221977
+[LIBGPUSPATIAL] [ 55123][17:30:46:151969][info  ] RTSpatialIndex 0x70501400a800 (Used 1634 MB), Probe Rectangles, Size: 27195, Results: 3221977
+[LIBGPUSPATIAL] [ 55123][17:30:46:186756][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1735 MB), Loaded Geometries, ProbeArray 27195, Loaded 5853, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55123][17:30:46:187951][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1748 MB), Evaluating 3221977 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55123][17:30:46:188761][info  ] Unique multi-polygons 5853, memory quota 191 MB, estimated BVH size 28 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55120][17:30:46:214716][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 28 MB, capacity 3723830
+[LIBGPUSPATIAL] [ 55120][17:30:46:231574][info  ] RTSpatialIndex 0x70501400a800 (Used 1638 MB), Probe Rectangles, Size: 27195, Results: 3723830
+[LIBGPUSPATIAL] [ 55120][17:30:46:266792][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1741 MB), Loaded Geometries, ProbeArray 27195, Loaded 5834, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55120][17:30:46:268000][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1755 MB), Evaluating 3723830 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55120][17:30:46:268622][info  ] Unique multi-polygons 5834, memory quota 191 MB, estimated BVH size 28 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55124][17:30:46:345520][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 72722
+[LIBGPUSPATIAL] [ 55124][17:30:46:347152][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2448, Results: 72722
+[LIBGPUSPATIAL] [ 55124][17:30:46:350832][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1616 MB), Loaded Geometries, ProbeArray 2448, Loaded 527, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55124][17:30:46:350913][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1616 MB), Evaluating 72722 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55124][17:30:46:351156][info  ] Unique multi-polygons 527, memory quota 192 MB, estimated BVH size 2 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55125][17:30:46:370335][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 86567
+[LIBGPUSPATIAL] [ 55125][17:30:46:372783][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2448, Results: 86567
+[LIBGPUSPATIAL] [ 55125][17:30:46:377340][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1620 MB), Loaded Geometries, ProbeArray 2448, Loaded 510, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55125][17:30:46:377424][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1621 MB), Evaluating 86567 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55125][17:30:46:377689][info  ] Unique multi-polygons 510, memory quota 192 MB, estimated BVH size 3 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55122][17:30:46:489631][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Allocate result buffer, memory consumption 27 MB, capacity 3593158
+[LIBGPUSPATIAL] [ 55122][17:30:46:501099][info  ] RTSpatialIndex 0x70501400a800 (Used 1637 MB), Probe Rectangles, Size: 27195, Results: 3593158
+[LIBGPUSPATIAL] [ 55122][17:30:46:521484][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1743 MB), Loaded Geometries, ProbeArray 27195, Loaded 5700, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55122][17:30:46:522632][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1757 MB), Evaluating 3593158 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55122][17:30:46:523264][info  ] Unique multi-polygons 5700, memory quota 191 MB, estimated BVH size 29 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55126][17:30:46:812925][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 77342
+[LIBGPUSPATIAL] [ 55126][17:30:46:814630][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2449, Results: 77342
+[LIBGPUSPATIAL] [ 55126][17:30:46:817070][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1617 MB), Loaded Geometries, ProbeArray 2449, Loaded 512, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55126][17:30:46:817145][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1617 MB), Evaluating 77342 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55126][17:30:46:817342][info  ] Unique multi-polygons 512, memory quota 192 MB, estimated BVH size 2 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55123][17:30:46:993857][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 114178
+[LIBGPUSPATIAL] [ 55123][17:30:46:995667][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2449, Results: 114178
+[LIBGPUSPATIAL] [ 55123][17:30:46:998018][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1618 MB), Loaded Geometries, ProbeArray 2449, Loaded 543, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55123][17:30:46:998106][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1618 MB), Evaluating 114178 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55123][17:30:46:998348][info  ] Unique multi-polygons 543, memory quota 192 MB, estimated BVH size 2 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55122][17:30:47:042585][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 62652
+[LIBGPUSPATIAL] [ 55122][17:30:47:044185][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2449, Results: 62652
+[LIBGPUSPATIAL] [ 55122][17:30:47:046023][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1616 MB), Loaded Geometries, ProbeArray 2449, Loaded 507, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55122][17:30:47:046109][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1617 MB), Evaluating 62652 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55122][17:30:47:046312][info  ] Unique multi-polygons 507, memory quota 192 MB, estimated BVH size 2 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55120][17:30:47:081485][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 1 MB, capacity 242572
+[LIBGPUSPATIAL] [ 55120][17:30:47:083473][info  ] RTSpatialIndex 0x70501400a800 (Used 1610 MB), Probe Rectangles, Size: 2449, Results: 242572
+[LIBGPUSPATIAL] [ 55120][17:30:47:086244][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1621 MB), Loaded Geometries, ProbeArray 2449, Loaded 529, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55120][17:30:47:086357][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1622 MB), Evaluating 242572 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55120][17:30:47:086758][info  ] Unique multi-polygons 529, memory quota 192 MB, estimated BVH size 3 MB, n_batches 1
+[LIBGPUSPATIAL] [ 55127][17:30:47:415635][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Allocate result buffer, memory consumption 0 MB, capacity 109608
+[LIBGPUSPATIAL] [ 55127][17:30:47:417648][info  ] RTSpatialIndex 0x70501400a800 (Used 1609 MB), Probe Rectangles, Size: 2449, Results: 109608
+[LIBGPUSPATIAL] [ 55127][17:30:47:419485][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1617 MB), Loaded Geometries, ProbeArray 2449, Loaded 487, Type MultiPolygon
+[LIBGPUSPATIAL] [ 55127][17:30:47:419561][info  ] RTSpatialRefiner 0x705017d29fd0 (Used 1617 MB), Evaluating 109608 Geometry Pairs with Predicate Within
+[LIBGPUSPATIAL] [ 55127][17:30:47:419849][info  ] Unique multi-polygons 487, memory quota 192 MB, estimated BVH size 2 MB, n_batches 1
+10.4s (1 rows)
+
+================================================================================
+BENCHMARK SUMMARY
+================================================================================
+Query     sedonadb_gpu   
+-------------------------
+q11       10.40s         
+-------------------------
+Total     10.40s         
+
+Results saved to results_mem_SF_10/sedonadb_gpu_q11_results.json
