@@ -1,0 +1,23 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-02-27T00:54:54.895104+00:00",
+  "results": [
+    {
+      "engine": "sedonadb_gpu",
+      "version": "0.3.0",
+      "scale_factor": 1.0,
+      "timestamp": "2026-02-27T00:54:53.078203+00:00",
+      "total_time": 1.61,
+      "results": [
+        {
+          "query": "q4",
+          "time_seconds": 1.61,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

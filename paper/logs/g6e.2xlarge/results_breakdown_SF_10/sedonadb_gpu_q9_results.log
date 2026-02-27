@@ -1,0 +1,42 @@
+Data paths:
+  building: benchmark-data-sf10/building
+  customer: benchmark-data-sf10/customer
+  driver: benchmark-data-sf10/driver
+  trip: benchmark-data-sf10/trip
+  vehicle: benchmark-data-sf10/vehicle
+  zone: benchmark-data-sf10/zone
+
+============================================================
+Running Sedonadb Gpu Benchmark
+============================================================
+Sedonadb Gpu version: 0.3.0
+  Running q9... [LIBGPUSPATIAL] [ 16593][19:55:31:556540][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
+[LIBGPUSPATIAL] [ 16593][19:55:31:729301][info  ] Init Memory Manager
+[LIBGPUSPATIAL] [ 16593][19:55:31:729482][info  ] Creating RMM pool memory resource with size 22511 MB
+[LIBGPUSPATIAL] [ 16593][19:55:31:772027][info  ] Initialize RTEngine
+[LIBGPUSPATIAL] [ 16593][19:55:31:894844][info  ] Create RTSpatialIndex 0x2f490370, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 16593][19:55:31:897547][info  ] Create RTSpatialRefiner 0x2b952e50, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.80
+[LIBGPUSPATIAL] [ 16593][19:55:31:908104][info  ] RTSpatialRefiner 0x2b952e50 (Free 22005 MB), Profiling Results. PushBuild: 4.73 ms, FinishBuilding: 4.18 ms
+[LIBGPUSPATIAL] [ 16593][19:55:31:908135][info  ] RTSpatialRefiner 0x2b952e50 (Free 22005 MB), FinishBuilding Refiner, Total geoms: 86438
+[LIBGPUSPATIAL] [ 16593][19:55:31:908152][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), PushBuild, Rectangles 86438
+[LIBGPUSPATIAL] [ 16593][19:55:31:908929][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), FinishBuilding Index on Rectangles, Total geoms: 86438
+[LIBGPUSPATIAL] [ 16593][19:55:31:908951][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), Profiling Results. PushBuild: 0.17 ms, FinishBuilding: 0.61 ms
+[LIBGPUSPATIAL] [ 16593][19:55:31:935802][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), Allocate result buffer, memory consumption 0 MB, capacity 87894
+[LIBGPUSPATIAL] [ 16593][19:55:31:936424][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), Probe Rectangles, Size: 86438, Results: 87894
+[LIBGPUSPATIAL] [ 16593][19:55:31:936451][info  ] RTSpatialIndex 0x2f490370 (Free 22005 MB), Profiling Results. Alloc: 0.07 ms, Prepare: 0.75 ms, RT: 4.45 ms, Copy res: 0.43 ms
+[LIBGPUSPATIAL] [ 16593][19:55:31:941273][info  ] RTSpatialRefiner 0x2b952e50 (Free 22005 MB), Loaded Geometries, ProbeArray 86438, Loaded 86438, Type Polygon
+[LIBGPUSPATIAL] [ 16593][19:55:31:941326][info  ] RTSpatialRefiner 0x2b952e50 (Free 22005 MB), Evaluating 87894 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 16593][19:55:31:941341][warning] Evaluate Polygon-Polygon relate with the GPU, which is not well-tested and the performance may be poor.
+[LIBGPUSPATIAL] [ 16593][19:55:31:971968][info  ] RTSpatialRefiner 0x2b952e50 (Free 22005 MB), Profiling Results. Parse: 4.72 ms, Refine: 30.33 ms, Copy Results: 0.31 ms
+0.73s (675 rows)
+
+================================================================================
+BENCHMARK SUMMARY
+================================================================================
+Query     sedonadb_gpu   
+-------------------------
+q9        0.73s          
+-------------------------
+Total     0.73s         
+
+Results saved to results_breakdown_SF_10/sedonadb_gpu_q9_results.json
