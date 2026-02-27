@@ -10,29 +10,29 @@ Data paths:
 Running Sedonadb Gpu Benchmark
 ============================================================
 Sedonadb Gpu version: 0.3.0
-  Running q9... [LIBGPUSPATIAL] [ 55018][17:30:29:999211][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
-[LIBGPUSPATIAL] [ 55018][17:30:30:175270][info  ] Init Memory Manager
-[LIBGPUSPATIAL] [ 55018][17:30:30:175453][info  ] Creating RMM pool memory resource with size 22511 MB
-[LIBGPUSPATIAL] [ 55018][17:30:30:220510][info  ] Initialize RTEngine
-[LIBGPUSPATIAL] [ 55018][17:30:30:351683][info  ] Create RTSpatialIndex 0x72539400a7d0, fast_build = 0, compact = 0, concurrency = 1
-[LIBGPUSPATIAL] [ 55018][17:30:30:354444][info  ] Create RTSpatialRefiner 0x725397ce8060, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.08
-[LIBGPUSPATIAL] [ 55018][17:30:30:365398][info  ] RTSpatialRefiner 0x725397ce8060 (Used 10 MB), FinishBuilding Refiner, Total geoms: 86438
-[LIBGPUSPATIAL] [ 55018][17:30:30:365439][info  ] RTSpatialIndex 0x72539400a7d0 (Used 10 MB), PushBuild, Rectangles 86438
-[LIBGPUSPATIAL] [ 55018][17:30:30:366222][info  ] RTSpatialIndex 0x72539400a7d0 (Used 17 MB), FinishBuilding Index on Rectangles, Total geoms: 86438
-[LIBGPUSPATIAL] [ 55016][17:30:30:393910][info  ] RTSpatialIndex 0x72539400a7d0 (Used 19 MB), Allocate result buffer, memory consumption 0 MB, capacity 87894
-[LIBGPUSPATIAL] [ 55016][17:30:30:394533][info  ] RTSpatialIndex 0x72539400a7d0 (Used 20 MB), Probe Rectangles, Size: 86438, Results: 87894
-[LIBGPUSPATIAL] [ 55016][17:30:30:399516][info  ] RTSpatialRefiner 0x725397ce8060 (Used 27 MB), Loaded Geometries, ProbeArray 86438, Loaded 86438, Type Polygon
-[LIBGPUSPATIAL] [ 55016][17:30:30:399590][info  ] RTSpatialRefiner 0x725397ce8060 (Used 27 MB), Evaluating 87894 Geometry Pairs with Predicate Intersects
-[LIBGPUSPATIAL] [ 55016][17:30:30:399609][warning] Evaluate Polygon-Polygon relate with the GPU, which is not well-tested and the performance may be poor.
-0.76s (675 rows)
+  Running q9... [LIBGPUSPATIAL] [ 13311][18:00:44:318574][info  ] Initializing GpuSpatialRuntime on device 0, PTX root /mnt/data/sedona-db/target/release/build/sedona-libgpuspatial-49614f8a870dbe66/out/share/gpuspatial/shaders
+[LIBGPUSPATIAL] [ 13311][18:00:44:491856][info  ] Init Memory Manager
+[LIBGPUSPATIAL] [ 13311][18:00:44:492031][info  ] Creating RMM pool memory resource with size 22511 MB
+[LIBGPUSPATIAL] [ 13311][18:00:44:536542][info  ] Initialize RTEngine
+[LIBGPUSPATIAL] [ 13311][18:00:44:661248][info  ] Create RTSpatialIndex 0x7670dc00a800, fast_build = 0, compact = 0, concurrency = 1
+[LIBGPUSPATIAL] [ 13311][18:00:44:664023][info  ] Create RTSpatialRefiner 0x7670dfabfeb0, fast_build = 0, compact = 0, parsing_threads = 8, concurrency = 1, pipeline_batches = 1, wkb_parser_memory_quota = 0.80, relate_engine_memory_quota = 0.08
+[LIBGPUSPATIAL] [ 13311][18:00:44:675066][info  ] RTSpatialRefiner 0x7670dfabfeb0 (Used 10 MB), FinishBuilding Refiner, Total geoms: 86438
+[LIBGPUSPATIAL] [ 13311][18:00:44:675105][info  ] RTSpatialIndex 0x7670dc00a800 (Used 10 MB), PushBuild, Rectangles 86438
+[LIBGPUSPATIAL] [ 13311][18:00:44:675876][info  ] RTSpatialIndex 0x7670dc00a800 (Used 17 MB), FinishBuilding Index on Rectangles, Total geoms: 86438
+[LIBGPUSPATIAL] [ 13310][18:00:44:703348][info  ] RTSpatialIndex 0x7670dc00a800 (Used 19 MB), Allocate result buffer, memory consumption 0 MB, capacity 87894
+[LIBGPUSPATIAL] [ 13310][18:00:44:703985][info  ] RTSpatialIndex 0x7670dc00a800 (Used 20 MB), Probe Rectangles, Size: 86438, Results: 87894
+[LIBGPUSPATIAL] [ 13310][18:00:44:708293][info  ] RTSpatialRefiner 0x7670dfabfeb0 (Used 27 MB), Loaded Geometries, ProbeArray 86438, Loaded 86438, Type Polygon
+[LIBGPUSPATIAL] [ 13310][18:00:44:708359][info  ] RTSpatialRefiner 0x7670dfabfeb0 (Used 27 MB), Evaluating 87894 Geometry Pairs with Predicate Intersects
+[LIBGPUSPATIAL] [ 13310][18:00:44:708374][warning] Evaluate Polygon-Polygon relate with the GPU, which is not well-tested and the performance may be poor.
+0.74s (675 rows)
 
 ================================================================================
 BENCHMARK SUMMARY
 ================================================================================
 Query     sedonadb_gpu   
 -------------------------
-q9        0.76s          
+q9        0.74s          
 -------------------------
-Total     0.76s         
+Total     0.74s         
 
 Results saved to results_mem_SF_10/sedonadb_gpu_q9_results.json
