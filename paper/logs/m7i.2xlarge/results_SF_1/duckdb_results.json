@@ -4,7 +4,7 @@
   "generated_at": "2026-02-25T07:22:38.297713+00:00",
   "results": [
     {
-      "engine": "duckdb",
+      "engine": "DuckDB",
       "version": "1.4.4",
       "scale_factor": 1.0,
       "timestamp": "2026-02-25T00:54:51.398230+00:00",

@@ -181,8 +181,7 @@ def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str
         num_queries = max(num_queries, df_sf10['Query'].nunique())
 
     # Width calculation: Single plot width * 2 roughly
-    single_width = max(4.5, num_queries * 1.25)
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(single_width * 2, 6))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 5))
 
     # Draw Subplots
     draw_subplot(ax1, df_sf1, log_scale, "(a) Scale Factor: 1")
@@ -208,8 +207,8 @@ def main():
     q_filter = [q.strip().lower() for q in args.queries.split(',')] if args.queries else None
 
     base_path = Path(args.results_dir)
-    sf1_path = base_path / "sf1"
-    sf10_path = base_path / "sf10"
+    sf1_path = base_path / "results_SF_1"
+    sf10_path = base_path / "results_SF_10"
 
     print(f"Loading SF1 results from: {sf1_path}")
     df_sf1 = load_data_to_df(sf1_path, q_filter)

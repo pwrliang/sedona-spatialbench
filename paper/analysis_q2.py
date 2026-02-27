@@ -22,6 +22,7 @@ def test_q2_with_external_tables(data_prefix=None, mode='gpu', repeat=5, target_
     ctx = sedonadb.connect()
     if mode.lower() == 'gpu':
         ctx.sql("SET sedona.spatial_join.gpu.enable = true")
+        ctx.sql("SET sedona.spatial_join.gpu.relate_engine_memory_quota = 1")
         ctx.sql("SET datafusion.execution.batch_size = 100000")
         print("GPU mode enabled")
     else:
