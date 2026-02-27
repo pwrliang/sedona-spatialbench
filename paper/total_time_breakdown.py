@@ -6,13 +6,14 @@ import numpy as np
 import argparse
 import sys
 
-# --- Configuration for Research Quality Figures ---
-sns.set_theme(style="whitegrid", context="paper", font_scale=2.0)
+# --- Configuration for Single-Column Research Figures ---
+# Font scale adjusted to balance side-by-side charts in a single column
+sns.set_theme(style="whitegrid", context="paper", font_scale=1.3)
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['savefig.bbox'] = 'tight'
 
 # Define a list of hatch patterns for high readability
-HATCH_PATTERNS = ['/', '\\', '.', 'o', '*', 'x']
+HATCH_PATTERNS = ['//', '\\\\', '..', 'o', '*', 'x']
 
 
 def parse_time(time_str, unit):
@@ -38,7 +39,7 @@ def extract_metrics(file_path):
     run_blocks = re.split(r'Run # \d+', log_text)
     target_text = run_blocks[-1] if len(run_blocks) > 1 else log_text
 
-    # 2. CLEAN TEXT: Powerfully strip all newlines, spaces, and table borders (│ and ┆)
+    # 2. CLEAN TEXT: Powerfully strip all newlines, spaces, and table borders
     clean_text = re.sub(r'[│┆\n\s]+', '', target_text)
 
     # 3. Extract metrics using the stitched text
@@ -66,7 +67,7 @@ def extract_metrics(file_path):
     }
 
 
-def draw_subplot(ax, cpu_metrics, gpu_metrics, title):
+def draw_subplot(ax, cpu_metrics, gpu_metrics, title, show_ylabel=True):
     """Helper function to draw a stacked bar chart on a specific axes."""
     components = ['Zone Table Scan', 'Trip Table Scan', 'Spatial Join']
     cpu_vals = [cpu_metrics[comp] for comp in components]
@@ -91,9 +92,9 @@ def draw_subplot(ax, cpu_metrics, gpu_metrics, title):
             h = bar.get_height()
             if h > (max_total * 0.05):  # Only show text if segment is > 5% of max total
                 ax.text(bar.get_x() + bar.get_width() / 2, bar.get_y() + h / 2,
-                        f'{h:.2f}s', ha='center', va='center', fontsize=12,
+                        f'{h:.2f}s', ha='center', va='center', fontsize=10,
                         color='black', fontweight='bold',
-                        bbox=dict(facecolor='white', alpha=0.6, edgecolor='none', pad=1))
+                        bbox=dict(facecolor='white', alpha=0.7, edgecolor='none', pad=0.3))
 
         bottoms += vals
 
@@ -103,18 +104,20 @@ def draw_subplot(ax, cpu_metrics, gpu_metrics, title):
         spine.set_linewidth(1.2)
         spine.set_visible(True)
 
-    # Formatting axes and grid
-    ax.set_ylabel("Execution Time (s)", fontweight='bold')
-    ax.set_xlabel(title, fontweight='bold', fontsize=16, labelpad=15)
-    ax.yaxis.grid(True, linestyle='--', alpha=0.7)
-    ax.set_axisbelow(True)
+    # Formatting axes and setting the title at the bottom
+    if show_ylabel:
+        ax.set_ylabel("Execution Time (s)", fontweight='bold')
 
-    # Legend formatting
-    ax.legend(loc='upper right', frameon=False, fontsize=12)
+    ax.set_xlabel(title, fontweight='bold', labelpad=10)
+
+    # Grid Control: Keep horizontal (y), explicitly disable vertical (x)
+    ax.yaxis.grid(True, linestyle='--', alpha=0.7)
+    ax.xaxis.grid(False)
+    ax.set_axisbelow(True)
 
 
 def generate_dual_chart(args):
-    """Generates a side-by-side figure with two subplots."""
+    """Generates a side-by-side figure suitable for a single column."""
     print(f"Loading data for {args.q1_name}...")
     cpu1 = extract_metrics(args.q1_cpu)
     gpu1 = extract_metrics(args.q1_gpu)
@@ -123,16 +126,27 @@ def generate_dual_chart(args):
     cpu2 = extract_metrics(args.q2_cpu)
     gpu2 = extract_metrics(args.q2_gpu)
 
-    # Set up figure with two subplots side-by-side
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
+    # 1x2 layout, shared Y-axis to save horizontal space.
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4.0), sharey=True)
 
-    draw_subplot(ax1, cpu1, gpu1, f"(a) {args.q1_name}: CPU vs GPU Execution")
-    draw_subplot(ax2, cpu2, gpu2, f"(b) {args.q2_name}: CPU vs GPU Execution")
+    # Draw subplots. Only show the Y-axis label on the left-most chart.
+    draw_subplot(ax1, cpu1, gpu1, f"(a) {args.q1_name}: CPU vs GPU", show_ylabel=True)
+    draw_subplot(ax2, cpu2, gpu2, f"(b) {args.q2_name}: CPU vs GPU", show_ylabel=False)
 
-    # Adjust layout and save
+    # Extract handles from the first axis to create a global, shared legend
+    handles, labels = ax1.get_legend_handles_labels()
+
+    # Pack the legend tightly into 3 columns at the top
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.82),
+               ncol=3, frameon=False, edgecolor='black',
+               fontsize=14, columnspacing=0.8, handletextpad=0.4, handlelength=1.2)
+
+    # Compress layout, adjust top margin for the legend, and bring subplots closer
     plt.tight_layout()
+    fig.subplots_adjust(top=0.85, wspace=0.1)
+
     plt.savefig(args.output, format='pdf', dpi=300)
-    print(f"\nDual chart successfully saved to {args.output}")
+    print(f"\nSingle-column side-by-side chart successfully saved to {args.output}")
 
 
 if __name__ == "__main__":
@@ -149,7 +163,7 @@ if __name__ == "__main__":
     parser.add_argument("--q2_gpu", required=True, help="Path to Query 2 GPU log")
 
     # Output Argument
-    parser.add_argument("-o", "--output", default="q2_vs_q10_stacked.pdf",
+    parser.add_argument("-o", "--output", default="q2_vs_q10_side_by_side.pdf",
                         help="Path for output PDF file")
 
     args = parser.parse_args()

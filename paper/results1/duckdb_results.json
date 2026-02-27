@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-01-30T01:41:29.589686+00:00",
+  "results": [
+    {
+      "engine": "duckdb",
+      "version": "1.4.4",
+      "scale_factor": 1.0,
+      "timestamp": "2026-01-30T00:19:45.350461+00:00",
+      "total_time": 270.68,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.17,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.34,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 0.22,
+          "row_count": 22,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 0.59,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 1.22,
+          "row_count": 316691,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 0.77,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 7.74,
+          "row_count": 6000000,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 0.76,
+          "row_count": 369,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 54.42,
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 204.45,
+          "row_count": 156093,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 3600,
+          "row_count": null,
+          "status": "timeout",
+          "error_message": "Query q11 timed out after 3600 seconds (process killed)"
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "error",
+          "error_message": "Out of Memory Error: failed to offload data block of size 256.0 KiB (115.1 GiB/115.1 GiB used).\nThis limit was set by the 'max_temp_directory_size' setting.\nBy default, this setting utilizes the available disk space on the drive where the 'temp_directory' is located.\nYou can adjust this setting, by using (for example) PRAGMA max_temp_directory_size='10GiB'\n\nPossible solutions:\n* Reducing the number of threads (SET threads=X)\n* Disabling insertion-order preservation (SET preserve_insertion_order=false)\n* Increasing the memory limit (SET memory_limit='...GB')\n\nSee also https://duckdb.org/docs/stable/guides/performance/how_to_tune_workloads"
+        }
+      ]
+    }
+  ]
+}

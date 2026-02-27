@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-01-30T03:01:15.982619+00:00",
+  "results": [
+    {
+      "engine": "sedonadb",
+      "version": "0.3.0a81",
+      "scale_factor": 1.0,
+      "timestamp": "2026-01-30T02:58:40.796502+00:00",
+      "total_time": 50.18000000000001,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.5,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.66,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 0.57,
+          "row_count": 22,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 0.62,
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 2.38,
+          "row_count": 316691,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 0.83,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 2.25,
+          "row_count": 6000000,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 0.79,
+          "row_count": 369,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.26,
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 5.31,
+          "row_count": 156095,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 7.8,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q12",
+          "time_seconds": 28.21,
+          "row_count": 30000000,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}
