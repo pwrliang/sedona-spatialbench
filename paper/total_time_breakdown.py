@@ -127,7 +127,7 @@ def generate_dual_chart(args):
     gpu2 = extract_metrics(args.q2_gpu)
 
     # 1x2 layout, shared Y-axis to save horizontal space.
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4.0), sharey=True)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 4.5), sharey=True)
 
     # Draw subplots. Only show the Y-axis label on the left-most chart.
     draw_subplot(ax1, cpu1, gpu1, f"(a) {args.q1_name}: CPU vs GPU", show_ylabel=True)
