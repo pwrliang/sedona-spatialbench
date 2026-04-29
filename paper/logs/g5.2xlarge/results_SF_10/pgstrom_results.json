@@ -1,14 +1,14 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-04-29T08:48:58.842308+00:00",
+  "generated_at": "2026-04-29T13:05:00.283980+00:00",
   "results": [
     {
       "engine": "pgstrom",
       "version": "6.1.0",
-      "scale_factor": 1.0,
-      "timestamp": "2026-04-29T08:19:00.296861+00:00",
-      "total_time": 274.06,
+      "scale_factor": 10.0,
+      "timestamp": "2026-04-29T12:51:29.530125+00:00",
+      "total_time": 119.0,
       "results": [
         {
           "query": "q2",
@@ -19,36 +19,29 @@
         },
         {
           "query": "q4",
-          "time_seconds": 0.74,
-          "row_count": 258,
+          "time_seconds": 5.89,
+          "row_count": 243,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 0.01,
+          "time_seconds": 0.04,
           "row_count": 3,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q9",
-          "time_seconds": 0.43,
-          "row_count": 37,
+          "time_seconds": 1.13,
+          "row_count": 675,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 23.84,
-          "row_count": 156095,
-          "status": "success",
-          "error_message": null
-        },
-        {
-          "query": "q11",
-          "time_seconds": 248.87,
-          "row_count": 1,
+          "time_seconds": 111.77,
+          "row_count": 454710,
           "status": "success",
           "error_message": null
         }
