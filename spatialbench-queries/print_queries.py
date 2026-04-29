@@ -442,6 +442,31 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q2() -> str:
+# ==================== QUERY PLAN ====================
+# Finalize Aggregate  (cost=69358.27..69358.28 rows=1 width=8)
+#   Output: count(*)
+#   InitPlan 1 (returns $1)
+#     ->  Limit  (cost=1100.00..14218.94 rows=1 width=4521)
+#           Output: z.z_boundary
+#           ->  Gather  (cost=1100.00..40456.81 rows=3 width=4521)
+#                 Output: z.z_boundary
+#                 Workers Planned: 2
+# -->                 ->  Parallel Custom Scan (GpuScan) on public.zone z  (cost=100.00..39456.51 rows=1 width=4521)
+#                       Output: z.z_boundary
+#                       GPU Projection: z.z_boundary
+#                       GPU Scan Quals: (z.z_name = 'Coconino County'::text) [plan: 454710 -> 1]
+#                       Scan-Engine: VFS with GPU0
+#   ->  Gather  (cost=55139.11..55139.32 rows=2 width=8)
+#         Output: (PARTIAL count(*))
+#         Workers Planned: 2
+#         Params Evaluated: $1
+#         ->  Partial Aggregate  (cost=54139.11..54139.12 rows=1 width=8)
+#               Output: PARTIAL count(*)
+#               ->  Parallel Bitmap Heap Scan on public.trip t  (cost=170.92..54132.86 rows=2500 width=0)
+#                     Filter: st_intersects(t.t_pickuploc, $1)
+#                     ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..169.42 rows=6000 width=0)
+#                           Index Cond: (t.t_pickuploc && $1)
+# ======================================================
         return """
                -- Q2: Count trips starting within Coconino County (Arizona) zone
                SELECT COUNT(*) AS trip_count_in_coconino_county
@@ -473,6 +498,30 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q4() -> str:
+# ==================== QUERY PLAN ====================
+# Sort  (cost=3606870.09..3608006.87 rows=454710 width=31)
+#   Output: z.z_zonekey, z.z_name, (count(*))
+#   Sort Key: (count(*)) DESC, z.z_zonekey
+#   ->  HashAggregate  (cost=3559592.56..3564139.66 rows=454710 width=31)
+#         Output: z.z_zonekey, z.z_name, count(*)
+#         Group Key: z.z_zonekey, z.z_name
+# -->         ->  Nested Loop  (cost=2843361.34..3556182.23 rows=454710 width=23)
+#               Output: z.z_zonekey, z.z_name
+#               ->  Limit  (cost=2843361.06..2843477.73 rows=1000 width=45)
+#                     Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+#                     ->  Gather Merge  (cost=2843361.06..8677101.68 rows=50000000 width=45)
+#                           Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+#                           Workers Planned: 2
+#                           ->  Sort  (cost=2842361.04..2904861.04 rows=25000000 width=45)
+#                                 Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+#                                 Sort Key: t.t_tip DESC, t.t_tripkey
+#                                 ->  Parallel Seq Scan on public.trip t  (cost=0.00..1471638.00 rows=25000000 width=45)
+#                                       Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+#               ->  Index Scan using idx_zone_z_boundary on public.zone z  (cost=0.29..712.24 rows=45 width=4544)
+#                     Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+#                     Index Cond: (z.z_boundary ~ t.t_pickuploc)
+#                     Filter: st_within(t.t_pickuploc, z.z_boundary)
+# ======================================================
         return """
                -- Q4: Zone distribution of top 1000 trips by tip amount
                SELECT z.z_zonekey, z.z_name, COUNT(*) AS trip_count
@@ -503,6 +552,28 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q6() -> str:
+# ==================== QUERY PLAN ====================
+# Sort  (cost=98737.63..98737.63 rows=1 width=79)
+#   Output: z.z_zonekey, z.z_name, (count(t.t_tripkey)), (avg(t.t_totalamount)), (avg((t.t_dropofftime - t.t_pickuptime)))
+#   Sort Key: (count(t.t_tripkey)) DESC, z.z_zonekey
+#   ->  GroupAggregate  (cost=98581.98..98737.62 rows=1 width=79)
+#         Output: z.z_zonekey, z.z_name, count(t.t_tripkey), avg(t.t_totalamount), avg((t.t_dropofftime - t.t_pickuptime))
+#         Group Key: z.z_zonekey, z.z_name
+#         ->  Sort  (cost=98581.98..98604.21 rows=8893 width=54)
+#               Output: z.z_zonekey, z.z_name, t.t_tripkey, t.t_totalamount, t.t_dropofftime, t.t_pickuptime
+#               Sort Key: z.z_zonekey, z.z_name
+# -->               ->  Nested Loop  (cost=171.20..97998.67 rows=8893 width=54)
+#                     Output: z.z_zonekey, z.z_name, t.t_tripkey, t.t_totalamount, t.t_dropofftime, t.t_pickuptime
+#                     ->  Index Scan using idx_zone_z_boundary on public.zone z  (cost=0.29..20.80 rows=1 width=4544)
+#                           Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+#                           Index Cond: (z.z_boundary && '0103000020E610000001000000050000002FDD2406810D5CC0CB10C7BAB835414096438B6CE7D35BC0CB10C7BAB835414096438B6CE7D35BC0FE43FAEDEBA841402FDD2406810D5CC0FE43FAEDEBA841402FDD2406810D5CC0CB10C7BAB8354140'::geometry)
+#                           Filter: st_intersects('0103000020E610000001000000050000002FDD2406810D5CC0CB10C7BAB835414096438B6CE7D35BC0CB10C7BAB835414096438B6CE7D35BC0FE43FAEDEBA841402FDD2406810D5CC0FE43FAEDEBA841402FDD2406810D5CC0CB10C7BAB8354140'::geometry, z.z_boundary)
+#                     ->  Bitmap Heap Scan on public.trip t  (cost=170.92..97917.86 rows=6000 width=63)
+#                           Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+#                           Filter: st_within(t.t_pickuploc, z.z_boundary)
+#                           ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..169.42 rows=6000 width=0)
+#                                 Index Cond: (t.t_pickuploc @ z.z_boundary)
+# ======================================================
         return """
                -- Q6: Zone statistics for trips intersecting a bounding box
                SELECT z.z_zonekey,
@@ -549,6 +620,22 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q9() -> str:
+
+        # ==================== QUERY PLAN ====================
+        # Gather Merge  (cost=30876835.30..30921987.98 rows=392632 width=48)
+        #   Output: b1.b_buildingkey, b2.b_buildingkey, (st_area(b1.b_boundary)), (st_area(b2.b_boundary)), (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))), (CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END)
+        #   Workers Planned: 1
+        #   ->  Sort  (cost=30875835.29..30876816.87 rows=392632 width=48)
+        #         Output: b1.b_buildingkey, b2.b_buildingkey, (st_area(b1.b_boundary)), (st_area(b2.b_boundary)), (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))), (CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END)
+        #         Sort Key: (CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END) DESC, b1.b_buildingkey, b2.b_buildingkey
+        # -->         ->  Nested Loop  (cost=0.28..30839354.25 rows=392632 width=48)
+        #               Output: b1.b_buildingkey, b2.b_buildingkey, st_area(b1.b_boundary), st_area(b2.b_boundary), st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)), CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END
+        #               ->  Parallel Seq Scan on public.building b1  (cost=0.00..2443.46 rows=50846 width=143)
+        #                     Output: b1.b_buildingkey, b1.b_name, b1.b_boundary
+        #               ->  Index Scan using idx_building_b_boundary on public.building b2  (cost=0.28..113.07 rows=3 width=143)
+        #                     Output: b2.b_buildingkey, b2.b_name, b2.b_boundary
+        #                     Index Cond: (b2.b_boundary && b1.b_boundary)
+        #                     Filter: ((b1.b_buildingkey < b2.b_buildingkey) AND st_intersects(b1.b_boundary, b2.b_boundary))
         return """
                -- Q9: Building Conflation (duplicate/overlap detection via IoU)
                WITH pairs AS (SELECT b1.b_buildingkey                                       AS building_1,
@@ -575,6 +662,31 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q10() -> str:
+# ==================== QUERY PLAN ====================
+# Sort  (cost=17357605293.62..17357606430.39 rows=454710 width=79)
+#   Output: z.z_zonekey, z.z_name, (avg((t.t_dropofftime - t.t_pickuptime))), (avg(t.t_distance)), (count(t.t_tripkey))
+#   Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+#   ->  Finalize GroupAggregate  (cost=17357435994.83..17357562563.18 rows=454710 width=79)
+#         Output: z.z_zonekey, z.z_name, avg((t.t_dropofftime - t.t_pickuptime)), avg(t.t_distance), count(t.t_tripkey)
+#         Group Key: z.z_zonekey, z.z_name
+#         ->  Gather Merge  (cost=17357435994.83..17357542101.23 rows=909420 width=95)
+#               Output: z.z_zonekey, z.z_name, (PARTIAL avg((t.t_dropofftime - t.t_pickuptime))), (PARTIAL avg(t.t_distance)), (PARTIAL count(t.t_tripkey))
+#               Workers Planned: 2
+#               ->  Sort  (cost=17357434994.80..17357436131.58 rows=454710 width=95)
+#                     Output: z.z_zonekey, z.z_name, (PARTIAL avg((t.t_dropofftime - t.t_pickuptime))), (PARTIAL avg(t.t_distance)), (PARTIAL count(t.t_tripkey))
+#                     Sort Key: z.z_zonekey, z.z_name
+#                     ->  Partial HashAggregate  (cost=17357386580.49..17357392264.37 rows=454710 width=95)
+#                           Output: z.z_zonekey, z.z_name, PARTIAL avg((t.t_dropofftime - t.t_pickuptime)), PARTIAL avg(t.t_distance), PARTIAL count(t.t_tripkey)
+#                           Group Key: z.z_zonekey, z.z_name
+# -->                           ->  Nested Loop Left Join  (cost=0.42..17332113990.62 rows=1684839325 width=53)
+#                                 Output: z.z_zonekey, z.z_name, t.t_dropofftime, t.t_pickuptime, t.t_distance, t.t_tripkey
+#                                 ->  Parallel Seq Scan on public.zone z  (cost=0.00..96320.62 rows=189462 width=4544)
+#                                       Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+#                                 ->  Index Scan using idx_trip_t_pickuploc on public.trip t  (cost=0.42..91420.18 rows=6000 width=62)
+#                                       Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+#                                       Index Cond: (t.t_pickuploc @ z.z_boundary)
+#                                       Filter: st_within(t.t_pickuploc, z.z_boundary)
+# ======================================================
         return """
                -- Q10: Zone statistics for trips starting within each zone
                SELECT z.z_zonekey,
@@ -590,6 +702,28 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
 
     @staticmethod
     def q11() -> str:
+        # ==================== QUERY PLAN ====================
+        # Finalize Aggregate  (cost=1163008919327.46..1163008919327.47 rows=1 width=8)
+        #   Output: count(*)
+        #   ->  Gather  (cost=1163008919327.25..1163008919327.46 rows=2 width=8)
+        #         Output: (PARTIAL count(*))
+        #         Workers Planned: 2
+        #         ->  Partial Aggregate  (cost=1163008918327.25..1163008918327.26 rows=1 width=8)
+        #               Output: PARTIAL count(*)
+        # -->               ->  Nested Loop  (cost=0.57..1162442714551.25 rows=226481510401 width=0)
+        #                     Join Filter: (pickup_zone.z_zonekey <> dropoff_zone.z_zonekey)
+        # -->                     ->  Nested Loop  (cost=0.29..16995052284.67 rows=1684839325 width=40)
+        #                           Output: t.t_dropoffloc, pickup_zone.z_zonekey
+        #                           ->  Parallel Seq Scan on public.trip t  (cost=0.00..1471638.00 rows=25000000 width=64)
+        #                                 Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+        #                           ->  Index Scan using idx_zone_z_boundary on public.zone pickup_zone  (cost=0.29..679.29 rows=45 width=4529)
+        #                                 Output: pickup_zone.z_zonekey, pickup_zone.z_gersid, pickup_zone.z_country, pickup_zone.z_region, pickup_zone.z_name, pickup_zone.z_subtype, pickup_zone.z_boundary
+        #                                 Index Cond: (pickup_zone.z_boundary ~ t.t_pickuploc)
+        #                                 Filter: st_within(t.t_pickuploc, pickup_zone.z_boundary)
+        #                     ->  Index Scan using idx_zone_z_boundary on public.zone dropoff_zone  (cost=0.29..679.29 rows=45 width=4529)
+        #                           Output: dropoff_zone.z_zonekey, dropoff_zone.z_gersid, dropoff_zone.z_country, dropoff_zone.z_region, dropoff_zone.z_name, dropoff_zone.z_subtype, dropoff_zone.z_boundary
+        #                           Index Cond: (dropoff_zone.z_boundary ~ t.t_dropoffloc)
+        #                           Filter: st_within(t.t_dropoffloc, dropoff_zone.z_boundary)
         return """
                -- Q11: Count trips that cross between different zones
                SELECT COUNT(*) AS cross_zone_trip_count
