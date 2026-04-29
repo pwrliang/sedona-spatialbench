@@ -739,6 +739,8 @@ class PostGISBenchmark(BaseBenchmark):
         import psycopg
         import pandas as pd
         from sqlalchemy import create_engine
+        import geoalchemy2  # Silences SQLAlchemy spatial warnings
+        import pyarrow.parquet as pq  # For memory-safe chunk streaming
         import os
         import getpass
         from pathlib import Path
@@ -788,10 +790,10 @@ class PostGISBenchmark(BaseBenchmark):
             db_url = f"postgresql://{auth}@{host}{port_part}/{dbname}"
         else:
             # Local Unix socket connection (Peer authentication)
-            # The empty space between @ and / tells SQLAlchemy to use the local socket
             db_url = f"postgresql://{user}@/{dbname}"
 
         self._engine = create_engine(db_url)
+
         # Define known geometry columns based on the SpatialBench dataset
         geo_cols = {"b_boundary", "t_pickuploc", "t_dropoffloc", "z_boundary"}
 
@@ -799,20 +801,42 @@ class PostGISBenchmark(BaseBenchmark):
         numeric_cols = {"t_fare", "t_tip", "t_totalamount", "t_distance"}
 
         for table, path in self.data_paths.items():
+            print(f"\n   -> Streaming data into '{table}' to save memory...", flush=True)
+
             if Path(path).is_dir():
                 parquet_files = list(Path(path).glob("*.parquet"))
-                if not parquet_files:
-                    continue
-                # Use standard pd instead of gpd to avoid the metadata error
-                df = pd.concat([pd.read_parquet(p) for p in parquet_files])
             else:
-                df = pd.read_parquet(path)
+                parquet_files = [Path(path)]
 
-            # Write directly to Postgres.
-            df.to_sql(table, self._engine, if_exists="replace", index=False)
+            if not parquet_files:
+                continue
 
+            # Stream data in memory-safe chunks
+            first_batch = True
+            df_columns = None  # Track columns for the casting phase
+
+            for file_path in parquet_files:
+                pf = pq.ParquetFile(file_path)
+
+                # Read 100,000 rows at a time
+                for batch in pf.iter_batches(batch_size=100000):
+                    df = batch.to_pandas()
+                    df_columns = df.columns
+
+                    if first_batch:
+                        # First batch creates the new table (replace)
+                        df.to_sql(table, self._engine, if_exists="replace", index=False, chunksize=10000)
+                        first_batch = False
+                    else:
+                        # Subsequent batches append to it
+                        df.to_sql(table, self._engine, if_exists="append", index=False, chunksize=10000)
+
+            if df_columns is None:
+                continue
+
+            print(f"   -> Casting columns and building indexes for '{table}'...", flush=True)
             # Convert the raw columns into proper PostGIS/PostgreSQL types natively in the DB
-            for col in df.columns:
+            for col in df_columns:
                 # 1. Handle Geometries
                 if col in geo_cols:
                     try:
