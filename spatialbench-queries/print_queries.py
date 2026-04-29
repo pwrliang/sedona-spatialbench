@@ -614,11 +614,19 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
                           b.b_name,
                           ST_Distance(t.t_pickuploc, b.b_boundary) AS distance_to_building
                    FROM building b
-                   ORDER BY t.t_pickuploc < - > b.b_boundary
+                    ORDER BY t.t_pickuploc <-> b.b_boundary
                        LIMIT 5
 ) AS nb
                ORDER BY nb.distance_to_building ASC, nb.b_buildingkey ASC
                """
+
+
+class PostGISSpatialBenchBenchmark(PgStromSpatialBenchBenchmark):
+    """A PostGIS-specific implementation of the SpatialBench benchmark."""
+
+    def dialect(self) -> str:
+        """Return the dialect of the benchmark."""
+        return "PostGIS"
 
 
 def main():
@@ -628,6 +636,7 @@ def main():
         "DuckDB": DuckDBSpatialBenchBenchmark,
         "SedonaDB": SedonaDBSpatialBenchBenchmark,
         "PgStrom": PgStromSpatialBenchBenchmark,
+        "PostGIS": PostGISSpatialBenchBenchmark,
         "Geopandas": None,  # Special case, we will catch this below,
         "Spatial Polars": None,  # Special case, we will catch this below,
     }

@@ -45,6 +45,33 @@ QUERY_COUNT = 12
 TABLES = ["building", "customer", "driver", "trip", "vehicle", "zone"]
 
 
+def get_postgis_version() -> str:
+    """Fetch the PostGIS version string for benchmark reporting."""
+    try:
+        import psycopg
+        import os
+        import getpass
+        user = os.environ.get("USER") or getpass.getuser()
+        dbname = os.environ.get("POSTGRES_DB", "spatialbench")
+        host = os.environ.get("POSTGRES_HOST", "")
+        port = os.environ.get("POSTGRES_PORT", "")
+        password = os.environ.get("POSTGRES_PASSWORD", "")
+
+        conn_parts = [f"dbname={dbname}", f"user={user}"]
+        if host: conn_parts.append(f"host={host}")
+        if port: conn_parts.append(f"port={port}")
+        if password: conn_parts.append(f"password={password}")
+
+        with psycopg.connect(" ".join(conn_parts)) as conn:
+            conn.autocommit = True
+            row = conn.execute("SELECT postgis_full_version();").fetchone()
+            if row and row[0]:
+                return row[0].split()[0]  # Just grab the version number part
+    except Exception:
+        pass
+    return "unknown"
+
+
 @dataclass
 class BenchmarkResult:
     """Result of a single query benchmark."""
@@ -373,6 +400,7 @@ class SedonaDBGPUBenchmark(BaseBenchmark):
         result = self._sedona.sql(query).to_pandas()
         return len(result), result
 
+
 class SpatialPolarsBenchmark(BaseBenchmark):
     """Spatial Polars benchmark runner."""
 
@@ -496,15 +524,27 @@ class PgStromBenchmark(BaseBenchmark):
             self._conn.execute("CREATE SERVER mystrom_parquet FOREIGN DATA WRAPPER arrow_fdw;")
         except psycopg.errors.DuplicateObject:
             pass
-        # Check if we can skip loading
+
+        # --- METADATA TRACKING LOGIC ---
         if self.skip_load:
-            # Simple check: Does the 'trip' table exist?
-            exists = self._conn.execute("SELECT to_regclass('public.trip');").fetchone()[0]
-            if exists:
-                print("\n=== SKIPPING DATA LOAD (Table 'trip' exists) ===\n")
+            current_data_path = str(self.data_paths.get('trip', ''))
+            self._conn.execute("CREATE TABLE IF NOT EXISTS spatialbench_meta_strom (loaded_path TEXT);")
+            last_path_row = self._conn.execute("SELECT loaded_path FROM spatialbench_meta_strom LIMIT 1;").fetchone()
+
+            exists = self._conn.execute(
+                "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'trip');").fetchone()[
+                0]
+
+            if exists and last_path_row and last_path_row[0] == current_data_path:
+                print("\n=== SKIPPING DATA LOAD (Same scale factor already loaded) ===\n")
                 return
             else:
-                print("\n=== WARNING: skip_load=True but tables are missing. Forcing load. ===\n")
+                print("\n=== WARNING: Data path changed or tables missing. Forcing load. ===\n")
+                self._conn.execute("DELETE FROM spatialbench_meta_strom;")
+                self._conn.execute("INSERT INTO spatialbench_meta_strom (loaded_path) VALUES (%s);",
+                                   (current_data_path,))
+        # -------------------------------
+
         # 1. DEFINE MAPPINGS
         target_mappings = {
             "building": {"b_buildingkey": ["b_buildingkey"], "b_name": ["b_name"], "b_boundary": ["b_boundary"]},
@@ -527,26 +567,22 @@ class PgStromBenchmark(BaseBenchmark):
 
         # 2. ROBUST CLEANUP (Handles both Tables and Views)
         for table_name in self.data_paths.keys():
-            # Try dropping as view first
             try:
                 self._conn.execute(f"DROP VIEW IF EXISTS {table_name} CASCADE;")
             except psycopg.errors.WrongObjectType:
-                self._conn.execute("ROLLBACK;")  # Reset if failed
+                self._conn.execute("ROLLBACK;")
 
-            # Try dropping as table
             try:
                 self._conn.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
             except psycopg.errors.WrongObjectType:
                 self._conn.execute("ROLLBACK;")
 
-            # Clean staging
             self._conn.execute(f"DROP FOREIGN TABLE IF EXISTS {table_name}_staging CASCADE;")
 
         # 3. PROCESS TABLES
         for table_name, raw_path in self.data_paths.items():
             abs_path = os.path.abspath(raw_path)
 
-            # --- FILE DISCOVERY ---
             parquet_files = []
             if os.path.isdir(abs_path):
                 merged_file = os.path.join(abs_path, f"{table_name}.merged.parquet")
@@ -623,7 +659,7 @@ class PgStromBenchmark(BaseBenchmark):
                 elif "binary" in type_str:
                     dtype = "bytea"
                 else:
-                    text_columns.append(name)  # Track text columns
+                    text_columns.append(name)
 
                 col_defs.append(f'"{name}" {dtype}')
 
@@ -638,6 +674,8 @@ class PgStromBenchmark(BaseBenchmark):
             print(f"   -> Loading data into native table '{table_name}'...")
 
             select_cols = []
+            created_geo_cols = []  # Track generated geometry columns for indexing
+
             if table_name in target_mappings:
                 mappings = target_mappings[table_name]
                 for target_col, candidates in mappings.items():
@@ -646,6 +684,7 @@ class PgStromBenchmark(BaseBenchmark):
                         if target_col in geo_cols:
                             select_cols.append(
                                 f"ST_SetSRID(ST_GeomFromWKB(\"{match}\"), 4326)::geometry AS {target_col}")
+                            created_geo_cols.append(target_col)
                         else:
                             select_cols.append(f"\"{match}\" AS {target_col}")
             else:
@@ -656,13 +695,18 @@ class PgStromBenchmark(BaseBenchmark):
             duration = time.time() - start_time
             print(f"   -> Load complete in {duration:.2f}s")
 
+            # ---> CREATE GIST INDEXES <---
+            for geo_col in created_geo_cols:
+                print(f"   -> Building GiST spatial index on {table_name}.{geo_col}...")
+                self._conn.execute(
+                    f'CREATE INDEX "idx_{table_name}_{geo_col}" ON "{table_name}" USING GIST ("{geo_col}");')
+
             # 6. OPTIMIZE STORAGE (Force PLAIN for text to fix GPU crash)
-            if table_name in ['zone', 'building', 'customer']:  # Apply to tables with text fields
+            if table_name in ['zone', 'building', 'customer']:
                 print(f"   -> Optimizing GPU storage for {table_name}...")
                 for col in target_mappings.get(table_name, {}):
                     if col not in geo_cols and col != "z_zonekey" and col != "c_custkey":
                         try:
-                            # We blindly try to set storage plain on text-like columns
                             self._conn.execute(f"ALTER TABLE {table_name} ALTER COLUMN {col} SET STORAGE PLAIN;")
                         except:
                             pass
@@ -683,20 +727,149 @@ class PgStromBenchmark(BaseBenchmark):
         return len(res), res
 
 
+class PostGISBenchmark(BaseBenchmark):
+    """PostGIS benchmark runner."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "postgis")
+        self._conn = None
+        self._engine = None
+
+    def setup(self) -> None:
+        import psycopg
+        import pandas as pd
+        from sqlalchemy import create_engine
+        import os
+        import getpass
+        from pathlib import Path
+
+        user = os.environ.get("USER") or getpass.getuser()
+        dbname = os.environ.get("POSTGRES_DB", "spatialbench")
+        host = os.environ.get("POSTGRES_HOST", "")
+        port = os.environ.get("POSTGRES_PORT", "")
+        password = os.environ.get("POSTGRES_PASSWORD", "")
+
+        conn_parts = [f"dbname={dbname}", f"user={user}"]
+        if host: conn_parts.append(f"host={host}")
+        if port: conn_parts.append(f"port={port}")
+        if password: conn_parts.append(f"password={password}")
+
+        # Connect using psycopg
+        self._conn = psycopg.connect(" ".join(conn_parts))
+        self._conn.autocommit = True
+        self._conn.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+
+        # --- METADATA TRACKING LOGIC ---
+        current_data_path = str(self.data_paths.get('trip', ''))
+
+        self._conn.execute("CREATE TABLE IF NOT EXISTS spatialbench_meta (loaded_path TEXT);")
+        last_path_row = self._conn.execute("SELECT loaded_path FROM spatialbench_meta LIMIT 1;").fetchone()
+
+        trip_exists = self._conn.execute(
+            "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'trip');"
+        ).fetchone()[0]
+
+        # If the table exists AND the data path hasn't changed, we can safely skip
+        if trip_exists and last_path_row and last_path_row[0] == current_data_path:
+            return
+
+        print(f"\n  [PostGIS] New scale factor/data detected. Loading tables from scratch... ", end="", flush=True)
+
+        # Update metadata for the new scale factor
+        self._conn.execute("DELETE FROM spatialbench_meta;")
+        self._conn.execute("INSERT INTO spatialbench_meta (loaded_path) VALUES (%s);", (current_data_path,))
+        # -------------------------------
+
+        # Build SQLAlchemy engine for Pandas injection
+        if host:
+            # Network connection (TCP)
+            auth = f"{user}:{password}" if password else user
+            port_part = f":{port}" if port else ":5432"
+            db_url = f"postgresql://{auth}@{host}{port_part}/{dbname}"
+        else:
+            # Local Unix socket connection (Peer authentication)
+            # The empty space between @ and / tells SQLAlchemy to use the local socket
+            db_url = f"postgresql://{user}@/{dbname}"
+
+        self._engine = create_engine(db_url)
+        # Define known geometry columns based on the SpatialBench dataset
+        geo_cols = {"b_boundary", "t_pickuploc", "t_dropoffloc", "z_boundary"}
+
+        # Define known numeric columns that pandas might accidentally load as TEXT
+        numeric_cols = {"t_fare", "t_tip", "t_totalamount", "t_distance"}
+
+        for table, path in self.data_paths.items():
+            if Path(path).is_dir():
+                parquet_files = list(Path(path).glob("*.parquet"))
+                if not parquet_files:
+                    continue
+                # Use standard pd instead of gpd to avoid the metadata error
+                df = pd.concat([pd.read_parquet(p) for p in parquet_files])
+            else:
+                df = pd.read_parquet(path)
+
+            # Write directly to Postgres.
+            df.to_sql(table, self._engine, if_exists="replace", index=False)
+
+            # Convert the raw columns into proper PostGIS/PostgreSQL types natively in the DB
+            for col in df.columns:
+                # 1. Handle Geometries
+                if col in geo_cols:
+                    try:
+                        self._conn.execute(f'''
+                                    ALTER TABLE "{table}"
+                                    ALTER COLUMN "{col}" TYPE geometry
+                                    USING ST_SetSRID(ST_GeomFromWKB("{col}"::bytea), 4326);
+                                ''')
+                    except Exception:
+                        self._conn.execute(f'''
+                                    ALTER TABLE "{table}"
+                                    ALTER COLUMN "{col}" TYPE geometry
+                                    USING ST_SetSRID("{col}"::geometry, 4326);
+                                ''')
+                    # Create spatial indexes for benchmarking performance
+                    self._conn.execute(f'CREATE INDEX "idx_{table}_{col}" ON "{table}" USING GIST ("{col}");')
+
+                # 2. Handle Numeric Data (Fixes the AVG(text) error)
+                elif col in numeric_cols:
+                    self._conn.execute(f'''
+                                ALTER TABLE "{table}"
+                                ALTER COLUMN "{col}" TYPE double precision
+                                USING NULLIF("{col}"::text, '')::double precision;
+                            ''')
+
+            self._conn.execute(f'ANALYZE "{table}";')
+            print(f"Table {table} processed")
+
+    def teardown(self) -> None:
+        if self._conn:
+            self._conn.close()
+            self._conn = None
+        if self._engine:
+            self._engine.dispose()
+            self._engine = None
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        result = self._conn.execute(query).fetchall()
+        return len(result), result
+
+
 def get_sql_queries(dialect: str) -> dict[str, str]:
     """Get SQL queries for a specific dialect from print_queries.py."""
     from print_queries import (
         DuckDBSpatialBenchBenchmark,
         SedonaDBSpatialBenchBenchmark,
         SpatialBenchBenchmark,
-        PgStromSpatialBenchBenchmark
+        PgStromSpatialBenchBenchmark,
+        PostGISSpatialBenchBenchmark
     )
     dialects = {
         "duckdb": DuckDBSpatialBenchBenchmark,
         "sedonadb": SedonaDBSpatialBenchBenchmark,
         "sedonadb_gpu": SedonaDBSpatialBenchBenchmark,
         "SedonaSpark": SpatialBenchBenchmark,
-        "PgStrom": PgStromSpatialBenchBenchmark
+        "PgStrom": PgStromSpatialBenchBenchmark,
+        "postgis": PostGISSpatialBenchBenchmark,
     }
     return dialects[dialect]().queries()
 
@@ -843,7 +1016,12 @@ def run_benchmark(
             "class": PgStromBenchmark,
             "version_getter": lambda: "6.1.0",  # Hardcoded or fetch via SQL
             "queries_getter": lambda: get_sql_queries("PgStrom"),
-        }
+        },
+        "postgis": {
+            "class": PostGISBenchmark,
+            "version_getter": lambda: get_postgis_version(),
+            "queries_getter": lambda: get_sql_queries("postgis"),
+        },
     }
 
     config = configs[engine]
@@ -964,7 +1142,8 @@ def main():
     args = parser.parse_args()
 
     engines = [e.strip().lower() for e in args.engines.split(",")]
-    valid_engines = {"duckdb", "geopandas", "sedonadb", "sedonadb_gpu", "spatial_polars", "apache_sedona", "pgstrom"}
+    valid_engines = {"duckdb", "geopandas", "sedonadb", "sedonadb_gpu", "spatial_polars", "apache_sedona", "pgstrom",
+                     "postgis"}
 
     for e in engines:
         if e not in valid_engines:
