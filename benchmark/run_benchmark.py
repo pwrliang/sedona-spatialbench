@@ -92,6 +92,7 @@ class BenchmarkSuite:
     total_time: float = 0.0
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     version: str = "unknown"
+    index_build_times: dict[str, dict[str, float]] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -100,6 +101,7 @@ class BenchmarkSuite:
             "scale_factor": self.scale_factor,
             "timestamp": self.timestamp,
             "total_time": self.total_time,
+            "index_build_times": self.index_build_times,
             "results": [
                 {
                     "query": r.query,
@@ -152,6 +154,7 @@ def _run_query_in_process(
 
         benchmark = engine_class(data_paths)
         benchmark.setup()
+        idx_times = getattr(benchmark, 'index_build_times', {})
         try:
             run_times = []
             row_count = None
@@ -167,15 +170,21 @@ def _run_query_in_process(
                 "time_seconds": run_times,  # Send back a list of times
                 "row_count": row_count,
                 "error_message": None,
+                "index_build_times": idx_times
             })
         finally:
             benchmark.teardown()
     except Exception as e:
+        idx_times = {}
+        if 'benchmark' in locals():
+            idx_times = getattr(benchmark, 'index_build_times', {})
+
         result_queue.put({
             "status": "error",
             "time_seconds": None,
             "row_count": None,
             "error_message": str(e),
+            "index_build_times": idx_times
         })
 
 
@@ -221,6 +230,7 @@ class BaseBenchmark(ABC):
     def __init__(self, data_paths: dict[str, str], engine_name: str):
         self.data_paths = data_paths
         self.engine_name = engine_name
+        self.index_build_times: dict[str, dict[str, float]] = {}
 
     @abstractmethod
     def setup(self) -> None:
@@ -698,8 +708,13 @@ class PgStromBenchmark(BaseBenchmark):
             # ---> CREATE GIST INDEXES <---
             for geo_col in created_geo_cols:
                 print(f"   -> Building GiST spatial index on {table_name}.{geo_col}...")
+                idx_start = time.perf_counter()
                 self._conn.execute(
                     f'CREATE INDEX "idx_{table_name}_{geo_col}" ON "{table_name}" USING GIST ("{geo_col}");')
+
+                if table_name not in self.index_build_times:
+                    self.index_build_times[table_name] = {}
+                self.index_build_times[table_name][geo_col] = time.perf_counter() - idx_start
 
             # 6. OPTIMIZE STORAGE (Force PLAIN for text to fix GPU crash)
             if table_name in ['zone', 'building', 'customer']:
@@ -731,7 +746,7 @@ class PostGISBenchmark(BaseBenchmark):
     """PostGIS benchmark runner."""
 
     def __init__(self, data_paths: dict[str, str]):
-        super().__init__(data_paths, "postgis")
+        super().__init__(data_paths, "PostGIS")
         self._conn = None
         self._engine = None
 
@@ -825,11 +840,11 @@ class PostGISBenchmark(BaseBenchmark):
 
                     if first_batch:
                         # First batch creates the new table (replace)
-                        df.to_sql(table, self._engine, if_exists="replace", index=False, chunksize=10000)
+                        df.to_sql(table, self._engine, if_exists="replace", index=False, chunksize=20000)
                         first_batch = False
                     else:
                         # Subsequent batches append to it
-                        df.to_sql(table, self._engine, if_exists="append", index=False, chunksize=10000)
+                        df.to_sql(table, self._engine, if_exists="append", index=False, chunksize=20000)
 
             if df_columns is None:
                 continue
@@ -852,7 +867,12 @@ class PostGISBenchmark(BaseBenchmark):
                                     USING ST_SetSRID("{col}"::geometry, 4326);
                                 ''')
                     # Create spatial indexes for benchmarking performance
+                    idx_start = time.perf_counter()
                     self._conn.execute(f'CREATE INDEX "idx_{table}_{col}" ON "{table}" USING GIST ("{col}");')
+
+                    if table not in self.index_build_times:
+                        self.index_build_times[table] = {}
+                    self.index_build_times[table][col] = time.perf_counter() - idx_start
 
                 # 2. Handle Numeric Data (Fixes the AVG(text) error)
                 elif col in numeric_cols:
@@ -906,11 +926,12 @@ def run_query_isolated(
         query_sql: str | None,
         timeout: int,
         runs: int = 1,
-) -> BenchmarkResult:
+) -> tuple[BenchmarkResult, dict[str, dict[str, float]]]:
     """Run a query in an isolated subprocess with hard timeout.
 
     This passes 'runs' to the subprocess to ensure the engine is kept warm
-    and avoiding process-spawning overhead.
+    and avoiding process-spawning overhead. Returns the BenchmarkResult and
+    the detailed index build times tracked during setup (if any).
     """
     result_queue = multiprocessing.Queue()
     process = multiprocessing.Process(
@@ -940,11 +961,13 @@ def run_query_isolated(
             row_count=None,
             status="timeout",
             error_message=f"Query {query_name} timed out after {total_timeout} seconds (process killed)",
-        )
+        ), {}
 
     # Process completed - get result from queue
     try:
         result_data = result_queue.get_nowait()
+        idx_times = result_data.get("index_build_times", {})
+
         if result_data["status"] == "success":
             run_times = result_data["time_seconds"]
 
@@ -965,7 +988,7 @@ def run_query_isolated(
                 row_count=result_data["row_count"],
                 status=result_data["status"],
                 error_message=result_data["error_message"],
-            )
+            ), idx_times
         else:
             # Propagate error from worker
             return BenchmarkResult(
@@ -975,7 +998,7 @@ def run_query_isolated(
                 row_count=None,
                 status=result_data["status"],
                 error_message=result_data["error_message"],
-            )
+            ), idx_times
     except Exception:
         # Process died without putting result in queue
         return BenchmarkResult(
@@ -985,7 +1008,7 @@ def run_query_isolated(
             row_count=None,
             status="error",
             error_message=f"Query {query_name} crashed (process exit code: {process.exitcode})",
-        )
+        ), {}
 
 
 def run_benchmark(
@@ -1072,7 +1095,7 @@ def run_benchmark(
         print(f"  Running {query_name}...", end=" ", flush=True)
 
         # Single subprocess call handles all runs internally
-        result = run_query_isolated(
+        result, idx_times = run_query_isolated(
             engine_class=engine_class,
             engine_name=engine,
             data_paths=data_paths,
@@ -1081,6 +1104,14 @@ def run_benchmark(
             timeout=timeout,
             runs=runs
         )
+
+        # Capture detailed index build time across the suite (will only be recorded on initial table load run)
+        if idx_times:
+            for tbl, cols in idx_times.items():
+                if tbl not in suite.index_build_times:
+                    suite.index_build_times[tbl] = {}
+                for col, t in cols.items():
+                    suite.index_build_times[tbl][col] = t
 
         if result.status == "success":
             if runs > 1:
@@ -1126,7 +1157,20 @@ def print_summary(results: list[BenchmarkSuite]) -> None:
         print(row)
 
     print("-" * len(header))
-    print(f"{'Total':<10}" + "".join(f"{s.total_time:.2f}s{'':<9}" for s in results))
+    print(f"{'Total Time':<10}" + "".join(f"{s.total_time:.2f}s{'':<9}" for s in results))
+
+    # Detailed index build time breakdown
+    has_index_times = any(s.index_build_times for s in results)
+    if has_index_times:
+        print(f"\n{'=' * 80}")
+        print("INDEX BUILD TIMES (Detailed Breakdown)")
+        print(f"{'=' * 80}")
+        for s in results:
+            if s.index_build_times:
+                print(f"\n{s.engine.upper()}:")
+                for tbl, cols in s.index_build_times.items():
+                    for col, t in cols.items():
+                        print(f"  {tbl}.{col}: {t:.2f}s")
 
 
 def save_results(results: list[BenchmarkSuite], output_file: str) -> None:
