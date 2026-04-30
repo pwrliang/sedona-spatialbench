@@ -1,25 +1,51 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-04-29T13:05:00.283980+00:00",
+  "generated_at": "2026-04-30T07:37:37.554213+00:00",
   "results": [
     {
       "engine": "pgstrom",
       "version": "6.1.0",
       "scale_factor": 10.0,
-      "timestamp": "2026-04-29T12:51:29.530125+00:00",
-      "total_time": 119.0,
+      "timestamp": "2026-04-30T07:13:02.727568+00:00",
+      "total_time": 120.06,
+      "index_build_times": {
+        "building": {
+          "b_boundary": 0.1882096309999497
+        },
+        "trip": {
+          "t_pickuploc": 182.19093099200006,
+          "t_dropoffloc": 164.2124708099999
+        },
+        "zone": {
+          "z_boundary": 1.931911834000175
+        }
+      },
       "results": [
         {
           "query": "q2",
-          "time_seconds": 0.17,
+          "time_seconds": 0.44,
+          "raw_times": [
+            0.4427,
+            0.4271,
+            0.4485,
+            0.4489,
+            0.4425
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 5.89,
+          "time_seconds": 6.04,
+          "raw_times": [
+            6.045,
+            6.0334,
+            6.0276,
+            6.0378,
+            6.0577
+          ],
           "row_count": 243,
           "status": "success",
           "error_message": null
@@ -27,6 +53,13 @@
         {
           "query": "q6",
           "time_seconds": 0.04,
+          "raw_times": [
+            0.0419,
+            0.0411,
+            0.041,
+            0.0412,
+            0.0417
+          ],
           "row_count": 3,
           "status": "success",
           "error_message": null
@@ -34,13 +67,27 @@
         {
           "query": "q9",
           "time_seconds": 1.13,
+          "raw_times": [
+            1.1376,
+            1.1367,
+            1.1332,
+            1.1293,
+            1.128
+          ],
           "row_count": 675,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 111.77,
+          "time_seconds": 112.41,
+          "raw_times": [
+            121.9801,
+            107.8111,
+            107.5624,
+            116.2473,
+            108.4291
+          ],
           "row_count": 454710,
           "status": "success",
           "error_message": null
