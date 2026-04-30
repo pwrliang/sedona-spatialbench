@@ -222,5 +222,6 @@ def main():
 
     plot_benchmark(df_sf1, df_sf10, args.output, args.log_scale)
 
+# --results-dir=/Users/liang/PycharmProjects/sedona-spatialbench/paper/logs/m7i.2xlarge --log-scale --output fig2.pdf
 if __name__ == "__main__":
     main()
