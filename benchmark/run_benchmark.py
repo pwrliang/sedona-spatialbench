@@ -81,6 +81,7 @@ class BenchmarkResult:
     row_count: int | None
     status: str  # "success", "error", "timeout"
     error_message: str | None = None
+    raw_times: list[float] | None = None  # Stores the individual run times
 
 
 @dataclass
@@ -106,6 +107,7 @@ class BenchmarkSuite:
                 {
                     "query": r.query,
                     "time_seconds": r.time_seconds,
+                    "raw_times": r.raw_times,
                     "row_count": r.row_count,
                     "status": r.status,
                     "error_message": r.error_message,
@@ -970,6 +972,7 @@ def run_query_isolated(
 
         if result_data["status"] == "success":
             run_times = result_data["time_seconds"]
+            measured_times = []
 
             # Extract list of times, discarding warmup if requested
             if runs > 1 and len(run_times) > 1:
@@ -977,6 +980,7 @@ def run_query_isolated(
                 print("measured_times ", measured_times)
                 avg_time = sum(measured_times) / len(measured_times)
             elif run_times:
+                measured_times = run_times
                 avg_time = run_times[0]
             else:
                 avg_time = 0.0
@@ -985,6 +989,7 @@ def run_query_isolated(
                 query=query_name,
                 engine=engine_name,
                 time_seconds=round(avg_time, 2),
+                raw_times=[round(t, 4) for t in measured_times],  # Save the raw times list
                 row_count=result_data["row_count"],
                 status=result_data["status"],
                 error_message=result_data["error_message"],
