@@ -695,7 +695,7 @@ class PgStromSpatialBenchBenchmark(SpatialBenchBenchmark):
                       AVG(t.t_distance)                     AS avg_distance,
                       COUNT(t.t_tripkey)                    AS num_trips
                FROM zone z
-                        LEFT JOIN trip t ON ST_Within(t.t_pickuploc, z.z_boundary)
+                            LEFT JOIN trip t ON ST_Within(t.t_pickuploc, z.z_boundary)
                GROUP BY z.z_zonekey, z.z_name
                ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC
                """
