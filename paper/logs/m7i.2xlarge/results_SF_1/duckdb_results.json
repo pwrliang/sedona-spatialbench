@@ -1,46 +1,82 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-25T07:22:38.297713+00:00",
+  "generated_at": "2026-04-30T13:39:01.658738+00:00",
   "results": [
     {
-      "engine": "DuckDB",
+      "engine": "duckdb",
       "version": "1.4.4",
       "scale_factor": 1.0,
-      "timestamp": "2026-02-25T00:54:51.398230+00:00",
-      "total_time": 278.61,
+      "timestamp": "2026-04-30T07:14:03.545745+00:00",
+      "total_time": 248.69,
+      "index_build_times": {},
       "results": [
         {
           "query": "q2",
           "time_seconds": 0.26,
+          "raw_times": [
+            0.3246,
+            0.2764,
+            0.197,
+            0.2237,
+            0.2711
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 0.48,
+          "time_seconds": 0.46,
+          "raw_times": [
+            0.4544,
+            0.4377,
+            0.4625,
+            0.4773,
+            0.449
+          ],
           "row_count": 258,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 0.71,
+          "time_seconds": 0.68,
+          "raw_times": [
+            0.678,
+            0.6834,
+            0.6788,
+            0.678,
+            0.6778
+          ],
           "row_count": 3,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q9",
-          "time_seconds": 58.0,
+          "time_seconds": 54.6,
+          "raw_times": [
+            54.148,
+            54.9335,
+            54.3829,
+            54.9797,
+            54.5639
+          ],
           "row_count": 37,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 219.16,
+          "time_seconds": 192.69,
+          "raw_times": [
+            191.3527,
+            191.4632,
+            193.524,
+            193.2662,
+            193.8643
+          ],
           "row_count": 156093,
           "status": "success",
           "error_message": null
@@ -48,6 +84,7 @@
         {
           "query": "q11",
           "time_seconds": 21600,
+          "raw_times": null,
           "row_count": null,
           "status": "timeout",
           "error_message": "Query q11 timed out after 21600 seconds (process killed)"

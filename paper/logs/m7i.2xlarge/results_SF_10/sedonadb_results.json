@@ -1,32 +1,54 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-26T20:27:21.703133+00:00",
+  "generated_at": "2026-05-01T01:28:48.272211+00:00",
   "results": [
     {
-      "engine": "SedonaDB",
-      "version": "0.3.0a165",
+      "engine": "sedonadb",
+      "version": "0.3.0a81",
       "scale_factor": 10.0,
-      "timestamp": "2026-02-26T20:18:35.398625+00:00",
-      "total_time": 85.49,
+      "timestamp": "2026-05-01T01:19:45.688963+00:00",
+      "total_time": 88.53,
+      "index_build_times": {},
       "results": [
         {
           "query": "q2",
-          "time_seconds": 1.41,
+          "time_seconds": 1.42,
+          "raw_times": [
+            1.4448,
+            1.4915,
+            1.3938,
+            1.3657,
+            1.3875
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 0.93,
+          "time_seconds": 0.95,
+          "raw_times": [
+            0.9602,
+            0.9706,
+            0.9441,
+            0.9249,
+            0.9297
+          ],
           "row_count": 243,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 2.1,
+          "time_seconds": 2.08,
+          "raw_times": [
+            2.1292,
+            2.097,
+            2.0908,
+            2.0696,
+            2.0131
+          ],
           "row_count": 3,
           "status": "success",
           "error_message": null
@@ -34,20 +56,41 @@
         {
           "query": "q9",
           "time_seconds": 0.07,
+          "raw_times": [
+            0.0671,
+            0.0615,
+            0.069,
+            0.0654,
+            0.0625
+          ],
           "row_count": 675,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 30.93,
+          "time_seconds": 31.92,
+          "raw_times": [
+            31.535,
+            32.1551,
+            31.9729,
+            31.8803,
+            32.073
+          ],
           "row_count": 454710,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": 50.05,
+          "time_seconds": 52.09,
+          "raw_times": [
+            51.6287,
+            52.1317,
+            52.2417,
+            52.3591,
+            52.0775
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null

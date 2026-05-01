@@ -1,56 +1,93 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-26T20:13:28.684867+00:00",
+  "generated_at": "2026-05-01T00:02:48.273895+00:00",
   "results": [
     {
-      "engine": "DuckDB",
+      "engine": "duckdb",
       "version": "1.4.4",
       "scale_factor": 10.0,
-      "timestamp": "2026-02-26T15:32:02.097051+00:00",
-      "total_time": 2637.91,
+      "timestamp": "2026-04-30T13:39:01.762572+00:00",
+      "total_time": 2644.2300000000005,
+      "index_build_times": {},
       "results": [
         {
           "query": "q2",
-          "time_seconds": 1.38,
+          "time_seconds": 1.45,
+          "raw_times": [
+            1.4192,
+            1.532,
+            1.4875,
+            1.446,
+            1.3575
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 0.82,
+          "time_seconds": 0.86,
+          "raw_times": [
+            0.822,
+            0.8619,
+            0.8701,
+            0.8887,
+            0.8651
+          ],
           "row_count": 243,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 2.48,
+          "time_seconds": 2.65,
+          "raw_times": [
+            2.681,
+            2.6272,
+            2.7483,
+            2.6883,
+            2.5024
+          ],
           "row_count": 3,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q9",
-          "time_seconds": 995.28,
+          "time_seconds": 1040.38,
+          "raw_times": [
+            1018.9008,
+            1046.7081,
+            1038.403,
+            1033.436,
+            1064.4492
+          ],
           "row_count": 675,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 1637.95,
+          "time_seconds": 1598.89,
+          "raw_times": [
+            1579.9506,
+            1588.9405,
+            1597.8462,
+            1612.341,
+            1615.3953
+          ],
           "row_count": 454702,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": null,
+          "time_seconds": 21600,
+          "raw_times": null,
           "row_count": null,
-          "status": "error",
-          "error_message": "Query q11 crashed (process exit code: -9)"
+          "status": "timeout",
+          "error_message": "Query q11 timed out after 21600 seconds (process killed)"
         }
       ]
     }

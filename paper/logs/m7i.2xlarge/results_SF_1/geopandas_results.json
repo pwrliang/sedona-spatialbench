@@ -1,32 +1,54 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-02-25T07:35:23.083651+00:00",
+  "generated_at": "2026-05-01T00:15:05.624030+00:00",
   "results": [
     {
-      "engine": "GeoPandas",
+      "engine": "geopandas",
       "version": "1.1.2",
       "scale_factor": 1.0,
-      "timestamp": "2026-02-25T07:22:38.393302+00:00",
-      "total_time": 125.81,
+      "timestamp": "2026-05-01T00:02:48.577966+00:00",
+      "total_time": 120.24000000000001,
+      "index_build_times": {},
       "results": [
         {
           "query": "q2",
-          "time_seconds": 12.45,
+          "time_seconds": 12.23,
+          "raw_times": [
+            12.265,
+            12.1439,
+            12.3495,
+            12.0768,
+            12.3036
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q4",
-          "time_seconds": 15.67,
+          "time_seconds": 14.97,
+          "raw_times": [
+            14.7284,
+            15.0353,
+            15.0377,
+            15.095,
+            14.9433
+          ],
           "row_count": 258,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q6",
-          "time_seconds": 16.9,
+          "time_seconds": 16.15,
+          "raw_times": [
+            16.2435,
+            16.2734,
+            15.8625,
+            16.1387,
+            16.221
+          ],
           "row_count": 3,
           "status": "success",
           "error_message": null
@@ -34,20 +56,41 @@
         {
           "query": "q9",
           "time_seconds": 0.05,
+          "raw_times": [
+            0.0467,
+            0.0608,
+            0.044,
+            0.0429,
+            0.0431
+          ],
           "row_count": 37,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q10",
-          "time_seconds": 36.86,
+          "time_seconds": 34.96,
+          "raw_times": [
+            34.6907,
+            35.3165,
+            35.0704,
+            34.739,
+            34.9618
+          ],
           "row_count": 156095,
           "status": "success",
           "error_message": null
         },
         {
           "query": "q11",
-          "time_seconds": 43.88,
+          "time_seconds": 41.88,
+          "raw_times": [
+            41.4896,
+            41.0314,
+            42.437,
+            42.0936,
+            42.3598
+          ],
           "row_count": 1,
           "status": "success",
           "error_message": null
