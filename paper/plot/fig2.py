@@ -19,6 +19,9 @@ plt.rcParams['savefig.bbox'] = 'tight'
 # Define a list of hatch patterns for high readability
 HATCH_PATTERNS = ['/', '\\', '.', 'o', '*', 'x', '+', '-', '//']
 
+# --- Define the Engine Order Globally ---
+ENGINE_ORDER = ["PostGIS", "GeoPandas", "DuckDB", "SedonaDB"]
+
 def load_data_to_df(results_dir: Path, query_filter: list[str] = None) -> pd.DataFrame:
     """Load JSON files into a Pandas DataFrame, handling Errors and Timeouts."""
     data_points = []
@@ -62,6 +65,9 @@ def load_data_to_df(results_dir: Path, query_filter: list[str] = None) -> pd.Dat
     if df.empty:
         return df
 
+    # --- Convert Engine to Categorical to enforce sorting order ---
+    df['Engine'] = pd.Categorical(df['Engine'], categories=ENGINE_ORDER, ordered=True)
+
     try:
         df['sort_key'] = df['Query'].str.extract(r'(\d+)').astype(float)
         df = df.sort_values(by=['sort_key', 'Engine']).drop(columns=['sort_key'])
@@ -90,7 +96,7 @@ def draw_subplot(ax, df, log_scale, title):
 
     # Custom Palette
     full_set2 = sns.color_palette("Set2")
-    custom_palette = [full_set2[5], full_set2[0], full_set2[1]]
+    custom_palette = [full_set2[2], full_set2[0], full_set2[5], full_set2[1]]
 
     # Draw Barplot
     sns.barplot(
@@ -98,6 +104,7 @@ def draw_subplot(ax, df, log_scale, title):
         x="Query",
         y="Time (s)",
         hue="Engine",
+        hue_order=ENGINE_ORDER, # --- Force Seaborn to use this exact order ---
         edgecolor="black",
         linewidth=1.0,
         errorbar=None,
@@ -122,13 +129,17 @@ def draw_subplot(ax, df, log_scale, title):
     if log_scale:
         ax.set_yscale("log")
         ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
-        ax.set_ylim(bottom=min_success_time * 0.5)
+        # Multiply top by a factor of 5 to 10 for log scale padding
+        ax.set_ylim(bottom=min_success_time * 0.5, top=max_success_time * 15)
+    else:
+        # Multiply top by 1.2 to add 20% padding for linear scale
+        ax.set_ylim(bottom=0, top=max_success_time * 1.2)
 
-    ax.set_ylabel("Execution Time (s)", fontweight='bold')
-    ax.set_xlabel(title, fontweight='bold')
-
+    ax.set_ylabel("Execution Time (s)", fontweight='bold', fontsize=16)
+    ax.set_xlabel(title, fontweight='bold', fontsize=16)
+    ax.tick_params(axis='both', which='major', labelsize=15)
     # Legend
-    ax.legend(loc='upper left', frameon=False, fontsize=16)
+    ax.legend(loc='upper left', ncol=2, frameon=False, fontsize=15)
 
     # Grid
     ax.set_axisbelow(True)
@@ -168,7 +179,7 @@ def draw_subplot(ax, df, log_scale, title):
                     # For log scale, place error labels at bottom; for linear, slightly above 0
                     label_y = y_offset if not log_scale else min_success_time
                     ax.text(x, label_y, label, ha='center', va='bottom',
-                            fontsize=12, rotation=90, color='red', fontweight='bold')
+                            fontsize=10, rotation=90, color='red', fontweight='bold')
 
 def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str = None, log_scale: bool = False):
     """Draw two subplots (SF1 and SF10) side by side."""
@@ -187,7 +198,7 @@ def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str
     draw_subplot(ax1, df_sf1, log_scale, "(a) Scale Factor: 1")
     draw_subplot(ax2, df_sf10, log_scale, "(b) Scale Factor: 10")
 
-    plt.tight_layout()
+    plt.tight_layout(w_pad=0.2)
 
     if output_file:
         print(f"Saving to {output_file}...")
