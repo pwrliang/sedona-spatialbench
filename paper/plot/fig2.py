@@ -15,13 +15,13 @@ import matplotlib.lines as mlines  # Added for custom legend handles
 # --- Configuration for Research Quality Figures ---
 sns.set_theme(style="whitegrid", context="paper", font_scale=2.5)
 plt.rcParams['font.family'] = 'sans-serif'
-plt.rcParams['savefig.bbox'] = 'tight'
 
 # Define a list of hatch patterns for high readability
 HATCH_PATTERNS = ['/', '\\', '.', 'o', '*', 'x', '+', '-', '//']
 
 # --- Define the Engine Order Globally ---
-ENGINE_ORDER = ["PostGIS", "GeoPandas", "DuckDB", "SedonaDB"]
+ENGINE_MAP = {"postgis": "PostGIS Execution Only", "geopandas": "GeoPandas", "duckdb": "DuckDB", "sedonadb": "SedonaDB"}
+ENGINE_ORDER = ["PostGIS Execution Only", "GeoPandas", "DuckDB", "SedonaDB"]
 
 # --- Define Query Index Requirements ---
 INDEX_REQUIREMENTS = {
@@ -53,10 +53,11 @@ def load_data_to_df(results_dir: Path, query_filter: list[str] = None) -> pd.Dat
                 data = json.load(f)
                 for suite in data.get("results", []):
                     engine = suite.get("engine", "unknown")
+                    engine = ENGINE_MAP[engine]
 
                     # Flatten the nested index_build_times for PostGIS
                     flat_index_times = {}
-                    if engine == "PostGIS":
+                    if engine == "PostGIS Execution Only":
                         raw_indexes = suite.get("index_build_times", {})
                         for table, cols in raw_indexes.items():
                             for col, time_val in cols.items():
@@ -75,7 +76,7 @@ def load_data_to_df(results_dir: Path, query_filter: list[str] = None) -> pd.Dat
 
                         # Calculate index overhead based on requirements
                         index_overhead = 0.0
-                        if engine == "PostGIS" and status == "success":
+                        if engine == "PostGIS Execution Only" and status == "success":
                             reqs = INDEX_REQUIREMENTS.get(query_id, [])
                             index_overhead = sum(flat_index_times.get(req, 0.0) for req in reqs)
 
@@ -158,7 +159,7 @@ def draw_subplot(ax, df, log_scale, title):
     # Axis Formatting
     if log_scale:
         ax.set_yscale("log")
-        ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f"{y:g}"))
         # Multiply top by a factor of 5 to 15 for log scale padding
         ax.set_ylim(bottom=min_success_time * 0.5, top=max_success_time * 15)
     else:
@@ -172,8 +173,35 @@ def draw_subplot(ax, df, log_scale, title):
     # Legend construction with the custom Whisker Handle
     handles, labels = ax.get_legend_handles_labels()
     whisker_handle = mlines.Line2D([], [], color='black', marker='_', linestyle=':',
-                                   markersize=10, markeredgewidth=1.5, label='+ Index Overhead')
-    ax.legend(handles=handles + [whisker_handle], loc='upper left', ncol=2, frameon=False, fontsize=13)
+                                   markersize=10, markeredgewidth=1.5, label='+ PostGIS Index Overhead')
+
+    new_handles = []
+    new_labels = []
+
+    empty_handle = mlines.Line2D([], [], linestyle='none')
+
+    # We want 4 rows in 2 columns.
+    # Col 1: handles[0], handles[1], handles[2], handles[3]
+    # Col 2: whisker_handle, empty, empty, empty
+    for i in range(4):
+        # Column 1 element (Engine)
+        if i < len(handles):
+            new_handles.append(handles[i])
+            new_labels.append(labels[i])
+        else:
+            new_handles.append(empty_handle)
+            new_labels.append(' ')
+
+        # Column 2 element
+        if i == 0:
+            new_handles.append(whisker_handle)
+            new_labels.append('PostGIS w. Index Overhead')
+        else:
+            pass
+            # new_handles.append(empty_handle)
+            # new_labels.append(' ')
+
+    ax.legend(handles=new_handles, labels=new_labels, loc='upper left', ncol=2, frameon=False, fontsize=13, columnspacing=0.5, handletextpad=0.4)
 
     # Grid
     ax.set_axisbelow(True)
@@ -211,7 +239,7 @@ def draw_subplot(ax, df, log_scale, title):
                                 ha='center', va='bottom', fontsize=8, rotation=90)
 
                     # --- ADDED: POSTGIS INDEX WHISKER ---
-                    if engine_name == "PostGIS" and idx_time_val > 0:
+                    if engine_name == "PostGIS Execution Only" and idx_time_val > 0:
                         total_time = time_val + idx_time_val
 
                         # Draw the vertical dashed line from top of bar to total time
@@ -226,7 +254,9 @@ def draw_subplot(ax, df, log_scale, title):
                     label = status.upper()
                     # For log scale, place error labels at bottom; for linear, slightly above 0
                     label_y = y_offset if not log_scale else min_success_time
-                    ax.text(x, label_y, label, ha='center', va='bottom',
+                    # print("label_y", label_y)
+                    label_y = 0.03
+                    ax.text(x + 0.04, label_y, label, ha='center', va='bottom',
                             fontsize=10, rotation=90, color='red', fontweight='bold')
 
 
@@ -240,11 +270,12 @@ def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str
     draw_subplot(ax1, df_sf1, log_scale, "(a) Scale Factor: 1")
     draw_subplot(ax2, df_sf10, log_scale, "(b) Scale Factor: 10")
 
-    plt.tight_layout(w_pad=0.2)
+    fig.tight_layout(w_pad=2.0)
+    fig.subplots_adjust(wspace=0.25)
 
     if output_file:
         print(f"Saving to {output_file}...")
-        plt.savefig(output_file, dpi=300)
+        fig.savefig(output_file)
     else:
         plt.show()
 
