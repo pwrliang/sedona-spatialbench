@@ -64,6 +64,7 @@ def generate_combined_cost_figure(csv_file):
 
     df_long = pd.melt(df, id_vars=['Query'], var_name='Device', value_name='Time_Seconds').dropna(
         subset=['Time_Seconds'])
+    df_long = df_long[df_long['Device'].str.contains('sedonadb', case=False, na=False)]
     df_long['Price_Per_Hour'] = df_long['Device'].apply(get_hourly_price)
     df_long = df_long.dropna(subset=['Price_Per_Hour'])
 
@@ -161,6 +162,7 @@ def generate_combined_cost_figure(csv_file):
     plt.show()
 
 
+# draw_costs.py --csv_file compiled_results_SF_10.csv
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate readable cost analysis charts.")
     parser.add_argument("--csv_file", type=str, required=True, help="Path to the input CSV file.")

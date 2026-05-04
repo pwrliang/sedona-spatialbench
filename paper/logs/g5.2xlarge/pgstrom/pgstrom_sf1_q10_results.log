@@ -1,0 +1,87 @@
+spatialbench=# EXPLAIN (ANALYZE, BUFFERS)
+SELECT z.z_zonekey,
+       z.z_name                              AS pickup_zone,
+       AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
+       AVG(t.t_distance)                     AS avg_distance,
+       COUNT(t.t_tripkey)                    AS num_trips
+FROM zone z
+LEFT JOIN trip t ON ST_Within(t.t_pickuploc, z.z_boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC;
+                                                                                 QUERY PLAN
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=490063670.43..490064060.67 rows=156095 width=82) (actual time=18642.264..18650.381 rows=156095 loops=1)
+   Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+   Sort Method: quicksort  Memory: 18697kB
+   Buffers: shared hit=8471913
+   ->  Finalize GroupAggregate  (cost=490006756.64..490050205.63 rows=156095 width=82) (actual time=18420.428..18567.975 rows=156095 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         Buffers: shared hit=8471908
+         ->  Gather Merge  (cost=490006756.64..490043181.35 rows=312190 width=98) (actual time=18420.414..18449.925 rows=156095 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               Buffers: shared hit=8471908
+               ->  Sort  (cost=490005756.62..490006146.86 rows=156095 width=98) (actual time=18389.113..18397.070 rows=52032 loops=3)
+                     Sort Key: z.z_zonekey, z.z_name
+                     Sort Method: quicksort  Memory: 13327kB
+                     Buffers: shared hit=8471908
+                     Worker 0:  Sort Method: quicksort  Memory: 8962kB
+                     Worker 1:  Sort Method: quicksort  Memory: 11617kB
+                     ->  Partial HashAggregate  (cost=489990340.63..489992291.82 rows=156095 width=98) (actual time=18353.871..18375.533 rows=52032 loops=3)
+                           Group Key: z.z_zonekey, z.z_name
+                           Batches: 1  Memory Usage: 38929kB
+                           Buffers: shared hit=8471876
+                           Worker 0:  Batches: 1  Memory Usage: 30737kB
+                           Worker 1:  Batches: 1  Memory Usage: 38929kB
+                           ->  Nested Loop Left Join  (cost=0.41..489180571.96 rows=53984578 width=56) (actual time=0.193..17881.989 rows=1062014 loops=3)
+                                 Buffers: shared hit=8471876
+                                 ->  Parallel Seq Scan on zone z  (cost=0.00..26230.40 rows=65040 width=9040) (actual time=0.016..19.364 rows=52032 loops=3)
+                                       Buffers: shared hit=25580
+                                 ->  Index Scan using idx_trip_t_pickuploc on trip t  (cost=0.41..7514.82 rows=600 width=62) (actual time=0.176..0.337 rows=20 loops=156095)
+                                       Index Cond: (t_pickuploc @ z.z_boundary)
+                                       Filter: st_within(t_pickuploc, z.z_boundary)
+                                       Rows Removed by Filter: 27
+                                       Buffers: shared hit=8187665
+ Planning:
+   Buffers: shared hit=448
+ Planning Time: 13.101 ms
+ Execution Time: 18667.386 ms
+(36 rows)
+
+spatialbench=# EXPLAIN ANALYZE
+SELECT z.z_zonekey,
+       z.z_name                              AS pickup_zone,
+       AVG(t.t_dropofftime - t.t_pickuptime) AS avg_duration,
+       AVG(t.t_distance)                     AS avg_distance,
+       COUNT(t.t_tripkey)                    AS num_trips
+FROM zone z
+LEFT JOIN trip t ON t.t_pickuploc && z.z_boundary
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC;
+                                                                                QUERY PLAN
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=7307464.26..7307854.50 rows=156095 width=82) (actual time=5355.661..5363.336 rows=156095 loops=1)
+   Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+   Sort Method: quicksort  Memory: 18826kB
+   ->  Finalize GroupAggregate  (cost=7250550.47..7293999.46 rows=156095 width=82) (actual time=5140.859..5283.850 rows=156095 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         ->  Gather Merge  (cost=7250550.47..7286975.18 rows=312190 width=98) (actual time=5140.843..5168.418 rows=156095 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               ->  Sort  (cost=7249550.45..7249940.69 rows=156095 width=98) (actual time=5117.135..5125.079 rows=52032 loops=3)
+                     Sort Key: z.z_zonekey, z.z_name
+                     Sort Method: quicksort  Memory: 12001kB
+                     Worker 0:  Sort Method: quicksort  Memory: 11375kB
+                     Worker 1:  Sort Method: quicksort  Memory: 10544kB
+                     ->  Partial HashAggregate  (cost=7234134.46..7236085.65 rows=156095 width=98) (actual time=5080.158..5102.818 rows=52032 loops=3)
+                           Group Key: z.z_zonekey, z.z_name
+                           Batches: 1  Memory Usage: 38929kB
+                           Worker 0:  Batches: 1  Memory Usage: 38929kB
+                           Worker 1:  Batches: 1  Memory Usage: 30737kB
+                           ->  Nested Loop Left Join  (cost=0.41..1380571.96 rows=390237500 width=56) (actual time=0.135..4178.471 rows=2474147 loops=3)
+                                 ->  Parallel Seq Scan on zone z  (cost=0.00..26230.40 rows=65040 width=9040) (actual time=0.011..13.607 rows=52032 loops=3)
+                                 ->  Index Scan using idx_trip_t_pickuploc on trip t  (cost=0.41..14.82 rows=600 width=62) (actual time=0.026..0.070 rows=47 loops=156095)
+                                       Index Cond: (t_pickuploc && z.z_boundary)
+ Planning Time: 0.513 ms
+ Execution Time: 5372.086 ms
+(24 rows)

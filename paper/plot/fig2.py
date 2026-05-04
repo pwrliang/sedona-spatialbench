@@ -139,7 +139,7 @@ def draw_subplot(ax, df, log_scale, title):
         edgecolor="black",
         linewidth=1.0,
         errorbar=None,
-        width=0.6,
+        width=0.8,
         palette=custom_palette,
         ax=ax
     )
@@ -166,9 +166,9 @@ def draw_subplot(ax, df, log_scale, title):
         # Multiply top by 1.2 to add 20% padding for linear scale
         ax.set_ylim(bottom=0, top=max_success_time * 1.2)
 
-    ax.set_ylabel("Execution Time (s)", fontweight='bold', fontsize=16)
-    ax.set_xlabel(title, fontweight='bold', fontsize=16)
-    ax.tick_params(axis='both', which='major', labelsize=15)
+    ax.set_ylabel("Execution Time (s)", fontweight='bold', fontsize=14, labelpad=-2)
+    ax.set_xlabel(title, fontweight='bold', fontsize=14)
+    ax.tick_params(axis='both', which='major', labelsize=13)
 
     # Legend construction with the custom Whisker Handle
     handles, labels = ax.get_legend_handles_labels()
@@ -256,7 +256,7 @@ def draw_subplot(ax, df, log_scale, title):
                     label_y = y_offset if not log_scale else min_success_time
                     # print("label_y", label_y)
                     label_y = 0.03
-                    ax.text(x + 0.04, label_y, label, ha='center', va='bottom',
+                    ax.text(x + 0.03, label_y, label, ha='center', va='bottom',
                             fontsize=10, rotation=90, color='red', fontweight='bold')
 
 
@@ -271,7 +271,7 @@ def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str
     draw_subplot(ax2, df_sf10, log_scale, "(b) Scale Factor: 10")
 
     fig.tight_layout(w_pad=2.0)
-    fig.subplots_adjust(wspace=0.25)
+    fig.subplots_adjust(wspace=0.2)
 
     if output_file:
         print(f"Saving to {output_file}...")

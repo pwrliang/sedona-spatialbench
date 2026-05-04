@@ -1,7 +1,0 @@
-Query,3090_sedonadb_gpu,A100_119_cores_sedonadb_gpu,H100_40_cores_sedonadb_gpu,g5.2xlarge_sedonadb_gpu,g6.2xlarge_sedonadb_gpu,g6e.2xlarge_sedonadb_gpu,m7i.2xlarge_sedonadb
-q2,1.08,0.97,0.88,1.99,1.66,1.6,1.53
-q4,1.04,0.66,0.37,1.23,1.05,0.97,1.02
-q6,1.81,1.5,1.06,2.94,2.35,2.3,2.23
-q9,0.09,0.13,0.1,0.12,0.1,0.09,0.07
-q10,4.29,5.41,3.44,6.58,5.84,5.04,33.77
-q11,8.17,7.88,5.91,12.61,11.56,8.78,54.22

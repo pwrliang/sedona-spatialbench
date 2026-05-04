@@ -38,6 +38,7 @@ def process_logs(base_dir, allowed_devices=None, allowed_queries=None):
             continue
 
         device_name = json_file.parts[-3]
+        print("device_name", device_name)
 
         # If the user specified devices, filter based on the folder name
         if allowed_devices and device_name not in allowed_devices:
@@ -127,6 +128,7 @@ def process_logs(base_dir, allowed_devices=None, allowed_queries=None):
         print(f"Success: Created '{output_filename}' (Queries: {len(queries)}, Columns: {len(columns)})")
 
 
+# --log-dir /Users/liang/PycharmProjects/sedona-spatialbench/paper/logs   --devices g5.2xlarge,g6.2xlarge,g6e.2xlarge,m7i.2xlarge   --queries q2,q4,q6,q9,q10,q11
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process spatialbench JSON logs into CSV formats.")
 
