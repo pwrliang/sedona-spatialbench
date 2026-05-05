@@ -44,13 +44,12 @@ def parse_raw_postgis_file(filepath):
     with open(filepath, 'r') as file:
         log_text = file.read()
 
-    # FIX: Split the file using the exact Postgres table header instead of the word "EXPLAIN".
-    # This completely ignores bash prompts (spatialbench=#), SQL syntax, and terminal noise.
-    plans = re.split(r'QUERY PLAN\n-+\n', log_text)
+    # \s* makes it completely immune to leading spaces, blank lines, or terminal formatting.
+    plans = re.split(r'\s*QUERY PLAN\s*\n-+\n', log_text)
 
-    # We expect 3 chunks: [0] = Intro/SQL, [1] = Full Plan + 2nd SQL, [2] = Filter Plan
     if len(plans) < 3:
-        print(f"Warning: {os.path.basename(filepath)} does not contain exactly two 'QUERY PLAN' blocks. Skipping.")
+        print(
+            f"Warning: {os.path.basename(filepath)} does not contain exactly two 'QUERY PLAN' blocks. Found {len(plans) - 1}. Skipping.")
         return None
 
     full_plan = plans[1]
@@ -58,14 +57,18 @@ def parse_raw_postgis_file(filepath):
 
     # --- Extract Metrics from Full Query ---
     total_time = extract_time(r'Execution Time:\s*([\d.]+)', full_plan)
-    # Finds the outermost Nested Loop/Hash Join
-    full_join_time = extract_time(r'(?:Nested Loop|Hash Join).*?actual time=[\d.]+\.\.([\d.]+)', full_plan)
+
+    # Finds the outermost node executing the spatial math (includes Bitmap Heap Scan for Q2)
+    full_join_time = extract_time(
+        r'(?:Nested Loop|Hash Join|Bitmap Heap Scan|Custom Scan).*?actual time=[\d.]+\.\.([\d.]+)', full_plan)
+
     # Finds the first base table scan
     scan_time = extract_time(r'(?:Seq Scan|Index Scan).*?actual time=[\d.]+\.\.([\d.]+)', full_plan)
     io_time = extract_io_time(full_plan)
 
     # --- Extract Metrics from Filter-Only Query ---
-    filter_join_time = extract_time(r'(?:Nested Loop|Hash Join).*?actual time=[\d.]+\.\.([\d.]+)', filter_plan)
+    filter_join_time = extract_time(
+        r'(?:Nested Loop|Hash Join|Bitmap Heap Scan|Custom Scan).*?actual time=[\d.]+\.\.([\d.]+)', filter_plan)
     filter_scan_time = extract_time(r'(?:Seq Scan|Index Scan).*?actual time=[\d.]+\.\.([\d.]+)', filter_plan)
 
     # --- Calculate the Breakdown ---
@@ -89,7 +92,8 @@ def parse_raw_postgis_file(filepath):
         "Miscs": miscs
     }
 
-def parse_folder_logs(log_folder, target_sf):
+
+def parse_folder_logs(log_folder, target_sf, as_percentage=True):
     """Iterates through the folder, parses files, and formats the DataFrame."""
     all_queries_data = {}
     search_path = os.path.join(log_folder, f'pgstrom_sf{target_sf}_q*_results.log')
@@ -118,13 +122,16 @@ def parse_folder_logs(log_folder, target_sf):
     )
     df = df.sort_index()
 
-    # Convert absolute times to percentage proportions
-    df_portions = df.div(df.sum(axis=1), axis=0) * 100
+    # Toggle between relative percentage and absolute running time
+    if as_percentage:
+        df_out = df.div(df.sum(axis=1), axis=0) * 100
+    else:
+        df_out = df
 
-    return df_portions[COLUMNS_ORDER]
+    return df_out[COLUMNS_ORDER]
 
 
-def draw_subplot(ax, df, palette, show_ylabel=True):
+def draw_subplot(ax, df, palette, is_percentage=True, show_ylabel=True):
     """Helper function to draw horizontal stacked bars on a specific axes."""
     if df.empty:
         ax.text(0.5, 0.5, "No Data", ha='center', va='center', transform=ax.transAxes)
@@ -140,38 +147,39 @@ def draw_subplot(ax, df, palette, show_ylabel=True):
         component_idx = i // len(df)
         bar.set_hatch(HATCH_PATTERNS[component_idx % len(HATCH_PATTERNS)])
 
-    ax.set_xlim(0, 100)
+    if is_percentage:
+        ax.set_xlim(0, 100)
+
     ax.set_ylabel("Query", fontweight='bold') if show_ylabel else ax.set_ylabel('')
     ax.set_axisbelow(True)
     ax.xaxis.grid(True, linestyle='--', alpha=0.7)
 
 
-def create_figure(df_sf1, df_sf10, output_filename):
-    """Creates the final multi-subplot figure."""
-    num_queries = max(len(df_sf1) if not df_sf1.empty else 0, len(df_sf10) if not df_sf10.empty else 0)
+def create_figure(df, output_filename):
+    """Creates the final single-plot figure."""
+    num_queries = len(df) if not df.empty else 0
     height = max(3.5, num_queries * 0.4)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, height), sharey=True)
+    # Create a single axis figure (width adjusted down slightly since there's only one plot)
+    fig, ax = plt.subplots(figsize=(8, height))
 
     full_set2 = sns.color_palette("Set2")
     custom_palette = [full_set2[0], full_set2[1], full_set2[2], full_set2[5], full_set2[3]]
 
-    draw_subplot(ax1, df_sf1, custom_palette, show_ylabel=True)
-    draw_subplot(ax2, df_sf10, custom_palette, show_ylabel=False)
+    draw_subplot(ax, df, custom_palette, is_percentage=True, show_ylabel=True)
 
-    ax1.set_xlabel("Proportion of Execution Time (%)\n\n(a) Scale Factor: 1", fontweight='bold')
-    ax2.set_xlabel("Proportion of Execution Time (%)\n\n(b) Scale Factor: 10", fontweight='bold')
+    ax.set_xlabel("Proportion of Execution Time (%)", fontweight='bold')
 
     legend_handles = [
         Patch(facecolor=custom_palette[i], hatch=HATCH_PATTERNS[i], label=COLUMNS_ORDER[i], edgecolor='black')
         for i in range(len(COLUMNS_ORDER))
     ]
 
-    leg = fig.legend(handles=legend_handles, loc='lower center', bbox_to_anchor=(0.5, 0.9), ncol=5, frameon=False,
+    leg = fig.legend(handles=legend_handles, loc='lower center', bbox_to_anchor=(0.5, 0.92), ncol=5, frameon=False,
                      fontsize=11)
 
     plt.tight_layout()
-    fig.subplots_adjust(top=0.88, wspace=0.1)
+    fig.subplots_adjust(top=0.85)  # Make room for the legend at the top
 
     if output_filename:
         print(f"\nSaving to {output_filename}...")
@@ -188,25 +196,18 @@ def main():
 
     log_folder = args.log_dir[0]
 
-    print(f"Loading SF1 results from: {log_folder}")
-    df_sf1 = parse_folder_logs(log_folder, target_sf=1)
+    print(f"Loading results from: {log_folder}")
+    # Defaulting to SF 1 as per the original script, change target_sf if needed
+    df = parse_folder_logs(log_folder, target_sf=1, as_percentage=True)
 
-    print(f"Loading SF10 results from: {log_folder}")
-    df_sf10 = parse_folder_logs(log_folder, target_sf=10)
-
-    if df_sf1.empty and df_sf10.empty:
+    if df.empty:
         print("Error: No data found.")
         return
 
-    if not df_sf1.empty:
-        print("\n--- SF1 Breakdown (%) ---")
-        print(df_sf1.round(2).to_string())
+    print("\n--- Breakdown (%) ---")
+    print(df.round(2).to_string())
 
-    if not df_sf10.empty:
-        print("\n--- SF10 Breakdown (%) ---")
-        print(df_sf10.round(2).to_string())
-
-    create_figure(df_sf1, df_sf10, args.output)
+    create_figure(df, args.output)
 
 
 if __name__ == "__main__":

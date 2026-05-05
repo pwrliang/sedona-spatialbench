@@ -10,7 +10,7 @@ DEVICE_NAME_MAPPING = {
     "g6e.2xlarge": "L40S",
     "m7i.2xlarge": "CPU",
     "A100_119_cores": "A100",
-    "H100_40_cores": "H100",
+    "H100_96_cores": "H100",
     "3090": "RTX3090"
 }
 
@@ -36,6 +36,9 @@ def pretty_print_speedups(csv_file):
 
     # 1. Load Data
     df = pd.read_csv(csv_path)
+    # This removes any column header that contains the string 'pgstrom'
+    cols_to_keep = ['Query'] + [col for col in df.columns if 'sedonadb' in col.lower()]
+    df = df[cols_to_keep]
     sf = re.search(r'SF_(\d+)', csv_path.name).group(1) if re.search(r'SF_(\d+)', csv_path.name) else "Unknown"
 
     # 2. Process and Map Names
