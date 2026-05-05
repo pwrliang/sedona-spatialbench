@@ -144,17 +144,24 @@ def _run_query_in_process(
         query_name: str,
         query_sql: str | None,
         runs: int = 1,
+        engine_kwargs: dict = None,
 ):
     """Worker function to run a query multiple times in a single isolated process.
 
     This avoids cold-starting the engine for every single run of the same query.
     """
+    if engine_kwargs is None:
+        engine_kwargs = {}
     try:
         # For Spatial Polars, ensure the package is imported first to register namespace
         if engine_class.__name__ == "SpatialPolarsBenchmark":
             import spatial_polars as _sp  # noqa: F401
 
-        benchmark = engine_class(data_paths)
+        if engine_class.__name__ in ("SedonaDBGPUBenchmark", "SedonaDBBenchmark"):
+            benchmark = engine_class(data_paths, sedona_memory_limit=engine_kwargs.get("sedona_memory_limit", "unlimited"))
+        else:
+            benchmark = engine_class(data_paths)
+
         benchmark.setup()
         idx_times = getattr(benchmark, 'index_build_times', {})
         try:
@@ -353,13 +360,15 @@ class GeoPandasBenchmark(BaseBenchmark):
 class SedonaDBBenchmark(BaseBenchmark):
     """SedonaDB benchmark runner."""
 
-    def __init__(self, data_paths: dict[str, str]):
+    def __init__(self, data_paths: dict[str, str], sedona_memory_limit: str = "unlimited"):
         super().__init__(data_paths, "sedonadb")
         self._sedona = None
+        self.sedona_memory_limit = sedona_memory_limit
 
     def setup(self) -> None:
         import sedonadb
         self._sedona = sedonadb.connect()
+        self._sedona.options.memory_limit = self.sedona_memory_limit
         for table, path in self.data_paths.items():
             # SedonaDB needs glob pattern for directories
             parquet_path = path
@@ -378,9 +387,10 @@ class SedonaDBBenchmark(BaseBenchmark):
 class SedonaDBGPUBenchmark(BaseBenchmark):
     """SedonaDB benchmark runner."""
 
-    def __init__(self, data_paths: dict[str, str]):
+    def __init__(self, data_paths: dict[str, str], sedona_memory_limit: str = "unlimited"):
         super().__init__(data_paths, "sedonadb_gpu")
         self._sedona = None
+        self.sedona_memory_limit = sedona_memory_limit
         self.default_batch_size = 100000
         self.query_batch_sizes = {
             "q2": self.default_batch_size,
@@ -394,6 +404,7 @@ class SedonaDBGPUBenchmark(BaseBenchmark):
     def setup(self) -> None:
         import sedonadb
         self._sedona = sedonadb.connect()
+        self._sedona.options.memory_limit = self.sedona_memory_limit
         self._sedona.sql("SET sedona.spatial_join.gpu.enable = true")
         self._sedona.sql("SET sedona.spatial_join.gpu.pipeline_batches = 1")
         for table, path in self.data_paths.items():
@@ -560,7 +571,7 @@ class PgStromBenchmark(BaseBenchmark):
         # 1. DEFINE MAPPINGS
         target_mappings = {
             "building": {"b_buildingkey": ["b_buildingkey"], "b_name": ["b_name"], "b_boundary": ["b_boundary"]},
-            "trip": {"t_tripkey": ["t_tripkey"], "t_custkey": ["t_custkey"], "t_driverkey": ["t_driverkey"],
+            "trip": {"t_tripkey": ["t_tripkey"], "t_custkey": ["c_custkey"], "t_driverkey": ["t_driverkey"],
                      "t_vehiclekey": ["t_vehiclekey"], "t_pickuptime": ["t_pickuptime"],
                      "t_dropofftime": ["t_dropofftime"], "t_fare": ["t_fare"], "t_tip": ["t_tip"],
                      "t_totalamount": ["t_totalamount"], "t_distance": ["t_distance"], "t_pickuploc": ["t_pickuploc"],
@@ -928,6 +939,7 @@ def run_query_isolated(
         query_sql: str | None,
         timeout: int,
         runs: int = 1,
+        engine_kwargs: dict = None,
 ) -> tuple[BenchmarkResult, dict[str, dict[str, float]]]:
     """Run a query in an isolated subprocess with hard timeout.
 
@@ -938,7 +950,7 @@ def run_query_isolated(
     result_queue = multiprocessing.Queue()
     process = multiprocessing.Process(
         target=_run_query_in_process,
-        args=(result_queue, engine_class, data_paths, query_name, query_sql, runs),
+        args=(result_queue, engine_class, data_paths, query_name, query_sql, runs, engine_kwargs),
     )
 
     process.start()
@@ -1023,6 +1035,7 @@ def run_benchmark(
         timeout: int,
         scale_factor: float,
         runs: int = 3,
+        engine_kwargs: dict = None,
 ) -> BenchmarkSuite:
     """Generic benchmark runner for any engine.
 
@@ -1107,7 +1120,8 @@ def run_benchmark(
             query_name=query_name,
             query_sql=query_sql,
             timeout=timeout,
-            runs=runs
+            runs=runs,
+            engine_kwargs=engine_kwargs
         )
 
         # Capture detailed index build time across the suite (will only be recorded on initial table load run)
@@ -1211,6 +1225,8 @@ def main():
                         help="Output file for results")
     parser.add_argument("--scale-factor", type=float, default=1,
                         help="Scale factor of the data (for reporting only)")
+    parser.add_argument("--sedona-memory-limit", type=str, default="unlimited",
+                        help="Memory limit for SedonaDB (default: unlimited)")
 
     args = parser.parse_args()
 
@@ -1234,8 +1250,12 @@ def main():
     for table, path in data_paths.items():
         print(f"  {table}: {path}")
 
+    engine_kwargs = {
+        "sedona_memory_limit": args.sedona_memory_limit
+    }
+
     results = [
-        run_benchmark(engine, data_paths, queries, args.timeout, args.scale_factor, args.runs)
+        run_benchmark(engine, data_paths, queries, args.timeout, args.scale_factor, args.runs, engine_kwargs)
         for engine in engines
     ]
 
