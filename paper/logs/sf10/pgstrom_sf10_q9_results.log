@@ -1,0 +1,45 @@
+SET
+                                                                                                                                                                                                                                                                                                                 QUERY PLAN                                                                                                                                                                                                                                                                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Gather Merge  (cost=31041104.44..31086552.32 rows=395199 width=48) (actual time=1148.913..1161.986 rows=675 loops=1)
+   Workers Planned: 1
+   Workers Launched: 1
+   Buffers: shared hit=381320
+   ->  Sort  (cost=31040104.43..31041092.43 rows=395199 width=48) (actual time=1140.226..1140.251 rows=338 loops=2)
+         Sort Key: (CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END) DESC, b1.b_buildingkey, b2.b_buildingkey
+         Sort Method: quicksort  Memory: 53kB
+         Buffers: shared hit=381320
+         Worker 0:  Sort Method: quicksort  Memory: 54kB
+         ->  Nested Loop  (cost=0.28..31003366.30 rows=395199 width=48) (actual time=12.277..1139.890 rows=338 loops=2)
+               Buffers: shared hit=381305
+               ->  Parallel Seq Scan on building b1  (cost=0.00..2443.46 rows=50846 width=143) (actual time=0.021..7.741 rows=43219 loops=2)
+                     Buffers: shared hit=1935
+               ->  Index Scan using idx_building_b_boundary on building b2  (cost=0.28..113.07 rows=3 width=143) (actual time=0.025..0.025 rows=0 loops=86438)
+                     Index Cond: (b_boundary && b1.b_boundary)
+                     Filter: ((b1.b_buildingkey < b_buildingkey) AND st_intersects(b1.b_boundary, b_boundary))
+                     Rows Removed by Filter: 1
+                     Buffers: shared hit=379370
+ Planning:
+   Buffers: shared hit=326
+ Planning Time: 14.542 ms
+ Execution Time: 1162.146 ms
+(22 rows)
+
+                                                                    QUERY PLAN                                                                     
+---------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=10201.66..10201.67 rows=1 width=8) (actual time=242.652..252.488 rows=1 loops=1)
+   ->  Gather  (cost=10201.55..10201.66 rows=1 width=8) (actual time=242.017..252.479 rows=1 loops=1)
+         Workers Planned: 1
+         Workers Launched: 1
+         ->  Parallel Custom Scan (GpuPreAgg) on building b1  (cost=9201.55..9201.56 rows=1 width=8) (actual time=156.528..156.530 rows=0 loops=2)
+               GPU Projection: pgstrom.nrows()
+               GPU Join Quals [1]: (b_buildingkey < b_buildingkey), (b_boundary && b_boundary) [plan: 50846 -> 395199, exec: 86438 -> 726]
+               GPU GiST Join [1]: (b_boundary && b_boundary) on idx_building_b_boundary (b_boundary) [fetched: 87890]
+               GpuJoin buffer usage: 32.43MB
+               GPU Group Key: 
+               Scan-Engine: VFS with GPU0; vfs=1935, ntuples=86438
+               ->  Parallel Seq Scan on building b2  (cost=0.00..2443.46 rows=50846 width=143) (actual time=0.013..11.037 rows=43219 loops=2)
+ Planning Time: 1.670 ms
+ Execution Time: 254.014 ms
+(14 rows)
+

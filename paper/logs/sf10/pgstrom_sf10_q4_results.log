@@ -1,0 +1,70 @@
+SET
+                                                                             QUERY PLAN                                                                              
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=3606870.09..3608006.87 rows=454710 width=31) (actual time=7736.591..7966.139 rows=243 loops=1)
+   Sort Key: (count(*)) DESC, z.z_zonekey
+   Sort Method: quicksort  Memory: 44kB
+   Buffers: shared hit=1106891 read=143690
+   I/O Timings: shared read=268.636
+   ->  HashAggregate  (cost=3559592.56..3564139.66 rows=454710 width=31) (actual time=7735.436..7966.024 rows=243 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         Batches: 1  Memory Usage: 12337kB
+         Buffers: shared hit=1106891 read=143690
+         I/O Timings: shared read=268.636
+         ->  Nested Loop  (cost=2843361.34..3556182.23 rows=454710 width=23) (actual time=7547.441..7964.555 rows=498 loops=1)
+               Buffers: shared hit=1106891 read=143690
+               I/O Timings: shared read=268.636
+               ->  Limit  (cost=2843361.06..2843477.73 rows=1000 width=45) (actual time=7546.255..7776.428 rows=1000 loops=1)
+                     Buffers: shared hit=1078076 read=143690
+                     I/O Timings: shared read=268.636
+                     ->  Gather Merge  (cost=2843361.06..8677101.68 rows=50000000 width=45) (actual time=7546.253..7776.338 rows=1000 loops=1)
+                           Workers Planned: 2
+                           Workers Launched: 2
+                           Buffers: shared hit=1078076 read=143690
+                           I/O Timings: shared read=268.636
+                           ->  Sort  (cost=2842361.04..2904861.04 rows=25000000 width=45) (actual time=7534.396..7534.457 rows=776 loops=3)
+                                 Sort Key: t.t_tip DESC, t.t_tripkey
+                                 Sort Method: top-N heapsort  Memory: 155kB
+                                 Buffers: shared hit=1078076 read=143690
+                                 I/O Timings: shared read=268.636
+                                 Worker 0:  Sort Method: top-N heapsort  Memory: 153kB
+                                 Worker 1:  Sort Method: top-N heapsort  Memory: 154kB
+                                 ->  Parallel Seq Scan on trip t  (cost=0.00..1471638.00 rows=25000000 width=45) (actual time=0.034..3923.566 rows=20000000 loops=3)
+                                       Buffers: shared hit=1077948 read=143690
+                                       I/O Timings: shared read=268.636
+               ->  Index Scan using idx_zone_z_boundary on zone z  (cost=0.29..712.24 rows=45 width=4564) (actual time=0.163..0.188 rows=0 loops=1000)
+                     Index Cond: (z_boundary ~ t.t_pickuploc)
+                     Filter: st_within(t.t_pickuploc, z_boundary)
+                     Rows Removed by Filter: 1
+                     Buffers: shared hit=28815
+ Planning:
+   Buffers: shared hit=404
+ Planning Time: 14.329 ms
+ Execution Time: 7974.153 ms
+(40 rows)
+
+                                                                             QUERY PLAN                                                                              
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=3044370.09..3045506.87 rows=454710 width=31) (actual time=7109.436..7373.897 rows=412 loops=1)
+   Sort Key: (count(*)) DESC, z.z_zonekey
+   Sort Method: quicksort  Memory: 57kB
+   ->  HashAggregate  (cost=2997092.56..3001639.66 rows=454710 width=31) (actual time=7108.164..7373.690 rows=412 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         Batches: 1  Memory Usage: 12369kB
+         ->  Nested Loop  (cost=2843361.34..2993682.23 rows=454710 width=23) (actual time=7046.435..7372.170 rows=1124 loops=1)
+               ->  Limit  (cost=2843361.06..2843477.73 rows=1000 width=45) (actual time=7046.335..7311.230 rows=1000 loops=1)
+                     ->  Gather Merge  (cost=2843361.06..8677101.68 rows=50000000 width=45) (actual time=7046.333..7311.163 rows=1000 loops=1)
+                           Workers Planned: 2
+                           Workers Launched: 2
+                           ->  Sort  (cost=2842361.04..2904861.04 rows=25000000 width=45) (actual time=7034.960..7034.998 rows=788 loops=3)
+                                 Sort Key: t.t_tip DESC, t.t_tripkey
+                                 Sort Method: top-N heapsort  Memory: 155kB
+                                 Worker 0:  Sort Method: top-N heapsort  Memory: 153kB
+                                 Worker 1:  Sort Method: top-N heapsort  Memory: 154kB
+                                 ->  Parallel Seq Scan on trip t  (cost=0.00..1471638.00 rows=25000000 width=45) (actual time=0.021..3677.192 rows=20000000 loops=3)
+               ->  Index Scan using idx_zone_z_boundary on zone z  (cost=0.29..149.74 rows=45 width=4564) (actual time=0.052..0.061 rows=1 loops=1000)
+                     Index Cond: (z_boundary && t.t_pickuploc)
+ Planning Time: 3.456 ms
+ Execution Time: 7377.859 ms
+(21 rows)
+

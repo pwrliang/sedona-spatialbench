@@ -1,0 +1,43 @@
+SET
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=23564.33..23564.34 rows=1 width=8) (actual time=54.611..54.613 rows=1 loops=1)
+   Buffers: shared hit=25385
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=0.00..13765.59 rows=1 width=9014) (actual time=49.138..49.139 rows=1 loops=1)
+           Buffers: shared hit=24416
+           ->  Seq Scan on zone z  (cost=0.00..27531.19 rows=2 width=9014) (actual time=49.137..49.137 rows=1 loops=1)
+                 Filter: (z_name = 'Coconino County'::text)
+                 Rows Removed by Filter: 149105
+                 Buffers: shared hit=24416
+   ->  Bitmap Heap Scan on trip t  (cost=21.06..9797.23 rows=600 width=0) (actual time=52.381..54.568 rows=541 loops=1)
+         Filter: st_intersects(t_pickuploc, $0)
+         Rows Removed by Filter: 347
+         Heap Blocks: exact=884
+         Buffers: shared hit=25385
+         ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..20.91 rows=600 width=0) (actual time=49.713..49.714 rows=888 loops=1)
+               Index Cond: (t_pickuploc && $0)
+               Buffers: shared hit=24475
+ Planning:
+   Buffers: shared hit=227
+ Planning Time: 13.552 ms
+ Execution Time: 55.204 ms
+(21 rows)
+
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=16065.83..16065.84 rows=1 width=8) (actual time=37.536..37.537 rows=1 loops=1)
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=0.00..13765.59 rows=1 width=9014) (actual time=36.451..36.452 rows=1 loops=1)
+           ->  Seq Scan on zone z  (cost=0.00..27531.19 rows=2 width=9014) (actual time=36.449..36.450 rows=1 loops=1)
+                 Filter: (z_name = 'Coconino County'::text)
+                 Rows Removed by Filter: 149105
+   ->  Bitmap Heap Scan on trip t  (cost=21.06..2298.73 rows=600 width=0) (actual time=36.803..37.497 rows=888 loops=1)
+         Recheck Cond: (t_pickuploc && $0)
+         Heap Blocks: exact=884
+         ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..20.91 rows=600 width=0) (actual time=36.719..36.719 rows=888 loops=1)
+               Index Cond: (t_pickuploc && $0)
+ Planning Time: 0.097 ms
+ Execution Time: 37.570 ms
+(13 rows)
+

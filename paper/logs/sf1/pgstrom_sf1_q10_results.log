@@ -1,0 +1,69 @@
+SET
+                                                                                 QUERY PLAN                                                                                  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=490063670.43..490064060.67 rows=156095 width=82) (actual time=25258.145..25282.038 rows=156095 loops=1)
+   Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+   Sort Method: quicksort  Memory: 18697kB
+   Buffers: shared hit=8471913
+   ->  Finalize GroupAggregate  (cost=490006756.64..490050205.63 rows=156095 width=82) (actual time=24976.566..25180.344 rows=156095 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         Buffers: shared hit=8471908
+         ->  Gather Merge  (cost=490006756.64..490043181.35 rows=312190 width=98) (actual time=24976.550..25028.340 rows=156095 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               Buffers: shared hit=8471908
+               ->  Sort  (cost=490005756.62..490006146.86 rows=156095 width=98) (actual time=24943.471..24950.836 rows=52032 loops=3)
+                     Sort Key: z.z_zonekey, z.z_name
+                     Sort Method: quicksort  Memory: 12972kB
+                     Buffers: shared hit=8471908
+                     Worker 0:  Sort Method: quicksort  Memory: 13052kB
+                     Worker 1:  Sort Method: quicksort  Memory: 7882kB
+                     ->  Partial HashAggregate  (cost=489990340.63..489992291.82 rows=156095 width=98) (actual time=24904.903..24927.240 rows=52032 loops=3)
+                           Group Key: z.z_zonekey, z.z_name
+                           Batches: 1  Memory Usage: 38929kB
+                           Buffers: shared hit=8471876
+                           Worker 0:  Batches: 1  Memory Usage: 38929kB
+                           Worker 1:  Batches: 1  Memory Usage: 30737kB
+                           ->  Nested Loop Left Join  (cost=0.41..489180571.96 rows=53984578 width=56) (actual time=0.278..24240.575 rows=1062014 loops=3)
+                                 Buffers: shared hit=8471876
+                                 ->  Parallel Seq Scan on zone z  (cost=0.00..26230.40 rows=65040 width=9040) (actual time=0.012..17.358 rows=52032 loops=3)
+                                       Buffers: shared hit=25580
+                                 ->  Index Scan using idx_trip_t_pickuploc on trip t  (cost=0.41..7514.82 rows=600 width=62) (actual time=0.257..0.458 rows=20 loops=156095)
+                                       Index Cond: (t_pickuploc @ z.z_boundary)
+                                       Filter: st_within(t_pickuploc, z.z_boundary)
+                                       Rows Removed by Filter: 27
+                                       Buffers: shared hit=8187665
+ Planning:
+   Buffers: shared hit=321
+ Planning Time: 14.853 ms
+ Execution Time: 25304.550 ms
+(36 rows)
+
+                                                                                QUERY PLAN                                                                                 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=7307464.26..7307854.50 rows=156095 width=82) (actual time=6330.502..6339.321 rows=156095 loops=1)
+   Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+   Sort Method: quicksort  Memory: 18826kB
+   ->  Finalize GroupAggregate  (cost=7250550.47..7293999.46 rows=156095 width=82) (actual time=6055.241..6242.371 rows=156095 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         ->  Gather Merge  (cost=7250550.47..7286975.18 rows=312190 width=98) (actual time=6055.227..6090.744 rows=156095 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               ->  Sort  (cost=7249550.45..7249940.69 rows=156095 width=98) (actual time=6027.992..6035.303 rows=52032 loops=3)
+                     Sort Key: z.z_zonekey, z.z_name
+                     Sort Method: quicksort  Memory: 12291kB
+                     Worker 0:  Sort Method: quicksort  Memory: 9799kB
+                     Worker 1:  Sort Method: quicksort  Memory: 11830kB
+                     ->  Partial HashAggregate  (cost=7234134.46..7236085.65 rows=156095 width=98) (actual time=5987.791..6010.734 rows=52032 loops=3)
+                           Group Key: z.z_zonekey, z.z_name
+                           Batches: 1  Memory Usage: 38929kB
+                           Worker 0:  Batches: 1  Memory Usage: 30737kB
+                           Worker 1:  Batches: 1  Memory Usage: 38929kB
+                           ->  Nested Loop Left Join  (cost=0.41..1380571.96 rows=390237500 width=56) (actual time=0.183..4828.656 rows=2474147 loops=3)
+                                 ->  Parallel Seq Scan on zone z  (cost=0.00..26230.40 rows=65040 width=9040) (actual time=0.007..10.882 rows=52032 loops=3)
+                                 ->  Index Scan using idx_trip_t_pickuploc on trip t  (cost=0.41..14.82 rows=600 width=62) (actual time=0.036..0.082 rows=47 loops=156095)
+                                       Index Cond: (t_pickuploc && z.z_boundary)
+ Planning Time: 7.519 ms
+ Execution Time: 6350.611 ms
+(24 rows)
+

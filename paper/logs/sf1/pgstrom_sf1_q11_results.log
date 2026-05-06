@@ -1,0 +1,35 @@
+SET
+                                                                                QUERY PLAN                                                                                 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=11330999383.35..11330999383.36 rows=1 width=8) (actual time=247702.732..247779.648 rows=1 loops=1)
+   Buffers: shared hit=119415285
+   ->  Gather  (cost=11330999383.14..11330999383.35 rows=2 width=8) (actual time=247620.479..247779.639 rows=3 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=119415285
+         ->  Partial Aggregate  (cost=11330998383.14..11330998383.15 rows=1 width=8) (actual time=247615.930..247615.932 rows=1 loops=3)
+               Buffers: shared hit=119415285
+               ->  Nested Loop  (cost=0.70..11328073824.03 rows=1169823644 width=0) (actual time=3.631..247598.762 rows=58797 loops=3)
+                     Join Filter: (pickup_zone.z_zonekey <> dropoff_zone.z_zonekey)
+                     Rows Removed by Join Filter: 962092
+                     Buffers: shared hit=119415285
+                     ->  Nested Loop  (cost=0.41..489180571.96 rows=53984578 width=40) (actual time=0.616..29206.387 rows=1019015 loops=3)
+                           Buffers: shared hit=8471813
+                           ->  Parallel Seq Scan on zone pickup_zone  (cost=0.00..26230.40 rows=65040 width=9022) (actual time=0.006..23.862 rows=52032 loops=3)
+                                 Buffers: shared hit=25580
+                           ->  Index Scan using idx_trip_t_pickuploc on trip t  (cost=0.41..7514.82 rows=600 width=64) (actual time=0.313..0.553 rows=20 loops=156095)
+                                 Index Cond: (t_pickuploc @ pickup_zone.z_boundary)
+                                 Filter: st_within(t_pickuploc, pickup_zone.z_boundary)
+                                 Rows Removed by Filter: 27
+                                 Buffers: shared hit=8187665
+                     ->  Index Scan using idx_zone_z_boundary on zone dropoff_zone  (cost=0.28..200.58 rows=16 width=9022) (actual time=0.174..0.214 rows=1 loops=3057046)
+                           Index Cond: (z_boundary ~ t.t_dropoffloc)
+                           Filter: st_within(t.t_dropoffloc, z_boundary)
+                           Rows Removed by Filter: 1
+                           Buffers: shared hit=110943472
+ Planning:
+   Buffers: shared hit=503
+ Planning Time: 15.275 ms
+ Execution Time: 247793.275 ms
+(30 rows)
+

@@ -1,0 +1,35 @@
+SET
+                                                                                                                                                                                                                                                                                                              QUERY PLAN                                                                                                                                                                                                                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=2957363.10..2957458.77 rows=38269 width=48) (actual time=446.455..446.461 rows=37 loops=1)
+   Sort Key: (CASE WHEN (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)) / ((st_area(b1.b_boundary) + st_area(b2.b_boundary)) - st_area(st_intersection(b1.b_boundary, b2.b_boundary, '-1'::double precision)))) END) DESC, b1.b_buildingkey, b2.b_buildingkey
+   Sort Method: quicksort  Memory: 28kB
+   Buffers: shared hit=73948
+   ->  Nested Loop  (cost=0.28..2954450.08 rows=38269 width=48) (actual time=52.063..446.378 rows=37 loops=1)
+         Buffers: shared hit=73942
+         ->  Seq Scan on building b1  (cost=0.00..648.00 rows=20000 width=143) (actual time=0.003..1.856 rows=20000 loops=1)
+               Buffers: shared hit=448
+         ->  Index Scan using idx_building_b_boundary on building b2  (cost=0.28..25.42 rows=1 width=143) (actual time=0.022..0.022 rows=0 loops=20000)
+               Index Cond: (b_boundary && b1.b_boundary)
+               Filter: ((b1.b_buildingkey < b_buildingkey) AND st_intersects(b1.b_boundary, b_boundary))
+               Rows Removed by Filter: 1
+               Buffers: shared hit=73494
+ Planning:
+   Buffers: shared hit=193
+ Planning Time: 14.234 ms
+ Execution Time: 446.562 ms
+(17 rows)
+
+                                                                      QUERY PLAN                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=9443.67..9443.68 rows=1 width=8) (actual time=435.279..435.280 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.28..9348.00 rows=38269 width=0) (actual time=49.537..435.256 rows=40 loops=1)
+         ->  Seq Scan on building b1  (cost=0.00..648.00 rows=20000 width=143) (actual time=0.003..1.365 rows=20000 loops=1)
+         ->  Index Scan using idx_building_b_boundary on building b2  (cost=0.28..0.43 rows=1 width=143) (actual time=0.021..0.021 rows=0 loops=20000)
+               Index Cond: (b_boundary && b1.b_boundary)
+               Filter: (b1.b_buildingkey < b_buildingkey)
+               Rows Removed by Filter: 1
+ Planning Time: 1.104 ms
+ Execution Time: 435.304 ms
+(9 rows)
+

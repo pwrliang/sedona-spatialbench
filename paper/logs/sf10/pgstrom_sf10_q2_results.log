@@ -1,0 +1,59 @@
+SET
+                                                                      QUERY PLAN                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=69358.27..69358.28 rows=1 width=8) (actual time=341.014..348.389 rows=1 loops=1)
+   Buffers: shared hit=9230
+   InitPlan 1 (returns $1)
+     ->  Limit  (cost=1100.00..14218.94 rows=1 width=4541) (actual time=312.909..313.001 rows=1 loops=1)
+           Buffers: shared hit=8
+           ->  Gather  (cost=1100.00..40456.81 rows=3 width=4541) (actual time=312.907..312.998 rows=1 loops=1)
+                 Workers Planned: 2
+                 Workers Launched: 2
+                 Buffers: shared hit=8
+                 ->  Parallel Custom Scan (GpuScan) on zone z  (cost=100.00..39456.51 rows=1 width=4541) (actual time=295.113..295.115 rows=0 loops=3)
+                       GPU Projection: z_boundary
+                       GPU Scan Quals: (z_name = 'Coconino County'::text) [plan: 454710 -> 1, exec: 414906 -> 1]
+                       Scan-Engine: VFS with GPU0; vfs=86239, ntuples=414906
+                       Buffers: shared hit=8
+   ->  Gather  (cost=55139.11..55139.32 rows=2 width=8) (actual time=340.518..348.290 rows=3 loops=1)
+         Workers Planned: 2
+         Params Evaluated: $1
+         Workers Launched: 2
+         Buffers: shared hit=9226
+         ->  Partial Aggregate  (cost=54139.11..54139.12 rows=1 width=8) (actual time=15.251..15.251 rows=1 loops=3)
+               Buffers: shared hit=9222
+               ->  Parallel Bitmap Heap Scan on trip t  (cost=170.92..54132.86 rows=2500 width=0) (actual time=3.904..15.079 rows=1833 loops=3)
+                     Filter: st_intersects(t_pickuploc, $1)
+                     Rows Removed by Filter: 1164
+                     Heap Blocks: exact=6371
+                     Buffers: shared hit=9222
+                     ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..169.42 rows=6000 width=0) (actual time=3.817..3.817 rows=8990 loops=1)
+                           Index Cond: (t_pickuploc && $1)
+                           Buffers: shared hit=114
+ Planning:
+   Buffers: shared hit=416
+ Planning Time: 14.739 ms
+ Execution Time: 349.271 ms
+(33 rows)
+
+                                                                     QUERY PLAN                                                                      
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=37166.80..37166.81 rows=1 width=8) (actual time=97.519..103.926 rows=1 loops=1)
+   InitPlan 1 (returns $1)
+     ->  Limit  (cost=1100.00..14218.94 rows=1 width=4541) (actual time=84.675..91.080 rows=1 loops=1)
+           ->  Gather  (cost=1100.00..40456.81 rows=3 width=4541) (actual time=84.673..91.078 rows=1 loops=1)
+                 Workers Planned: 2
+                 Workers Launched: 2
+                 ->  Parallel Custom Scan (GpuScan) on zone z  (cost=100.00..39456.51 rows=1 width=4541) (actual time=73.349..73.351 rows=0 loops=3)
+                       GPU Projection: z_boundary
+                       GPU Scan Quals: (z_name = 'Coconino County'::text) [plan: 454710 -> 1, exec: 394526 -> 1]
+                       Scan-Engine: VFS with GPU0; vfs=81870, ntuples=394526
+   ->  Bitmap Heap Scan on trip t  (cost=170.92..22932.86 rows=6000 width=0) (actual time=88.237..96.997 rows=8990 loops=1)
+         Recheck Cond: (t_pickuploc && $1)
+         Heap Blocks: exact=8953
+         ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..169.42 rows=6000 width=0) (actual time=86.894..86.894 rows=8990 loops=1)
+               Index Cond: (t_pickuploc && $1)
+ Planning Time: 0.551 ms
+ Execution Time: 104.076 ms
+(17 rows)
+

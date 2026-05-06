@@ -1,0 +1,34 @@
+SET
+                                                                                                                                 QUERY PLAN                                                                                                                                  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=295392.71..295392.72 rows=3 width=79) (actual time=56.732..56.733 rows=3 loops=1)
+   Sort Key: (count(t.t_tripkey)) DESC, z.z_zonekey
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=14021
+   ->  GroupAggregate  (cost=295052.29..295392.69 rows=3 width=79) (actual time=53.099..56.701 rows=3 loops=1)
+         Group Key: z.z_zonekey, z.z_name
+         Buffers: shared hit=14018
+         ->  Sort  (cost=295052.29..295100.91 rows=19449 width=54) (actual time=52.884..53.249 rows=8959 loops=1)
+               Sort Key: z.z_zonekey, z.z_name
+               Sort Method: quicksort  Memory: 1240kB
+               Buffers: shared hit=14018
+               ->  Nested Loop  (cost=171.20..293666.80 rows=19449 width=54) (actual time=7.039..49.765 rows=8959 loops=1)
+                     Buffers: shared hit=14015
+                     ->  Index Scan using idx_zone_z_boundary on zone z  (cost=0.29..53.84 rows=3 width=4564) (actual time=0.947..1.593 rows=18 loops=1)
+                           Index Cond: (z_boundary && '0103000020E610000001000000050000002FDD2406810D5CC0CB10C7BAB835414096438B6CE7D35BC0CB10C7BAB835414096438B6CE7D35BC0FE43FAEDEBA841402FDD2406810D5CC0FE43FAEDEBA841402FDD2406810D5CC0CB10C7BAB8354140'::geometry)
+                           Filter: st_intersects('0103000020E610000001000000050000002FDD2406810D5CC0CB10C7BAB835414096438B6CE7D35BC0CB10C7BAB835414096438B6CE7D35BC0FE43FAEDEBA841402FDD2406810D5CC0FE43FAEDEBA841402FDD2406810D5CC0CB10C7BAB8354140'::geometry, z_boundary)
+                           Buffers: shared hit=99
+                     ->  Bitmap Heap Scan on trip t  (cost=170.92..97810.99 rows=6000 width=63) (actual time=0.547..2.609 rows=498 loops=18)
+                           Filter: st_within(t_pickuploc, z.z_boundary)
+                           Rows Removed by Filter: 262
+                           Heap Blocks: exact=13634
+                           Buffers: shared hit=13916
+                           ->  Bitmap Index Scan on idx_trip_t_pickuploc  (cost=0.00..169.42 rows=6000 width=0) (actual time=0.216..0.216 rows=760 loops=18)
+                                 Index Cond: (t_pickuploc @ z.z_boundary)
+                                 Buffers: shared hit=176
+ Planning:
+   Buffers: shared hit=450
+ Planning Time: 15.407 ms
+ Execution Time: 57.323 ms
+(29 rows)
+
