@@ -15,7 +15,6 @@ plt.rcParams['font.family'] = 'sans-serif'
 HATCH_PATTERNS = ['/', '\\', '.', 'x', '+']
 
 COLUMNS_ORDER = [
-    "Loading",
     "Scanning",
     "Filter Stage",
     "Refinement Stage",
@@ -85,7 +84,6 @@ def parse_raw_postgis_file(filepath):
     miscs = max(0.0, total_time - full_join_time)
 
     return {
-        "Loading": loading,
         "Scanning": scanning,
         "Filter Stage": filter_stage,
         "Refinement Stage": refinement_stage,
@@ -106,6 +104,7 @@ def parse_folder_logs(log_folder, target_sf, as_percentage=True):
         query_id = f"Q{match.group(2)}"
 
         parsed_data = parse_raw_postgis_file(filepath)
+        print(query_id, parsed_data)
         if parsed_data:
             all_queries_data[query_id] = parsed_data
 
