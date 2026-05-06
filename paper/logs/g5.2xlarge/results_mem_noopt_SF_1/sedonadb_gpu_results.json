@@ -1,25 +1,25 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-05-06T06:17:55.025123+00:00",
+  "generated_at": "2026-05-06T15:08:52.694296+00:00",
   "results": [
     {
       "engine": "sedonadb_gpu",
       "version": "0.3.0",
       "scale_factor": 1.0,
-      "timestamp": "2026-05-06T06:17:09.963959+00:00",
-      "total_time": 6.53,
+      "timestamp": "2026-05-06T15:07:59.440864+00:00",
+      "total_time": 6.68,
       "index_build_times": {},
       "results": [
         {
           "query": "q2",
-          "time_seconds": 0.49,
+          "time_seconds": 0.5,
           "raw_times": [
-            0.5,
-            0.5208,
-            0.5132,
-            0.442,
-            0.4795
+            0.4687,
+            0.486,
+            0.5038,
+            0.5237,
+            0.531
           ],
           "row_count": 1,
           "status": "success",
@@ -27,13 +27,13 @@
         },
         {
           "query": "q4",
-          "time_seconds": 0.48,
+          "time_seconds": 0.53,
           "raw_times": [
-            0.4885,
-            0.4805,
-            0.4724,
-            0.4823,
-            0.4894
+            0.5101,
+            0.5568,
+            0.5327,
+            0.5235,
+            0.5072
           ],
           "row_count": 258,
           "status": "success",
@@ -43,11 +43,11 @@
           "query": "q6",
           "time_seconds": 0.86,
           "raw_times": [
-            0.8405,
-            0.8658,
-            0.8922,
-            0.84,
-            0.8445
+            0.8853,
+            0.82,
+            0.8728,
+            0.8674,
+            0.8723
           ],
           "row_count": 3,
           "status": "success",
@@ -57,11 +57,11 @@
           "query": "q9",
           "time_seconds": 0.03,
           "raw_times": [
-            0.0357,
-            0.034,
-            0.0359,
-            0.0316,
-            0.0319
+            0.0344,
+            0.0332,
+            0.0343,
+            0.0345,
+            0.0323
           ],
           "row_count": 37,
           "status": "success",
@@ -69,13 +69,13 @@
         },
         {
           "query": "q10",
-          "time_seconds": 2.01,
+          "time_seconds": 2.07,
           "raw_times": [
-            2.2054,
-            2.012,
-            1.9179,
-            2.0215,
-            1.9082
+            2.2224,
+            2.0668,
+            1.9996,
+            2.0448,
+            2.0311
           ],
           "row_count": 156095,
           "status": "success",
@@ -83,13 +83,13 @@
         },
         {
           "query": "q11",
-          "time_seconds": 2.66,
+          "time_seconds": 2.69,
           "raw_times": [
-            2.5488,
-            2.5524,
-            2.4692,
-            2.7358,
-            2.9866
+            2.6339,
+            2.6019,
+            2.5712,
+            2.6343,
+            3.0234
           ],
           "row_count": 1,
           "status": "success",
