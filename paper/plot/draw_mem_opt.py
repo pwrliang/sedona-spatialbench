@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 import os
+import re
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -33,7 +34,7 @@ def load_data_to_df(results_dir: Path, query_filter: list[str] = None) -> pd.Dat
         print(f"Error: Directory {results_dir} does not exist.")
         return pd.DataFrame()
 
-    files = list(results_dir.glob("*_results.json"))
+    files = list(results_dir.glob("sedonadb_gpu_results.json"))
     if not files:
         print(f"Warning: No *_results.json files found in {results_dir}")
         return pd.DataFrame()
@@ -114,7 +115,7 @@ def print_statistics(df: pd.DataFrame, sf_label: str):
         print(f"\nCould not calculate statistics for SF={sf_label}: {e}")
 
 
-def draw_subplot(ax, df, log_scale, title):
+def draw_subplot1(ax, df, log_scale, title):
     """Helper function to draw bars on a specific axes."""
     if df.empty:
         ax.text(0.5, 0.5, "No Data", ha='center', va='center')
@@ -173,8 +174,6 @@ def draw_subplot(ax, df, log_scale, title):
 
     # Place title at the bottom by treating it as the x-axis label
     ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
-
-    # Remove the top title if seaborn created one automatically
     ax.set_title("")
 
     # Legend
@@ -184,7 +183,7 @@ def draw_subplot(ax, df, log_scale, title):
     ax.set_axisbelow(True)
     ax.yaxis.grid(True, linestyle='--', alpha=0.7)
 
-    # Annotations (Only keeping Timeout/Error warnings, removed success numbers)
+    # Annotations
     configs_ordered = [t.get_text() for t in ax.get_legend().get_texts()]
     y_offset = max_success_time * 0.02
 
@@ -214,15 +213,81 @@ def draw_subplot(ax, df, log_scale, title):
                             fontsize=12, rotation=90, color='red', fontweight='bold')
 
 
-def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str = None, log_scale: bool = False):
-    """Draw two subplots (SF1 and SF10) side by side."""
+def draw_subplot2(ax, spill_dir: Path, title: str):
+    """Parses memory budget logs and draws a line plot for Q11 performance."""
+    data = []
 
-    # Width calculation: Single plot width * 2 roughly
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 4.5))
+    if not spill_dir.exists():
+        print(f"Warning: Spill directory {spill_dir} does not exist.")
+        ax.text(0.5, 0.5, "No Spill Directory Found", ha='center', va='center')
+        ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
+        return
+
+    pattern = re.compile(r"results_SF_\d+_MEM_LIMIT_(\d+)gb")
+
+    for dirname in spill_dir.iterdir():
+        if not dirname.is_dir():
+            continue
+
+        match = pattern.search(dirname.name)
+        if match:
+            mem_limit = int(match.group(1))
+            json_file = dirname / "sedonadb_gpu_results.json"
+            if json_file.exists():
+                with open(json_file, 'r') as f:
+                    try:
+                        content = json.load(f)
+                        # Assumes the structure matches script #2: results[0].total_time
+                        results_list = content.get("results", [])
+                        if results_list:
+                            total_time = results_list[0].get("total_time")
+                            if total_time is not None:
+                                data.append((mem_limit, total_time))
+                    except json.JSONDecodeError:
+                        print(f"Warning: Could not decode {json_file}")
+
+    data.sort(key=lambda x: x[0])
+
+    if not data:
+        ax.text(0.5, 0.5, "No Memory Spill Data", ha='center', va='center')
+        ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
+        return
+
+    mem_limits = [x[0] for x in data]
+    times = [x[1] for x in data]
+
+    # Draw Lineplot
+    ax.plot(mem_limits, times, marker='o', linestyle='-', linewidth=2.5,
+            markersize=10, color=sns.color_palette("Set2")[2], label="Q11")
+
+    # Styling Spines (matching subplot 1)
+    for spine in ax.spines.values():
+        spine.set_edgecolor('black')
+        spine.set_linewidth(1.2)
+        spine.set_visible(True)
+
+    # Grid and Legends
+    ax.yaxis.grid(True, linestyle='--', alpha=0.7)
+    ax.xaxis.grid(False)
+    ax.set_axisbelow(True)
+    ax.legend(frameon=False, fontsize=12)
+
+    # Labels and Titles (Title placed at bottom to match ax1)
+    ax.set_ylabel('Running Time (s)', fontweight='bold')
+    ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
+    ax.set_title("")
+
+
+def plot_benchmark(df_sf10: pd.DataFrame, root_dir: Path, output_file: str = None, log_scale: bool = False):
+    """Draw two subplots side by side."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
 
     # Draw Subplots (Titles will be rendered at the bottom via x-labels)
-    draw_subplot(ax1, df_sf1, log_scale, "(a) Scale Factor: 1")
-    draw_subplot(ax2, df_sf10, log_scale, "(b) Scale Factor: 10")
+    draw_subplot1(ax1, df_sf10, log_scale, "(a) Scale Factor: 10")
+
+    # Point Subplot 2 specifically to the "spill" subdirectory
+    spill_dir = root_dir / "spill"
+    draw_subplot2(ax2, spill_dir, "(b) Memory Budget (GB)")
 
     plt.tight_layout()
 
@@ -236,7 +301,7 @@ def plot_benchmark(df_sf1: pd.DataFrame, df_sf10: pd.DataFrame, output_file: str
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-dir", type=str, required=True,
-                        help="Base directory containing 'results_*' subfolders")
+                        help="Base directory containing 'results_*' subfolders and the 'spill' folder")
     parser.add_argument("--output", type=str, default="mem_comp.pdf")
     parser.add_argument("--log-scale", action="store_true")
     parser.add_argument("--queries", type=str)
@@ -245,29 +310,24 @@ def main():
     q_filter = [q.strip().lower() for q in args.queries.split(',')] if args.queries else None
     base_path = Path(args.root_dir)
 
-    # Combine SF1 data
-    df_sf1_noopt = load_data_to_df(base_path / "results_mem_noopt_SF_1", q_filter)
-    df_sf1_opt = load_data_to_df(base_path / "results_SF_1", q_filter)
-    df_sf1 = pd.concat([df_sf1_noopt, df_sf1_opt]).reset_index(drop=True)
-
-    # Combine SF10 data
+    # Combine SF10 data (Subplot 1 expects these directly in root_dir)
     df_sf10_noopt = load_data_to_df(base_path / "results_mem_noopt_SF_10", q_filter)
     df_sf10_opt = load_data_to_df(base_path / "results_SF_10", q_filter)
     df_sf10 = pd.concat([df_sf10_noopt, df_sf10_opt]).reset_index(drop=True)
 
-    if df_sf1.empty and df_sf10.empty:
-        print("Error: No data found in the specified directories.")
+    if df_sf10.empty:
+        print("Error: No data found in the specified directories for Subplot A.")
         sys.exit(1)
 
     # Print raw numbers and speedups to console
-    print_statistics(df_sf1, "1")
     print_statistics(df_sf10, "10")
 
     # Resolve output path to be in the same directory as this script
     script_dir = Path(__file__).resolve().parent
     output_path = script_dir / args.output
 
-    plot_benchmark(df_sf1, df_sf10, str(output_path), args.log_scale)
+    # Pass the base_path to plot_benchmark, which will handle routing to the spill folder
+    plot_benchmark(df_sf10, base_path, str(output_path), args.log_scale)
 
 
 if __name__ == "__main__":
