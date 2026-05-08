@@ -119,7 +119,8 @@ def draw_subplot1(ax, df, log_scale, title):
     """Helper function to draw bars on a specific axes."""
     if df.empty:
         ax.text(0.5, 0.5, "No Data", ha='center', va='center')
-        ax.set_xlabel(title, fontweight='bold', labelpad=15)
+        ax.set_xlabel('Queries (SF=10)', fontweight='bold', labelpad=10, fontsize=16)
+        ax.set_title(title, fontweight='bold', fontsize=16, y=-0.35)
         return
 
     # Calculate scale limits for this subplot
@@ -172,9 +173,9 @@ def draw_subplot1(ax, df, log_scale, title):
 
     ax.set_ylabel("Execution Time (s)", fontweight='bold')
 
-    # Place title at the bottom by treating it as the x-axis label
-    ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
-    ax.set_title("")
+    # Labels and Titles
+    ax.set_xlabel('Queries', fontweight='bold', labelpad=10, fontsize=16)
+    ax.set_title(title, fontweight='bold', fontsize=16, y=-0.35)
 
     # Legend
     ax.legend(loc='upper left', frameon=False, fontsize=12, bbox_to_anchor=(0, 0.99))
@@ -220,7 +221,8 @@ def draw_subplot2(ax, spill_dir: Path, title: str):
     if not spill_dir.exists():
         print(f"Warning: Spill directory {spill_dir} does not exist.")
         ax.text(0.5, 0.5, "No Spill Directory Found", ha='center', va='center')
-        ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
+        ax.set_xlabel('Memory Budget (GB)', fontweight='bold', labelpad=10, fontsize=16)
+        ax.set_title(title, fontweight='bold', fontsize=16, y=-0.35)
         return
 
     pattern = re.compile(r"results_SF_\d+_MEM_LIMIT_(\d+)gb")
@@ -250,7 +252,8 @@ def draw_subplot2(ax, spill_dir: Path, title: str):
 
     if not data:
         ax.text(0.5, 0.5, "No Memory Spill Data", ha='center', va='center')
-        ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
+        ax.set_xlabel('Memory Budget (GB)', fontweight='bold', labelpad=10, fontsize=16)
+        ax.set_title(title, fontweight='bold', fontsize=16, y=-0.35)
         return
 
     mem_limits = [x[0] for x in data]
@@ -272,22 +275,22 @@ def draw_subplot2(ax, spill_dir: Path, title: str):
     ax.set_axisbelow(True)
     ax.legend(frameon=False, fontsize=12)
 
-    # Labels and Titles (Title placed at bottom to match ax1)
+    # Labels and Titles
     ax.set_ylabel('Running Time (s)', fontweight='bold')
-    ax.set_xlabel(title, fontweight='bold', labelpad=15, fontsize=16)
-    ax.set_title("")
+    ax.set_xlabel('Memory Budget (GB)', fontweight='bold', labelpad=10, fontsize=16)
+    ax.set_title(title, fontweight='bold', fontsize=16, y=-0.35)
 
 
 def plot_benchmark(df_sf10: pd.DataFrame, root_dir: Path, output_file: str = None, log_scale: bool = False):
     """Draw two subplots side by side."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
 
-    # Draw Subplots (Titles will be rendered at the bottom via x-labels)
-    draw_subplot1(ax1, df_sf10, log_scale, "(a) Scale Factor: 10")
+    # Draw Subplots
+    draw_subplot1(ax1, df_sf10, log_scale, "(a) Comparing of Memory Allocators")
 
     # Point Subplot 2 specifically to the "spill" subdirectory
     spill_dir = root_dir / "spill"
-    draw_subplot2(ax2, spill_dir, "(b) Memory Budget (GB)")
+    draw_subplot2(ax2, spill_dir, "(b) Performance Under Memory Constraint")
 
     plt.tight_layout()
 

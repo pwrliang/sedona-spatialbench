@@ -9,7 +9,7 @@ from matplotlib.patches import Patch
 import seaborn as sns
 
 # --- Configuration for Academic Figures ---
-sns.set_theme(style="whitegrid", context="paper", font_scale=1.5)
+sns.set_theme(style="whitegrid", context="paper", font_scale=2)
 plt.rcParams['font.family'] = 'sans-serif'
 
 HATCH_PATTERNS = ['/', '\\', '.', 'x', '+']
@@ -174,8 +174,8 @@ def create_figure(df, output_filename):
         for i in range(len(COLUMNS_ORDER))
     ]
 
-    leg = fig.legend(handles=legend_handles, loc='lower center', bbox_to_anchor=(0.5, 0.92), ncol=5, frameon=False,
-                     fontsize=11)
+    leg = fig.legend(handles=legend_handles, loc='lower center', bbox_to_anchor=(0.5, 0.85), ncol=5, frameon=False,
+                     fontsize=13)
 
     plt.tight_layout()
     fig.subplots_adjust(top=0.85)  # Make room for the legend at the top
