@@ -1,0 +1,73 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-05-08T03:49:01.187886+00:00",
+  "results": [
+    {
+      "engine": "pgstrom",
+      "version": "6.1.0",
+      "scale_factor": 1.0,
+      "timestamp": "2026-05-08T03:40:07.782130+00:00",
+      "total_time": 88.7,
+      "index_build_times": {},
+      "results": [
+        {
+          "query": "q2",
+          "time_seconds": 0.74,
+          "raw_times": [
+            0.7823,
+            0.7806,
+            0.8454,
+            0.642,
+            0.6459
+          ],
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 35.19,
+          "raw_times": [
+            35.2974,
+            35.0285,
+            35.2369,
+            35.27,
+            35.1158
+          ],
+          "row_count": 258,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 5.67,
+          "raw_times": [
+            5.6366,
+            5.7159,
+            5.6742,
+            5.646,
+            5.6954
+          ],
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 47.1,
+          "raw_times": [
+            47.1727,
+            47.0592,
+            47.2734,
+            47.0002,
+            46.9722
+          ],
+          "row_count": 37,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}
