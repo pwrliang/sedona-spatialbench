@@ -4,6 +4,7 @@ Summarize SpatialBench results and generate publication-quality figures
 for Section 5 of the VLDB 2027 paper.
 Categorizes query runtimes across the 4 functional categories defined in Section 4.1.
 Marks failed and timed-out queries explicitly in place of missing bars.
+Supports PostGIS evaluated under both indexed and no-index configurations.
 """
 
 import argparse
@@ -34,6 +35,7 @@ QUERY_CATEGORIES = [
 
 ENGINE_ORDER = [
     "postgis",
+    "postgis_noindex",
     "duckdb",
     "sedonadb",
     "clickhouse",
@@ -45,6 +47,7 @@ ENGINE_ORDER = [
 
 ENGINE_COLORS = {
     "postgis": "#336791",        # PostGIS Slate Blue
+    "postgis_noindex": "#85b6d9",# PostGIS Light Steel Blue
     "duckdb": "#ff7f0e",         # Orange
     "sedonadb": "#1f77b4",       # SedonaDB Royal Blue
     "clickhouse": "#8c564b",     # Brown
@@ -54,8 +57,22 @@ ENGINE_COLORS = {
     "trino": "#17becf"           # Teal
 }
 
+
+ENGINE_HATCHES = {
+    "postgis": "//",
+    "postgis_noindex": "\\",
+    "duckdb": "xx",
+    "sedonadb": "..",
+    "clickhouse": "++",
+    "spatial_polars": "**",
+    "geopandas": "--",
+    "apache_sedona": "oo",
+    "trino": "||"
+}
+
 ENGINE_LABELS = {
-    "postgis": "PostGIS",
+    "postgis": "PostGIS (Indexed)",
+    "postgis_noindex": "PostGIS (No Index)",
     "duckdb": "DuckDB",
     "sedonadb": "SedonaDB",
     "clickhouse": "ClickHouse",
@@ -179,9 +196,10 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
         return
 
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
+    plt.rcParams["hatch.linewidth"] = 0.55
 
-    fig = plt.figure(figsize=(7.2, 3.8))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1, 1], hspace=0.36)
+    fig = plt.figure(figsize=(7.2, 4.2))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1, 1], hspace=0.38)
 
     # Top row: 3 queries vs 2 queries
     w_top = [len(QUERY_CATEGORIES[0][1]), len(QUERY_CATEGORIES[1][1])]
@@ -199,7 +217,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
     ]
 
     n_eng = len(engines)
-    bar_width = 0.80 / n_eng
+    bar_width = 0.82 / n_eng
 
     for ax_idx, (cat_name, queries) in enumerate(QUERY_CATEGORIES):
         ax = axes[ax_idx]
@@ -220,7 +238,8 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 label=ENGINE_LABELS.get(eng, eng),
                 color=eng_color,
                 edgecolor="black",
-                linewidth=0.4
+                linewidth=0.35,
+                hatch=ENGINE_HATCHES.get(eng, "")
             )
 
             # Explicitly mark failed and timed out queries in place of missing bars
@@ -228,7 +247,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 val = data[eng].get(q)
                 if not isinstance(val, (int, float)):
                     pos_x = x[q_idx] + offset
-                    ax.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.5)
+                    ax.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.3)
                     ax.text(
                         pos_x,
                         0.008,
@@ -236,7 +255,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                         rotation=90,
                         ha="center",
                         va="bottom",
-                        fontsize=5.2,
+                        fontsize=4.6,
                         fontweight="bold",
                         color=eng_color
                     )
@@ -251,20 +270,21 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
         if ax_idx in (0, 2):
             ax.set_ylabel("Execution Time (s, log)", fontsize=8, fontweight="bold")
 
-    # Shared legend placed at top
+    # Shared legend placed cleanly at top without overlapping titles
     handles, labels = axes[0].get_legend_handles_labels()
+    ncol = 4 if n_eng > 4 else n_eng
     fig.legend(
         handles,
         labels,
         loc="upper center",
-        bbox_to_anchor=(0.5, 1.03),
-        ncol=min(6, n_eng),
-        fontsize=7.8,
+        bbox_to_anchor=(0.5, 0.99),
+        ncol=ncol,
+        fontsize=7.5,
         frameon=True,
         edgecolor="#cccccc"
     )
 
-    fig.subplots_adjust(top=0.91, bottom=0.08, left=0.09, right=0.98)
+    fig.subplots_adjust(top=0.86, bottom=0.07, left=0.09, right=0.98)
     plt.savefig(output_pdf, bbox_inches="tight")
     plt.savefig(output_png, dpi=300, bbox_inches="tight")
     plt.close()
@@ -274,7 +294,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
     out_dir = os.path.dirname(output_pdf)
     base_name = os.path.splitext(os.path.basename(output_pdf))[0]
     for ax_idx, (cat_name, queries) in enumerate(QUERY_CATEGORIES):
-        fig_cat, ax_cat = plt.subplots(figsize=(max(3.2, len(queries) * 1.1), 3.0))
+        fig_cat, ax_cat = plt.subplots(figsize=(max(3.2, len(queries) * 1.2), 3.2))
         x = np.arange(len(queries))
         for i, eng in enumerate(engines):
             vals = [
@@ -291,7 +311,8 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 label=ENGINE_LABELS.get(eng, eng),
                 color=eng_color,
                 edgecolor="black",
-                linewidth=0.4
+                linewidth=0.35,
+                hatch=ENGINE_HATCHES.get(eng, "")
             )
 
             # Explicitly mark failed queries in individual category figures
@@ -299,7 +320,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 val = data[eng].get(q)
                 if not isinstance(val, (int, float)):
                     pos_x = x[q_idx] + offset
-                    ax_cat.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.5)
+                    ax_cat.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.3)
                     ax_cat.text(
                         pos_x,
                         0.008,
@@ -307,7 +328,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                         rotation=90,
                         ha="center",
                         va="bottom",
-                        fontsize=6.0,
+                        fontsize=5.5,
                         fontweight="bold",
                         color=eng_color
                     )
@@ -319,7 +340,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
         ax_cat.set_ylim(0.005, 1200)
         ax_cat.set_ylabel("Execution Time (s, log)", fontsize=9, fontweight="bold")
         ax_cat.grid(axis="y", linestyle="--", alpha=0.5, linewidth=0.5)
-        ax_cat.legend(frameon=True, fontsize=7.5, loc="upper right")
+        ax_cat.legend(frameon=True, fontsize=7.0, loc="upper right", ncol=2)
         plt.tight_layout()
         cat_pdf = os.path.join(out_dir, f"{base_name}_cat{ax_idx+1}.pdf")
         cat_png = os.path.join(out_dir, f"{base_name}_cat{ax_idx+1}.png")
@@ -347,7 +368,7 @@ def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
             total_cat = sum(data[e].get(q) for q in q_list if isinstance(data[e].get(q), (int, float)))
             cat_times[e].append(total_cat)
 
-    fig, ax = plt.subplots(figsize=(max(6, len(categories) * 1.8), 3.8))
+    fig, ax = plt.subplots(figsize=(max(6, len(categories) * 1.8), 4.0))
     x = np.arange(len(categories))
     width = 0.80 / len(engines)
 
@@ -360,15 +381,22 @@ def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
             label=ENGINE_LABELS.get(e, e),
             color=ENGINE_COLORS.get(e, "#555555"),
             edgecolor="black",
-            linewidth=0.5
+            linewidth=0.4,
+            hatch=ENGINE_HATCHES.get(e, "")
         )
 
     ax.set_ylabel("Total Time (seconds)", fontsize=10, fontweight="bold")
-    ax.set_title(f"Query Category Runtime Breakdown (SF{sf})", fontsize=11, fontweight="bold")
+    # ax.set_title (handled by LaTeX caption)
     ax.set_xticks(x)
     ax.set_xticklabels(categories, fontsize=8.5, fontweight="bold")
-    ax.legend(frameon=True, fontsize=8.5)
+    ncol = 4 if len(engines) > 4 else len(engines)
+    ax.legend(frameon=True, fontsize=7.8, ncol=ncol, loc="upper center", bbox_to_anchor=(0.5, 0.98))
     ax.grid(axis="y", linestyle="--", alpha=0.6)
+
+    # Provide headroom for legend
+    all_vals = [val for vals in cat_times.values() for val in vals]
+    if all_vals:
+        ax.set_ylim(0, max(all_vals) * 1.25)
 
     plt.tight_layout()
     plt.savefig(output_pdf, bbox_inches="tight")
