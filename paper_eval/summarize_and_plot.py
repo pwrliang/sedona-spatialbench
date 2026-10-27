@@ -2,6 +2,7 @@
 """
 Summarize SpatialBench results and generate publication-quality figures
 for Section 5 of the VLDB 2027 paper.
+Categorizes query runtimes across the 4 functional categories defined in Section 4.1.
 """
 
 import argparse
@@ -22,29 +23,45 @@ except ImportError:
 
 QUERY_NAMES = [f"q{i}" for i in range(1, 13)]
 
-QUERY_CATEGORIES = {
-    "Filtering (Q1-Q3)": ["q1", "q2", "q3"],
-    "Join Plan (Q4, Q6)": ["q4", "q6"],
-    "Geometry (Q5, Q7, Q9)": ["q5", "q7", "q9"],
-    "Heavy Joins (Q8, Q10-Q12)": ["q8", "q10", "q11", "q12"]
-}
+# Four functional categories defined in Section 4.1 of the paper
+QUERY_CATEGORIES = [
+    ("Filtering & Range Scans", ["q1", "q2", "q3"]),
+    ("Selective Join Planning", ["q4", "q6"]),
+    ("Geometric Computation", ["q5", "q7", "q9"]),
+    ("Heavy Spatial Joins", ["q8", "q10", "q11", "q12"])
+]
+
+ENGINE_ORDER = [
+    "postgis",
+    "duckdb",
+    "sedonadb",
+    "clickhouse",
+    "spatial_polars",
+    "geopandas",
+    "apache_sedona",
+    "trino"
+]
 
 ENGINE_COLORS = {
-    "sedonadb": "#1f77b4",       # Blue
+    "postgis": "#336791",        # PostGIS Slate Blue
     "duckdb": "#ff7f0e",         # Orange
-    "spatial_polars": "#2ca02c", # Green
+    "sedonadb": "#1f77b4",       # SedonaDB Royal Blue
+    "clickhouse": "#8c564b",     # Brown
+    "spatial_polars": "#2ca02c", # Polaris Green
     "geopandas": "#d62728",      # Red
     "apache_sedona": "#9467bd",  # Purple
-    "clickhouse": "#8c564b"      # Brown
+    "trino": "#17becf"           # Teal
 }
 
 ENGINE_LABELS = {
-    "sedonadb": "SedonaDB",
+    "postgis": "PostGIS",
     "duckdb": "DuckDB",
+    "sedonadb": "SedonaDB",
+    "clickhouse": "ClickHouse",
     "spatial_polars": "Polaris (Spatial Polars)",
     "geopandas": "GeoPandas",
     "apache_sedona": "Apache Sedona",
-    "clickhouse": "ClickHouse"
+    "trino": "Trino"
 }
 
 
@@ -55,6 +72,11 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
 
     data = {}  # engine -> {query -> mean_time}
     for file_path in files:
+        # Filter mode if mode is specified in filename
+        fname = os.path.basename(file_path).lower()
+        if mode and mode.lower() not in fname:
+            continue
+
         try:
             with open(file_path, "r") as f:
                 content = json.load(f)
@@ -70,8 +92,12 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
                     for q_item in suite.get("results", []):
                         q = q_item.get("query", "").lower()
                         t = q_item.get("time_seconds")
-                        if q and t is not None and q_item.get("status") == "success":
-                            data[engine][q] = float(t)
+                        status = q_item.get("status", "")
+                        if q:
+                            if status == "success" and t is not None:
+                                data[engine][q] = float(t)
+                            elif status in ("failed", "timeout", "error"):
+                                data[engine][q] = "FAILED"
         except Exception as e:
             print(f"[WARN] Failed to parse {file_path}: {e}")
 
@@ -80,7 +106,9 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
 
 def generate_markdown_summary(data, output_file: str, sf: str, mode: str):
     """Generate markdown table with query timings and geometric means."""
-    engines = sorted(data.keys())
+    engines = [e for e in ENGINE_ORDER if e in data]
+    if not engines:
+        engines = sorted(data.keys())
     if not engines:
         print("[WARN] No engine results to summarize.")
         return
@@ -99,12 +127,14 @@ def generate_markdown_summary(data, output_file: str, sf: str, mode: str):
     for q in active_queries:
         row = [q.upper()]
         for e in engines:
-            t = data[e].get(q)
-            if t is not None:
-                row.append(f"{t:.2f}s")
-                totals[e] += t
+            val = data[e].get(q)
+            if isinstance(val, (int, float)):
+                row.append(f"{val:.2f}s")
+                totals[e] += val
                 valid_counts[e] += 1
-                log_sums[e] += np.log(max(t, 1e-6))
+                log_sums[e] += np.log(max(val, 1e-6))
+            elif val == "FAILED":
+                row.append("FAILED")
             else:
                 row.append("N/A")
         lines.append("| " + " | ".join(row) + " |")
@@ -128,48 +158,132 @@ def generate_markdown_summary(data, output_file: str, sf: str, mode: str):
     print("\n" + summary_content)
 
 
-def plot_execution_times(data, output_pdf: str, output_png: str, sf: str, mode: str):
-    """Generate publication-ready execution time bar chart."""
+def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf: str, mode: str):
+    """
+    Generate publication-quality 4-panel figure categorized according to Section 4.1:
+      (a) Filtering & Range Scans (Q1-Q3)
+      (b) Selective Join Planning (Q4, Q6)
+      (c) Geometric Computation (Q5, Q7, Q9)
+      (d) Heavy Spatial Joins (Q8, Q10-Q12)
+    Uses subgridspec to preserve equal bar widths across panels with varying query counts.
+    """
     if not HAS_MATPLOTLIB:
         print("[WARN] Matplotlib not found, skipping figure generation.")
         return
 
-    engines = sorted(data.keys())
+    engines = [e for e in ENGINE_ORDER if e in data]
+    if not engines:
+        engines = sorted(data.keys())
     if not engines:
         return
 
-    active_queries = [q for q in QUERY_NAMES if any(q in data[e] for e in engines)]
-    if not active_queries:
-        return
-
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
-    fig, ax = plt.subplots(figsize=(max(6, len(active_queries) * 1.5), 4.5))
 
-    n_queries = len(active_queries)
-    n_engines = len(engines)
-    width = 0.8 / n_engines
-    x = np.arange(n_queries)
+    fig = plt.figure(figsize=(7.2, 3.8))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1, 1], hspace=0.36)
 
-    for i, engine in enumerate(engines):
-        times = [data[engine].get(q, 0.001) for q in active_queries]
-        label = ENGINE_LABELS.get(engine, engine)
-        color = ENGINE_COLORS.get(engine, None)
-        offset = (i - (n_engines - 1) / 2) * width
-        rects = ax.bar(x + offset, times, width, label=label, color=color, edgecolor="black", linewidth=0.5)
+    # Top row: 3 queries vs 2 queries
+    w_top = [len(QUERY_CATEGORIES[0][1]), len(QUERY_CATEGORIES[1][1])]
+    # Bottom row: 3 queries vs 4 queries
+    w_bot = [len(QUERY_CATEGORIES[2][1]), len(QUERY_CATEGORIES[3][1])]
 
-    ax.set_ylabel("Execution Time (seconds, log scale)", fontsize=11, fontweight="bold")
-    ax.set_title(f"Sedona SpatialBench Query Runtimes (SF{sf}, {mode.capitalize()} Mode)", fontsize=12, fontweight="bold")
-    ax.set_xticks(x)
-    ax.set_xticklabels([q.upper() for q in active_queries], fontsize=10, fontweight="bold")
-    ax.set_yscale("log")
-    ax.legend(frameon=True, facecolor="white", edgecolor="none", fontsize=10)
-    ax.grid(axis="y", linestyle="--", alpha=0.7)
+    gs_top = gs[0].subgridspec(1, 2, width_ratios=w_top, wspace=0.22)
+    gs_bot = gs[1].subgridspec(1, 2, width_ratios=w_bot, wspace=0.22)
 
-    plt.tight_layout()
+    axes = [
+        fig.add_subplot(gs_top[0]),
+        fig.add_subplot(gs_top[1]),
+        fig.add_subplot(gs_bot[0]),
+        fig.add_subplot(gs_bot[1])
+    ]
+
+    n_eng = len(engines)
+    bar_width = 0.80 / n_eng
+
+    for ax_idx, (cat_name, queries) in enumerate(QUERY_CATEGORIES):
+        ax = axes[ax_idx]
+        x = np.arange(len(queries))
+
+        for i, eng in enumerate(engines):
+            vals = [
+                data[eng].get(q) if isinstance(data[eng].get(q), (int, float)) else np.nan
+                for q in queries
+            ]
+            offset = (i - (n_eng - 1) / 2) * bar_width
+            ax.bar(
+                x + offset,
+                vals,
+                bar_width,
+                label=ENGINE_LABELS.get(eng, eng),
+                color=ENGINE_COLORS.get(eng, "#555555"),
+                edgecolor="black",
+                linewidth=0.4
+            )
+
+        ax.set_xticks(x)
+        ax.set_xticklabels([q.upper() for q in queries], fontsize=8.5, fontweight="bold")
+        ax.set_title(f"({chr(97+ax_idx)}) {cat_name}", fontsize=9, fontweight="bold", pad=4)
+        ax.set_yscale("log")
+        ax.set_ylim(0.005, 1200)
+        ax.grid(axis="y", linestyle="--", alpha=0.5, linewidth=0.5)
+
+        if ax_idx in (0, 2):
+            ax.set_ylabel("Execution Time (s, log)", fontsize=8, fontweight="bold")
+
+    # Shared legend placed at top
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.03),
+        ncol=min(6, n_eng),
+        fontsize=7.8,
+        frameon=True,
+        edgecolor="#cccccc"
+    )
+
+    fig.subplots_adjust(top=0.91, bottom=0.08, left=0.09, right=0.98)
     plt.savefig(output_pdf, bbox_inches="tight")
     plt.savefig(output_png, dpi=300, bbox_inches="tight")
     plt.close()
-    print(f"[OK] Execution time figure saved: {output_pdf} and {output_png}")
+    print(f"[OK] Categorized execution time figure saved: {output_pdf} and {output_png}")
+
+    # Generate individual category figures as well
+    out_dir = os.path.dirname(output_pdf)
+    base_name = os.path.splitext(os.path.basename(output_pdf))[0]
+    for ax_idx, (cat_name, queries) in enumerate(QUERY_CATEGORIES):
+        fig_cat, ax_cat = plt.subplots(figsize=(max(3.2, len(queries) * 1.1), 3.0))
+        x = np.arange(len(queries))
+        for i, eng in enumerate(engines):
+            vals = [
+                data[eng].get(q) if isinstance(data[eng].get(q), (int, float)) else np.nan
+                for q in queries
+            ]
+            offset = (i - (n_eng - 1) / 2) * bar_width
+            ax_cat.bar(
+                x + offset,
+                vals,
+                bar_width,
+                label=ENGINE_LABELS.get(eng, eng),
+                color=ENGINE_COLORS.get(eng, "#555555"),
+                edgecolor="black",
+                linewidth=0.4
+            )
+        ax_cat.set_xticks(x)
+        ax_cat.set_xticklabels([q.upper() for q in queries], fontsize=9, fontweight="bold")
+        ax_cat.set_title(f"{cat_name}", fontsize=10, fontweight="bold")
+        ax_cat.set_yscale("log")
+        ax_cat.set_ylim(0.005, 1200)
+        ax_cat.set_ylabel("Execution Time (s, log)", fontsize=9, fontweight="bold")
+        ax_cat.grid(axis="y", linestyle="--", alpha=0.5, linewidth=0.5)
+        ax_cat.legend(frameon=True, fontsize=7.5, loc="upper right")
+        plt.tight_layout()
+        cat_pdf = os.path.join(out_dir, f"{base_name}_cat{ax_idx+1}.pdf")
+        cat_png = os.path.join(out_dir, f"{base_name}_cat{ax_idx+1}.png")
+        plt.savefig(cat_pdf, bbox_inches="tight")
+        plt.savefig(cat_png, dpi=300, bbox_inches="tight")
+        plt.close()
 
 
 def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
@@ -177,32 +291,42 @@ def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
     if not HAS_MATPLOTLIB:
         return
 
-    engines = sorted(data.keys())
-    categories = [cat for cat, q_list in QUERY_CATEGORIES.items() if any(q in data[e] for e in engines for q in q_list)]
-    if not categories:
+    engines = [e for e in ENGINE_ORDER if e in data]
+    if not engines:
+        engines = sorted(data.keys())
+    if not engines:
         return
 
+    categories = [cat_name for cat_name, q_list in QUERY_CATEGORIES]
     cat_times = {e: [] for e in engines}
-    for cat in categories:
-        q_list = QUERY_CATEGORIES[cat]
+
+    for cat_name, q_list in QUERY_CATEGORIES:
         for e in engines:
-            total_cat = sum(data[e].get(q, 0.0) for q in q_list if q in data[e])
+            total_cat = sum(data[e].get(q) for q in q_list if isinstance(data[e].get(q), (int, float)))
             cat_times[e].append(total_cat)
 
-    fig, ax = plt.subplots(figsize=(max(6, len(categories) * 2), 4.5))
+    fig, ax = plt.subplots(figsize=(max(6, len(categories) * 1.8), 3.8))
     x = np.arange(len(categories))
-    width = 0.8 / len(engines)
+    width = 0.80 / len(engines)
 
     for i, e in enumerate(engines):
         offset = (i - (len(engines) - 1) / 2) * width
-        ax.bar(x + offset, cat_times[e], width, label=ENGINE_LABELS.get(e, e), color=ENGINE_COLORS.get(e), edgecolor="black", linewidth=0.5)
+        ax.bar(
+            x + offset,
+            cat_times[e],
+            width,
+            label=ENGINE_LABELS.get(e, e),
+            color=ENGINE_COLORS.get(e, "#555555"),
+            edgecolor="black",
+            linewidth=0.5
+        )
 
-    ax.set_ylabel("Total Time (seconds)", fontsize=11, fontweight="bold")
-    ax.set_title(f"Query Category Runtime Breakdown (SF{sf})", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Total Time (seconds)", fontsize=10, fontweight="bold")
+    ax.set_title(f"Query Category Runtime Breakdown (SF{sf})", fontsize=11, fontweight="bold")
     ax.set_xticks(x)
-    ax.set_xticklabels(categories, fontsize=9, fontweight="bold")
-    ax.legend(frameon=True, fontsize=10)
-    ax.grid(axis="y", linestyle="--", alpha=0.7)
+    ax.set_xticklabels(categories, fontsize=8.5, fontweight="bold")
+    ax.legend(frameon=True, fontsize=8.5)
+    ax.grid(axis="y", linestyle="--", alpha=0.6)
 
     plt.tight_layout()
     plt.savefig(output_pdf, bbox_inches="tight")
@@ -231,7 +355,7 @@ def main():
 
     pdf_bar = os.path.join(args.output_dir, f"runtimes_sf{args.sf}_{args.mode}.pdf")
     png_bar = os.path.join(args.output_dir, f"runtimes_sf{args.sf}_{args.mode}.png")
-    plot_execution_times(data, pdf_bar, png_bar, args.sf, args.mode)
+    plot_categorized_execution_times(data, pdf_bar, png_bar, args.sf, args.mode)
 
     pdf_cat = os.path.join(args.output_dir, f"categories_sf{args.sf}.pdf")
     png_cat = os.path.join(args.output_dir, f"categories_sf{args.sf}.png")
