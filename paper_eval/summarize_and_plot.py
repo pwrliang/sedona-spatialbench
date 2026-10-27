@@ -3,6 +3,7 @@
 Summarize SpatialBench results and generate publication-quality figures
 for Section 5 of the VLDB 2027 paper.
 Categorizes query runtimes across the 4 functional categories defined in Section 4.1.
+Marks failed and timed-out queries explicitly in place of missing bars.
 """
 
 import argparse
@@ -72,7 +73,6 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
 
     data = {}  # engine -> {query -> mean_time}
     for file_path in files:
-        # Filter mode if mode is specified in filename
         fname = os.path.basename(file_path).lower()
         if mode and mode.lower() not in fname:
             continue
@@ -166,6 +166,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
       (c) Geometric Computation (Q5, Q7, Q9)
       (d) Heavy Spatial Joins (Q8, Q10-Q12)
     Uses subgridspec to preserve equal bar widths across panels with varying query counts.
+    Explicitly marks failed and timed out queries with a vertical 'FAIL' label in engine color.
     """
     if not HAS_MATPLOTLIB:
         print("[WARN] Matplotlib not found, skipping figure generation.")
@@ -210,15 +211,35 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 for q in queries
             ]
             offset = (i - (n_eng - 1) / 2) * bar_width
+            eng_color = ENGINE_COLORS.get(eng, "#555555")
+
             ax.bar(
                 x + offset,
                 vals,
                 bar_width,
                 label=ENGINE_LABELS.get(eng, eng),
-                color=ENGINE_COLORS.get(eng, "#555555"),
+                color=eng_color,
                 edgecolor="black",
                 linewidth=0.4
             )
+
+            # Explicitly mark failed and timed out queries in place of missing bars
+            for q_idx, q in enumerate(queries):
+                val = data[eng].get(q)
+                if not isinstance(val, (int, float)):
+                    pos_x = x[q_idx] + offset
+                    ax.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.5)
+                    ax.text(
+                        pos_x,
+                        0.008,
+                        "FAIL",
+                        rotation=90,
+                        ha="center",
+                        va="bottom",
+                        fontsize=5.2,
+                        fontweight="bold",
+                        color=eng_color
+                    )
 
         ax.set_xticks(x)
         ax.set_xticklabels([q.upper() for q in queries], fontsize=8.5, fontweight="bold")
@@ -261,15 +282,36 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
                 for q in queries
             ]
             offset = (i - (n_eng - 1) / 2) * bar_width
+            eng_color = ENGINE_COLORS.get(eng, "#555555")
+
             ax_cat.bar(
                 x + offset,
                 vals,
                 bar_width,
                 label=ENGINE_LABELS.get(eng, eng),
-                color=ENGINE_COLORS.get(eng, "#555555"),
+                color=eng_color,
                 edgecolor="black",
                 linewidth=0.4
             )
+
+            # Explicitly mark failed queries in individual category figures
+            for q_idx, q in enumerate(queries):
+                val = data[eng].get(q)
+                if not isinstance(val, (int, float)):
+                    pos_x = x[q_idx] + offset
+                    ax_cat.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.5)
+                    ax_cat.text(
+                        pos_x,
+                        0.008,
+                        "FAIL",
+                        rotation=90,
+                        ha="center",
+                        va="bottom",
+                        fontsize=6.0,
+                        fontweight="bold",
+                        color=eng_color
+                    )
+
         ax_cat.set_xticks(x)
         ax_cat.set_xticklabels([q.upper() for q in queries], fontsize=9, fontweight="bold")
         ax_cat.set_title(f"{cat_name}", fontsize=10, fontweight="bold")
