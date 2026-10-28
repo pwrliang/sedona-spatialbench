@@ -88,7 +88,7 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
     pattern = os.path.join(results_dir, f"*sf{scale_factor}*.json")
     files = glob.glob(pattern)
 
-    data = {}  # engine -> {query -> mean_time}
+    data = {}  # engine -> {query -> {"mean": float, "std": float, "runs": list}}
     for file_path in files:
         fname = os.path.basename(file_path).lower()
         if mode and mode.lower() not in fname:
@@ -110,9 +110,15 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
                         q = q_item.get("query", "").lower()
                         t = q_item.get("time_seconds")
                         status = q_item.get("status", "")
+                        run_times = q_item.get("run_times")
+                        std_dev = q_item.get("std_dev")
                         if q:
                             if status == "success" and t is not None:
-                                data[engine][q] = float(t)
+                                data[engine][q] = {
+                                    "mean": float(t),
+                                    "std": float(std_dev) if std_dev is not None else 0.0,
+                                    "runs": [float(r) for r in run_times] if run_times else [float(t)]
+                                }
                             elif status in ("failed", "timeout", "error"):
                                 data[engine][q] = "FAILED"
         except Exception as e:
@@ -145,7 +151,17 @@ def generate_markdown_summary(data, output_file: str, sf: str, mode: str):
         row = [q.upper()]
         for e in engines:
             val = data[e].get(q)
-            if isinstance(val, (int, float)):
+            if isinstance(val, dict):
+                mean = val["mean"]
+                std = val.get("std", 0.0)
+                if std > 0:
+                    row.append(f"{mean:.2f}s (±{std:.2f})")
+                else:
+                    row.append(f"{mean:.2f}s")
+                totals[e] += mean
+                valid_counts[e] += 1
+                log_sums[e] += np.log(max(mean, 1e-6))
+            elif isinstance(val, (int, float)):
                 row.append(f"{val:.2f}s")
                 totals[e] += val
                 valid_counts[e] += 1
@@ -224,17 +240,36 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
         x = np.arange(len(queries))
 
         for i, eng in enumerate(engines):
-            vals = [
-                data[eng].get(q) if isinstance(data[eng].get(q), (int, float)) else np.nan
-                for q in queries
-            ]
+            vals = []
+            stds = []
+            for q in queries:
+                val = data[eng].get(q)
+                if isinstance(val, dict):
+                    vals.append(val["mean"])
+                    stds.append(val.get("std", 0.0))
+                elif isinstance(val, (int, float)):
+                    vals.append(val)
+                    stds.append(0.0)
+                else:
+                    vals.append(np.nan)
+                    stds.append(0.0)
+
             offset = (i - (n_eng - 1) / 2) * bar_width
             eng_color = ENGINE_COLORS.get(eng, "#555555")
+
+            yerr = None
+            if any(s > 0 for s in stds):
+                lower_err = [min(s, v * 0.9) if not np.isnan(v) else 0.0 for v, s in zip(vals, stds)]
+                upper_err = stds
+                yerr = [lower_err, upper_err]
 
             ax.bar(
                 x + offset,
                 vals,
                 bar_width,
+                yerr=yerr,
+                capsize=1.5,
+                error_kw={'elinewidth': 0.7, 'ecolor': '#222222', 'capthick': 0.7},
                 label=ENGINE_LABELS.get(eng, eng),
                 color=eng_color,
                 edgecolor="black",
@@ -245,7 +280,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
             # Explicitly mark failed and timed out queries in place of missing bars
             for q_idx, q in enumerate(queries):
                 val = data[eng].get(q)
-                if not isinstance(val, (int, float)):
+                if val == "FAILED" or (not isinstance(val, (dict, int, float))):
                     pos_x = x[q_idx] + offset
                     ax.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.3)
                     ax.text(
@@ -297,17 +332,36 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
         fig_cat, ax_cat = plt.subplots(figsize=(max(3.2, len(queries) * 1.2), 3.2))
         x = np.arange(len(queries))
         for i, eng in enumerate(engines):
-            vals = [
-                data[eng].get(q) if isinstance(data[eng].get(q), (int, float)) else np.nan
-                for q in queries
-            ]
+            vals = []
+            stds = []
+            for q in queries:
+                val = data[eng].get(q)
+                if isinstance(val, dict):
+                    vals.append(val["mean"])
+                    stds.append(val.get("std", 0.0))
+                elif isinstance(val, (int, float)):
+                    vals.append(val)
+                    stds.append(0.0)
+                else:
+                    vals.append(np.nan)
+                    stds.append(0.0)
+
             offset = (i - (n_eng - 1) / 2) * bar_width
             eng_color = ENGINE_COLORS.get(eng, "#555555")
+
+            yerr = None
+            if any(s > 0 for s in stds):
+                lower_err = [min(s, v * 0.9) if not np.isnan(v) else 0.0 for v, s in zip(vals, stds)]
+                upper_err = stds
+                yerr = [lower_err, upper_err]
 
             ax_cat.bar(
                 x + offset,
                 vals,
                 bar_width,
+                yerr=yerr,
+                capsize=2,
+                error_kw={'elinewidth': 0.8, 'ecolor': '#222222', 'capthick': 0.8},
                 label=ENGINE_LABELS.get(eng, eng),
                 color=eng_color,
                 edgecolor="black",
@@ -318,7 +372,7 @@ def plot_categorized_execution_times(data, output_pdf: str, output_png: str, sf:
             # Explicitly mark failed queries in individual category figures
             for q_idx, q in enumerate(queries):
                 val = data[eng].get(q)
-                if not isinstance(val, (int, float)):
+                if val == "FAILED" or (not isinstance(val, (dict, int, float))):
                     pos_x = x[q_idx] + offset
                     ax_cat.plot([pos_x, pos_x], [0.005, 0.007], color=eng_color, linewidth=1.3)
                     ax_cat.text(
@@ -362,11 +416,22 @@ def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
 
     categories = [cat_name for cat_name, q_list in QUERY_CATEGORIES]
     cat_times = {e: [] for e in engines}
+    cat_stds = {e: [] for e in engines}
 
     for cat_name, q_list in QUERY_CATEGORIES:
         for e in engines:
-            total_cat = sum(data[e].get(q) for q in q_list if isinstance(data[e].get(q), (int, float)))
+            total_cat = 0.0
+            var_cat = 0.0
+            for q in q_list:
+                val = data[e].get(q)
+                if isinstance(val, dict):
+                    total_cat += val["mean"]
+                    std = val.get("std", 0.0)
+                    var_cat += std ** 2
+                elif isinstance(val, (int, float)):
+                    total_cat += val
             cat_times[e].append(total_cat)
+            cat_stds[e].append(np.sqrt(var_cat))
 
     fig, ax = plt.subplots(figsize=(max(6, len(categories) * 1.8), 4.0))
     x = np.arange(len(categories))
@@ -374,10 +439,17 @@ def plot_category_breakdown(data, output_pdf: str, output_png: str, sf: str):
 
     for i, e in enumerate(engines):
         offset = (i - (len(engines) - 1) / 2) * width
+        yerr = None
+        if any(s > 0 for s in cat_stds[e]):
+            yerr = cat_stds[e]
+
         ax.bar(
             x + offset,
             cat_times[e],
             width,
+            yerr=yerr,
+            capsize=2,
+            error_kw={'elinewidth': 0.8, 'ecolor': '#222222', 'capthick': 0.8},
             label=ENGINE_LABELS.get(e, e),
             color=ENGINE_COLORS.get(e, "#555555"),
             edgecolor="black",
