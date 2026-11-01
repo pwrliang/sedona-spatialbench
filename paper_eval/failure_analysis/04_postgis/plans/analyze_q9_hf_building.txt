@@ -1,0 +1,46 @@
+-- {"tag": "q9_hf_building", "query": "q9", "sql_file": null, "config": "indexed", "sets": ["search_path=hf,public"], "timeout": 1800, "started_utc": "2026-11-01T15:17:58.710555+00:00", "status": "ok", "wall_seconds": 0.655}
+Limit  (cost=161028450.61..161031038.11 rows=100 width=48) (actual time=614.540..621.190 rows=100 loops=1)
+  Output: building.b_buildingkey, building_1.b_buildingkey, (st_area(st_geomfromwkb(building.b_boundary))), (st_area(st_geomfromwkb(building_1.b_boundary))), (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))), (CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END)
+  Buffers: shared hit=349409
+  ->  Gather Merge  (cost=161028450.61..198935454.98 rows=1465005 width=48) (actual time=492.109..498.754 rows=100 loops=1)
+        Output: building.b_buildingkey, building_1.b_buildingkey, (st_area(st_geomfromwkb(building.b_boundary))), (st_area(st_geomfromwkb(building_1.b_boundary))), (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))), (CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END)
+        Workers Planned: 1
+        Workers Launched: 1
+        Buffers: shared hit=349409
+        ->  Result  (cost=161027450.60..348284389.70 rows=1465005 width=48) (actual time=475.512..478.484 rows=67 loops=2)
+              Output: building.b_buildingkey, building_1.b_buildingkey, st_area(st_geomfromwkb(building.b_boundary)), st_area(st_geomfromwkb(building_1.b_boundary)), st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))), (CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END)
+              Buffers: shared hit=349409
+              Worker 0: actual time=459.159..462.314 rows=73 loops=1
+                Buffers: shared hit=143786
+              ->  Sort  (cost=161027450.60..161031113.11 rows=1465005 width=244) (actual time=475.370..475.378 rows=67 loops=2)
+                    Output: building.b_buildingkey, building_1.b_buildingkey, (CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END), building.b_boundary, building_1.b_boundary
+                    Sort Key: (CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END) DESC, building.b_buildingkey, building_1.b_buildingkey
+                    Sort Method: top-N heapsort  Memory: 103kB
+                    Worker 0:  Sort Method: top-N heapsort  Memory: 101kB
+                    Buffers: shared hit=349409
+                    Worker 0: actual time=459.024..459.032 rows=73 loops=1
+                      Buffers: shared hit=143786
+                    ->  Nested Loop  (cost=0.28..160971459.16 rows=1465005 width=244) (actual time=61.631..475.219 rows=338 loops=2)
+                          Output: building.b_buildingkey, building_1.b_buildingkey, CASE WHEN (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) = '0'::double precision) THEN '0'::double precision WHEN (((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))) = '0'::double precision) THEN '1'::double precision ELSE (st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))) / ((st_area(st_geomfromwkb(building.b_boundary)) + st_area(st_geomfromwkb(building_1.b_boundary))) - st_area(st_intersection(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary))))) END, building.b_boundary, building_1.b_boundary
+                          Buffers: shared hit=349395
+                          Worker 0: actual time=118.416..458.886 rows=245 loops=1
+                            Buffers: shared hit=143772
+                          ->  Parallel Seq Scan on hf.building  (cost=0.00..2193.46 rows=50846 width=118) (actual time=0.009..2.562 rows=43219 loops=2)
+                                Output: building.b_buildingkey, building.b_name, building.b_boundary
+                                Buffers: shared hit=1685
+                                Worker 0: actual time=0.006..2.118 rows=35548 loops=1
+                                  Buffers: shared hit=694
+                          ->  Index Scan using hf_idx_building_geom on hf.building building_1  (cost=0.28..225.54 rows=3 width=118) (actual time=0.008..0.008 rows=0 loops=86438)
+                                Output: building_1.b_buildingkey, building_1.b_name, building_1.b_boundary
+                                Index Cond: (st_geomfromwkb(building_1.b_boundary) && st_geomfromwkb(building.b_boundary))
+                                Filter: ((building.b_buildingkey < building_1.b_buildingkey) AND st_intersects(st_geomfromwkb(building.b_boundary), st_geomfromwkb(building_1.b_boundary)))
+                                Rows Removed by Filter: 1
+                                Buffers: shared hit=347710
+                                Worker 0: actual time=0.008..0.008 rows=0 loops=35548
+                                  Buffers: shared hit=143078
+Planning Time: 5.170 ms
+JIT:
+  Functions: 21
+  Options: Inlining true, Optimization true, Expressions true, Deforming true
+  Timing: Generation 2.309 ms, Inlining 64.708 ms, Optimization 108.118 ms, Emission 67.178 ms, Total 242.313 ms
+Execution Time: 648.454 ms

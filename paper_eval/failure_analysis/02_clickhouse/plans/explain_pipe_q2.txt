@@ -1,0 +1,12 @@
+(Expression)
+ExpressionTransform
+  (Aggregating)
+  Resize 24 → 1
+    AggregatingTransform × 24
+      (Expression)
+      ExpressionTransform × 24
+        (Filter)
+        FilterTransform × 24
+          (ReadFromFile)
+          Resize 11 → 24
+            File × 11 0 → 1

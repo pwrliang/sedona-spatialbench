@@ -1,0 +1,26 @@
+-- SedonaDB LOGICAL PLAN for q5
+Sort: monthly_travel_hull_area DESC NULLS FIRST, c.c_custkey ASC NULLS LAST, pickup_month ASC NULLS LAST, fetch=100
+  Projection: c.c_custkey, c.c_name AS customer_name, date_trunc(Utf8("month"),t.t_pickuptime) AS pickup_month, st_area(st_convexhull(st_collect_agg(st_geomfromwkb(t.t_dropoffloc)))) AS monthly_travel_hull_area, count(Int64(1)) AS count(*) AS dropoff_count
+    Filter: count(Int64(1)) > Int64(5)
+      Aggregate: groupBy=[[c.c_custkey, c.c_name, date_trunc(Utf8("month"), t.t_pickuptime)]], aggr=[[st_collect_agg(st_geomfromwkb(t.t_dropoffloc)), count(Int64(1))]]
+        Projection: t.t_pickuptime, t.t_dropoffloc, c.c_custkey, c.c_name
+          Inner Join: t.t_custkey = c.c_custkey
+            SubqueryAlias: t
+              SubqueryAlias: trip
+                TableScan: ?table? projection=[t_custkey, t_pickuptime, t_dropoffloc]
+            SubqueryAlias: c
+              SubqueryAlias: customer
+                TableScan: ?table? projection=[c_custkey, c_name]
+
+-- SedonaDB PHYSICAL PLAN for q5
+SortPreservingMergeExec: [monthly_travel_hull_area@3 DESC, c_custkey@0 ASC NULLS LAST, pickup_month@2 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[monthly_travel_hull_area@3 DESC, c_custkey@0 ASC NULLS LAST, pickup_month@2 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[c_custkey@0 as c_custkey, c_name@1 as customer_name, date_trunc(Utf8("month"),t.t_pickuptime)@2 as pickup_month, st_area(st_convexhull(st_collect_agg(st_geomfromwkb(t.t_dropoffloc))@3)) as monthly_travel_hull_area, count(Int64(1))@4 as dropoff_count]
+      FilterExec: count(Int64(1))@4 > 5
+        AggregateExec: mode=SinglePartitioned, gby=[c_custkey@2 as c_custkey, c_name@3 as c_name, date_trunc(month, t_pickuptime@0) as date_trunc(Utf8("month"),t.t_pickuptime)], aggr=[st_collect_agg(st_geomfromwkb(t.t_dropoffloc)), count(Int64(1))]
+          HashJoinExec: mode=Partitioned, join_type=Inner, on=[(c_custkey@0, t_custkey@0)], projection=[t_pickuptime@3, t_dropoffloc@4, c_custkey@0, c_name@1]
+            RepartitionExec: partitioning=Hash([c_custkey@0], 24), input_partitions=24
+              DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/customer/part-1.parquet:0..653808], [local/storage/liang/sf10/customer/part-1.parquet:653808..1307616], [local/storage/liang/sf10/customer/part-1.parquet:1307616..1961424], [local/storage/liang/sf10/customer/part-1.parquet:1961424..2615232], [local/storage/liang/sf10/customer/part-1.parquet:2615232..3269040], ...]}, projection=[c_custkey, c_name], file_type=parquet
+            RepartitionExec: partitioning=Hash([t_custkey@0], 24), input_partitions=24
+              DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_custkey, t_pickuptime, t_dropoffloc], file_type=parquet
+

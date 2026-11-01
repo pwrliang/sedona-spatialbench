@@ -1,0 +1,27 @@
+Limit  (cost=170639069561236.62..170639069561236.88 rows=100 width=79)
+  Output: z.z_zonekey, z.z_name, (avg((t.t_dropofftime - t.t_pickuptime))), (avg(t.t_distance)), (count(t.t_tripkey))
+  ->  Sort  (cost=170639069561236.62..170639069562372.31 rows=454274 width=79)
+        Output: z.z_zonekey, z.z_name, (avg((t.t_dropofftime - t.t_pickuptime))), (avg(t.t_distance)), (count(t.t_tripkey))
+        Sort Key: (avg((t.t_dropofftime - t.t_pickuptime))) DESC NULLS LAST, z.z_zonekey
+        ->  Finalize GroupAggregate  (cost=170638950043056.47..170639069543874.59 rows=454274 width=79)
+              Output: z.z_zonekey, z.z_name, avg((t.t_dropofftime - t.t_pickuptime)), avg(t.t_distance), count(t.t_tripkey)
+              Group Key: z.z_zonekey, z.z_name
+              ->  Gather Merge  (cost=170638950043056.47..170639069509804.03 rows=1817096 width=95)
+                    Output: z.z_zonekey, z.z_name, (PARTIAL avg((t.t_dropofftime - t.t_pickuptime))), (PARTIAL avg(t.t_distance)), (PARTIAL count(t.t_tripkey))
+                    Workers Planned: 4
+                    ->  Partial GroupAggregate  (cost=170638950042056.41..170639069292370.31 rows=454274 width=95)
+                          Output: z.z_zonekey, z.z_name, PARTIAL avg((t.t_dropofftime - t.t_pickuptime)), PARTIAL avg(t.t_distance), PARTIAL count(t.t_tripkey)
+                          Group Key: z.z_zonekey, z.z_name
+                          ->  Sort  (cost=170638950042056.41..170638967077004.34 rows=6813979169 width=51)
+                                Output: z.z_zonekey, z.z_name, t.t_dropofftime, t.t_pickuptime, t.t_distance, t.t_tripkey
+                                Sort Key: z.z_zonekey, z.z_name
+                                ->  Nested Loop Left Join  (cost=0.00..170637564294595.31 rows=6813979169 width=51)
+                                      Output: z.z_zonekey, z.z_name, t.t_dropofftime, t.t_pickuptime, t.t_distance, t.t_tripkey
+                                      Join Filter: st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(z.z_boundary))
+                                      ->  Parallel Seq Scan on public.zone z  (cost=0.00..34377.68 rows=113568 width=466)
+                                            Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+                                      ->  Seq Scan on public.trip t  (cost=0.00..1643295.48 rows=59998848 width=50)
+                                            Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+JIT:
+  Functions: 15
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

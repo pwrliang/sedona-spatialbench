@@ -1,0 +1,19 @@
+branch: vldb2027-eval
+commit: bbeee5f33547e793c269211fec91600bea063edf
+ M benchmark/run_benchmark.py
+ M paper_eval/CHECKPOINT.md
+ M paper_eval/config.env
+ M paper_eval/run_benchmarks.sh
+ M paper_eval/setup_env.sh
+ M spatialbench-queries/print_queries.py
+?? benchmark/__pycache__/
+?? paper_eval/.tmp/
+?? paper_eval/benchmark-data-sf1/
+?? paper_eval/benchmark-data-sf10/
+?? paper_eval/download_data.sh
+?? paper_eval/failure_analysis/
+?? paper_eval/plots/
+?? paper_eval/results/
+?? paper_eval/run_me.sh
+?? run_me.sh
+?? spatialbench-queries/__pycache__/

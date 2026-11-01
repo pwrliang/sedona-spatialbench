@@ -1,0 +1,21 @@
+Finalize Aggregate  (cost=44495999816101400.00..44495999816101400.00 rows=1 width=8)
+  Output: count(*)
+  ->  Gather  (cost=44495999816101400.00..44495999816101400.00 rows=7 width=8)
+        Output: (PARTIAL count(*))
+        Workers Planned: 7
+        ->  Partial Aggregate  (cost=44495999816100400.00..44495999816100400.00 rows=1 width=8)
+              Output: PARTIAL count(*)
+              ->  Nested Loop  (cost=0.00..44495995394090744.00 rows=1768803862308 width=0)
+                    Join Filter: ((pickup_zone.z_zonekey <> dropoff_zone.z_zonekey) AND st_within(st_geomfromwkb(t.t_dropoffloc), st_geomfromwkb(dropoff_zone.z_boundary)))
+                    ->  Nested Loop  (cost=0.00..97724829204866.06 rows=3893702382 width=30)
+                          Output: t.t_dropoffloc, pickup_zone.z_zonekey
+                          Join Filter: st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(pickup_zone.z_boundary))
+                          ->  Parallel Seq Scan on public.trip t  (cost=0.00..1129019.64 rows=8571264 width=44)
+                                Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                          ->  Seq Scan on public.zone pickup_zone  (cost=0.00..37784.74 rows=454274 width=451)
+                                Output: pickup_zone.z_zonekey, pickup_zone.z_gersid, pickup_zone.z_country, pickup_zone.z_region, pickup_zone.z_name, pickup_zone.z_subtype, pickup_zone.z_boundary
+                    ->  Seq Scan on public.zone dropoff_zone  (cost=0.00..37784.74 rows=454274 width=451)
+                          Output: dropoff_zone.z_zonekey, dropoff_zone.z_gersid, dropoff_zone.z_country, dropoff_zone.z_region, dropoff_zone.z_name, dropoff_zone.z_subtype, dropoff_zone.z_boundary
+JIT:
+  Functions: 13
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

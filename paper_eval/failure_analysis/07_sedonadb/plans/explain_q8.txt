@@ -1,0 +1,26 @@
+-- SedonaDB LOGICAL PLAN for q8
+Sort: nearby_pickup_count DESC NULLS FIRST, b.b_buildingkey ASC NULLS LAST, fetch=100
+  Projection: b.b_buildingkey, b.b_name, count(Int64(1)) AS count(*) AS nearby_pickup_count
+    Aggregate: groupBy=[[b.b_buildingkey, b.b_name]], aggr=[[count(Int64(1))]]
+      Projection: b.b_buildingkey, b.b_name
+        SpatialJoin: join_type=Inner, filter=st_dwithin(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary), Float64(0.0045))
+          SubqueryAlias: t
+            SubqueryAlias: trip
+              TableScan: ?table? projection=[t_pickuploc]
+          SubqueryAlias: b
+            SubqueryAlias: building
+              TableScan: ?table? projection=[b_buildingkey, b_name, b_boundary]
+
+-- SedonaDB PHYSICAL PLAN for q8
+SortPreservingMergeExec: [nearby_pickup_count@2 DESC, b_buildingkey@0 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[nearby_pickup_count@2 DESC, b_buildingkey@0 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[b_buildingkey@0 as b_buildingkey, b_name@1 as b_name, count(Int64(1))@2 as nearby_pickup_count]
+      AggregateExec: mode=FinalPartitioned, gby=[b_buildingkey@0 as b_buildingkey, b_name@1 as b_name], aggr=[count(Int64(1))]
+        RepartitionExec: partitioning=Hash([b_buildingkey@0, b_name@1], 24), input_partitions=24
+          AggregateExec: mode=Partial, gby=[b_buildingkey@0 as b_buildingkey, b_name@1 as b_name], aggr=[count(Int64(1))]
+            SpatialJoinExec: join_type=Inner, on=ST_Distance(st_geomfromwkb(b_boundary@2), st_geomfromwkb(t_pickuploc@0)) < 0.0045, projection=[b_buildingkey@0, b_name@1]
+              RepartitionExec: partitioning=RoundRobinBatch(24), input_partitions=1
+                DataSourceExec: file_groups={1 group: [[local/storage/liang/sf10/building/part-1.parquet]]}, projection=[b_buildingkey, b_name, b_boundary], file_type=parquet
+              ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+                DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_pickuploc], file_type=parquet
+

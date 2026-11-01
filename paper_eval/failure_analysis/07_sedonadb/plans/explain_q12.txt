@@ -1,0 +1,33 @@
+-- SedonaDB LOGICAL PLAN for q12
+Sort: avg_distance_to_5_nearest DESC NULLS FIRST, knn.t_tripkey ASC NULLS LAST, fetch=100
+  Projection: knn.t_tripkey, avg(knn.distance_to_building) AS avg_distance_to_5_nearest
+    Aggregate: groupBy=[[knn.t_tripkey]], aggr=[[avg(knn.distance_to_building)]]
+      SubqueryAlias: knn
+        Projection: t.t_tripkey, st_distance(t.pickup_geom, b.boundary_geom) AS distance_to_building
+          SpatialJoin: join_type=Inner, filter=st_knn(t.pickup_geom, b.boundary_geom, Int64(5), Boolean(false))
+            SubqueryAlias: t
+              SubqueryAlias: trip_with_geom
+                Projection: trip.t_tripkey, st_geomfromwkb(trip.t_pickuploc) AS pickup_geom
+                  SubqueryAlias: trip
+                    TableScan: ?table? projection=[t_tripkey, t_pickuploc]
+            SubqueryAlias: b
+              SubqueryAlias: building_with_geom
+                Projection: st_geomfromwkb(building.b_boundary) AS boundary_geom
+                  SubqueryAlias: building
+                    TableScan: ?table? projection=[b_boundary]
+
+-- SedonaDB PHYSICAL PLAN for q12
+SortPreservingMergeExec: [avg_distance_to_5_nearest@1 DESC, t_tripkey@0 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[avg_distance_to_5_nearest@1 DESC, t_tripkey@0 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[t_tripkey@0 as t_tripkey, avg(knn.distance_to_building)@1 as avg_distance_to_5_nearest]
+      AggregateExec: mode=FinalPartitioned, gby=[t_tripkey@0 as t_tripkey], aggr=[avg(knn.distance_to_building)]
+        RepartitionExec: partitioning=Hash([t_tripkey@0], 24), input_partitions=24
+          AggregateExec: mode=Partial, gby=[t_tripkey@0 as t_tripkey], aggr=[avg(knn.distance_to_building)]
+            ProjectionExec: expr=[t_tripkey@0 as t_tripkey, st_distance(pickup_geom@1, boundary_geom@2) as distance_to_building]
+              SpatialJoinExec: join_type=Inner, on=ST_KNN(pickup_geom@1, boundary_geom@0, 5, false)
+                ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+                  DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_tripkey, st_geomfromwkb(t_pickuploc@10) as pickup_geom], file_type=parquet
+                ProjectionExec: expr=[st_geomfromwkb(b_boundary@0) as boundary_geom]
+                  RepartitionExec: partitioning=RoundRobinBatch(24), input_partitions=1
+                    DataSourceExec: file_groups={1 group: [[local/storage/liang/sf10/building/part-1.parquet]]}, projection=[b_boundary], file_type=parquet
+

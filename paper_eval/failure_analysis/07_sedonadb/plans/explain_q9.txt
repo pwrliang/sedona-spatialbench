@@ -1,0 +1,29 @@
+-- SedonaDB LOGICAL PLAN for q9
+Sort: iou DESC NULLS FIRST, pairs.building_1 ASC NULLS LAST, pairs.building_2 ASC NULLS LAST, fetch=100
+  Projection: pairs.building_1, pairs.building_2, pairs.area1, pairs.area2, pairs.overlap_area, CASE WHEN pairs.overlap_area = Float64(0) THEN Float64(0) WHEN pairs.area1 + pairs.area2 - pairs.overlap_area = Float64(0) THEN Float64(1) ELSE pairs.overlap_area / (pairs.area1 + pairs.area2 - pairs.overlap_area) END AS iou
+    SubqueryAlias: pairs
+      Projection: b1.id AS building_1, b2.id AS building_2, st_area(b1.geom) AS area1, st_area(b2.geom) AS area2, st_area(st_intersection(b1.geom, b2.geom)) AS overlap_area
+        SpatialJoin: join_type=Inner, filter=b2.id > b1.id AND st_intersects(b1.geom, b2.geom) AS b1.id < b2.id AND st_intersects(b1.geom,b2.geom)
+          SubqueryAlias: b1
+            Projection: building.b_buildingkey AS id, st_geomfromwkb(building.b_boundary) AS geom
+              SubqueryAlias: building
+                TableScan: ?table? projection=[b_buildingkey, b_boundary]
+          SubqueryAlias: b2
+            Projection: building.b_buildingkey AS id, st_geomfromwkb(building.b_boundary) AS geom
+              SubqueryAlias: building
+                TableScan: ?table? projection=[b_buildingkey, b_boundary]
+
+-- SedonaDB PHYSICAL PLAN for q9
+SortPreservingMergeExec: [iou@5 DESC, building_1@0 ASC NULLS LAST, building_2@1 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[iou@5 DESC, building_1@0 ASC NULLS LAST, building_2@1 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[building_1@0 as building_1, building_2@1 as building_2, area1@2 as area1, area2@3 as area2, overlap_area@4 as overlap_area, CASE WHEN overlap_area@4 = 0 THEN 0 WHEN area1@2 + area2@3 - overlap_area@4 = 0 THEN 1 ELSE overlap_area@4 / (area1@2 + area2@3 - overlap_area@4) END as iou]
+      ProjectionExec: expr=[id@0 as building_1, id@2 as building_2, st_area(geom@1) as area1, st_area(geom@3) as area2, st_area(st_intersection(geom@1, geom@3)) as overlap_area]
+        SpatialJoinExec: join_type=Inner, on=ST_intersects(geom@1, geom@1), filter=id@1 > id@0
+          ProjectionExec: expr=[b_buildingkey@0 as id, st_geomfromwkb(b_boundary@1) as geom]
+            RepartitionExec: partitioning=RoundRobinBatch(24), input_partitions=1
+              DataSourceExec: file_groups={1 group: [[local/storage/liang/sf10/building/part-1.parquet]]}, projection=[b_buildingkey, b_boundary], file_type=parquet
+          ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+            ProjectionExec: expr=[b_buildingkey@0 as id, st_geomfromwkb(b_boundary@1) as geom]
+              RepartitionExec: partitioning=RoundRobinBatch(24), input_partitions=1
+                DataSourceExec: file_groups={1 group: [[local/storage/liang/sf10/building/part-1.parquet]]}, projection=[b_buildingkey, b_boundary], file_type=parquet
+

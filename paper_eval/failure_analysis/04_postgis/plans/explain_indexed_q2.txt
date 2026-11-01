@@ -1,0 +1,21 @@
+Finalize Aggregate  (cost=82723.00..82723.01 rows=1 width=8)
+  Output: count(*)
+  InitPlan 1 (returns $1)
+    ->  Limit  (cost=1000.00..12553.97 rows=1 width=32)
+          Output: (st_geomfromwkb(z.z_boundary))
+          ->  Gather  (cost=1000.00..35661.91 rows=3 width=32)
+                Output: (st_geomfromwkb(z.z_boundary))
+                Workers Planned: 4
+                ->  Parallel Seq Scan on public.zone z  (cost=0.00..34661.61 rows=1 width=32)
+                      Output: st_geomfromwkb(z.z_boundary)
+                      Filter: ((z.z_name)::text = 'Coconino County'::text)
+  ->  Gather  (cost=70168.81..70169.02 rows=2 width=8)
+        Output: (PARTIAL count(*))
+        Workers Planned: 2
+        Params Evaluated: $1
+        ->  Partial Aggregate  (cost=69168.81..69168.82 rows=1 width=8)
+              Output: PARTIAL count(*)
+              ->  Parallel Bitmap Heap Scan on public.trip t  (cost=95.32..69162.56 rows=2500 width=0)
+                    Filter: st_intersects(st_geomfromwkb(t.t_pickuploc), $1)
+                    ->  Bitmap Index Scan on idx_trip_pickuploc  (cost=0.00..93.82 rows=6000 width=0)
+                          Index Cond: (st_geomfromwkb(t.t_pickuploc) && $1)

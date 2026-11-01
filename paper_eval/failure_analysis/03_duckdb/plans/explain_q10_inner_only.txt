@@ -1,0 +1,65 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 100         │
+│                           │
+│         Order By:         │
+│ normalized_interval(avg((t│
+│     .t_dropofftime - t    │
+│   .t_pickuptime))) DESC   │
+│      z.z_zonekey ASC      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│          Groups:          │
+│             #0            │
+│             #1            │
+│                           │
+│        Aggregates:        │
+│          avg(#2)          │
+│          avg(#3)          │
+│         count(#4)         │
+│                           │
+│      ~59,990,850 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         z_zonekey         │
+│           z_name          │
+│      (t_dropofftime -     │
+│        t_pickuptime)      │
+│         t_distance        │
+│         t_tripkey         │
+│                           │
+│      ~59,999,973 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│        SPATIAL_JOIN       │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  ST_Within(ST_GeomFromWKB ├──────────────┐
+│       (t_pickuploc),      │              │
+│  ST_GeomFromWKB(z_boundary│              │
+│             ))            │              │
+│                           │              │
+│      ~59,999,973 rows     │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││       READ_PARQUET        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││         Function:         │
+│        READ_PARQUET       ││        READ_PARQUET       │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         t_tripkey         ││         z_zonekey         │
+│        t_pickuptime       ││           z_name          │
+│       t_dropofftime       ││         z_boundary        │
+│         t_distance        ││                           │
+│        t_pickuploc        ││                           │
+│                           ││                           │
+│      ~59,999,973 rows     ││       ~455,715 rows       │
+└───────────────────────────┘└───────────────────────────┘

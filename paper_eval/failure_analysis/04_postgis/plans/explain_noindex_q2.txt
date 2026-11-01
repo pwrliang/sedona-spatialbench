@@ -1,0 +1,23 @@
+Finalize Aggregate  (cost=215445604.64..215445604.65 rows=1 width=8)
+  Output: count(*)
+  InitPlan 1 (returns $1)
+    ->  Limit  (cost=1000.00..12553.97 rows=1 width=32)
+          Output: (st_geomfromwkb(z.z_boundary))
+          ->  Gather  (cost=1000.00..35661.91 rows=3 width=32)
+                Output: (st_geomfromwkb(z.z_boundary))
+                Workers Planned: 4
+                ->  Parallel Seq Scan on public.zone z  (cost=0.00..34661.61 rows=1 width=32)
+                      Output: st_geomfromwkb(z.z_boundary)
+                      Filter: ((z.z_name)::text = 'Coconino County'::text)
+  ->  Gather  (cost=215433049.94..215433050.65 rows=7 width=8)
+        Output: (PARTIAL count(*))
+        Workers Planned: 7
+        Params Evaluated: $1
+        ->  Partial Aggregate  (cost=215432049.94..215432049.95 rows=1 width=8)
+              Output: PARTIAL count(*)
+              ->  Parallel Seq Scan on public.trip t  (cost=0.00..215432047.80 rows=857 width=0)
+                    Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                    Filter: st_intersects(st_geomfromwkb(t.t_pickuploc), $1)
+JIT:
+  Functions: 11
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

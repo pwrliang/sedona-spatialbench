@@ -1,0 +1,65 @@
+# captured: 2026-11-01T09:41:17-05:00
+## host
+cse-dnc196862d.coeit.osu.edu
+Linux cse-dnc196862d.coeit.osu.edu 5.15.0-202-generic #212~20.04.1-Ubuntu SMP Fri Oct 16 08:59:34 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+## cpu
+CPU(s):                                  24
+Thread(s) per core:                      1
+Core(s) per socket:                      16
+Socket(s):                               1
+Model name:                              12th Gen Intel(R) Core(TM) i9-12900
+CPU MHz:                                 3844.331
+CPU max MHz:                             5100.0000
+CPU min MHz:                             800.0000
+L2 cache:                                10 MiB
+## memory
+              total        used        free      shared  buff/cache   available
+Mem:             62          22          11           0          27          38
+Swap:             7           5           2
+## swap / overcommit
+0
+NAME      TYPE      SIZE USED PRIO
+/dev/dm-6 partition   8G 5.2G   -2
+## disks
+Filesystem                                Size  Used Avail Use% Mounted on
+naotvs1socc.coeit.osu.edu:/nfs_home_2      60T   50T  9.7T  84% /home
+/dev/mapper/vg_workstation-local_scratch  789G  532G  217G  72% /local/scratch
+## python
+Python 3.11.14
+/local/storage/liang/.anaconda3/envs/spatialbench/bin/python
+## engine versions
+duckdb           1.4.4
+sedonadb         0.3.0
+geopandas        1.1.2
+shapely          2.1.2
+polars           1.37.1
+spatial-polars   0.2.3
+pyarrow          23.0.0
+pandas           2.3.3
+psycopg          3.3.2
+apache-sedona    1.8.1
+shapely GEOS      3.13.1
+sedonadb.__version__ 0.6.0 (module file: /local/storage/liang/sedona-db/python/sedonadb/python/sedonadb/__init__.py )
+duckdb spatial ext: ('f129b24',)
+## sedona-db source checkout (sedonadb is an editable install)
+path: /local/storage/liang/sedona-db/python/sedonadb
+commit 02e255a0a387da0975bc82e35b3a687c80364f60
+Fri Oct 30 21:46:36 2026 -0400 fix(libgpuspatial): include cstdint in shader_id.hpp to fix undefined uint32_t/uint64_t
+?? ../../.agents/
+?? ../../c/sedona-libgpuspatial/libgpuspatial/test/data/spatialbench/
+## clickhouse
+ClickHouse local version 26.11.1.793 (official build).
+## postgres / postgis
+PostgreSQL 12.22 (Ubuntu 12.22-0ubuntu0.20.04.4) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+POSTGIS="3.0.0 r17983" [EXTENSION] PGSQL="120" GEOS="3.8.0-CAPI-1.13.1 " PROJ="6.3.1" LIBXML="2.9.4" LIBJSON="0.13.1" LIBPROTOBUF="1.3.3" WAGYU="0.4.3 (Internal)"
+effective_cache_size=52428808kB
+jit=on
+maintenance_work_mem=2097152kB
+max_parallel_workers=16
+max_parallel_workers_per_gather=8
+max_worker_processes=24
+parallel_setup_cost=1000
+parallel_tuple_cost=0.1
+random_page_cost=1.1
+shared_buffers=20971528kB
+work_mem=262144kB

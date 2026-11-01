@@ -1,0 +1,33 @@
+┌───────────────────────────┐
+│    UNGROUPED_AGGREGATE    │
+│    ────────────────────   │
+│        Aggregates:        │
+│        count_star()       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│        SPATIAL_JOIN       │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  ST_Within(ST_GeomFromWKB ├──────────────┐
+│       (t_pickuploc),      │              │
+│  ST_GeomFromWKB(z_boundary│              │
+│             ))            │              │
+│                           │              │
+│      ~59,999,973 rows     │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││       READ_PARQUET        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││         Function:         │
+│        READ_PARQUET       ││        READ_PARQUET       │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│        t_pickuploc        ││         z_boundary        │
+│                           ││                           │
+│                           ││          Filters:         │
+│                           ││     z_subtype='county'    │
+│                           ││                           │
+│      ~59,999,973 rows     ││        ~91,143 rows       │
+└───────────────────────────┘└───────────────────────────┘

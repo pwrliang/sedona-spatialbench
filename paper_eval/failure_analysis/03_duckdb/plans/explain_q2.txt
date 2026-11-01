@@ -1,0 +1,75 @@
+┌───────────────────────────┐
+│    UNGROUPED_AGGREGATE    │
+│    ────────────────────   │
+│        Aggregates:        │
+│        count_star()       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│        SPATIAL_JOIN       │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│       ST_Intersects       ├──────────────┐
+│      (ST_GeomFromWKB      │              │
+│  (t_pickuploc), SUBQUERY) │              │
+│                           │              │
+│      ~59,999,973 rows     │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││         PROJECTION        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││ CASE  WHEN ((#1 > 1)) THEN│
+│        READ_PARQUET       ││   ("error"('More than one │
+│                           ││      row returned by a    │
+│        Projections:       ││     subquery used as an   │
+│        t_pickuploc        ││     expression - scalar   │
+│                           ││     subqueries can only   │
+│                           ││    return a single row.   │
+│                           ││          Use "SET         │
+│                           ││ scalar_subquery_error_on_m│
+│                           ││   ultiple_rows=false" to  │
+│                           ││     revert to previous    │
+│                           ││   behavior of returning a │
+│                           ││ random row.')) ELSE #0 END│
+│                           ││                           │
+│      ~59,999,973 rows     ││           ~1 row          │
+└───────────────────────────┘└─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │    UNGROUPED_AGGREGATE    │
+                             │    ────────────────────   │
+                             │        Aggregates:        │
+                             │        "first"(#0)        │
+                             │        count_star()       │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │         PROJECTION        │
+                             │    ────────────────────   │
+                             │             #0            │
+                             │                           │
+                             │           ~1 row          │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │         PROJECTION        │
+                             │    ────────────────────   │
+                             │ ST_GeomFromWKB(z_boundary)│
+                             │                           │
+                             │           ~1 row          │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │      STREAMING_LIMIT      │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │       READ_PARQUET        │
+                             │    ────────────────────   │
+                             │         Function:         │
+                             │        READ_PARQUET       │
+                             │                           │
+                             │        Projections:       │
+                             │         z_boundary        │
+                             │                           │
+                             │          Filters:         │
+                             │  z_name='Coconino County' │
+                             │                           │
+                             │        ~91,143 rows       │
+                             └───────────────────────────┘

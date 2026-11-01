@@ -1,0 +1,24 @@
+Limit  (cost=519606610.98..519606611.23 rows=100 width=51)
+  Output: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime)), (st_area(st_convexhull(st_collect(st_geomfromwkb(t.t_dropoffloc))))), (count(*))
+  ->  Sort  (cost=519606610.98..519656610.02 rows=19999616 width=51)
+        Output: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime)), (st_area(st_convexhull(st_collect(st_geomfromwkb(t.t_dropoffloc))))), (count(*))
+        Sort Key: (st_area(st_convexhull(st_collect(st_geomfromwkb(t.t_dropoffloc))))) DESC, c.c_custkey, (date_trunc('month'::text, t.t_pickuptime))
+        ->  GroupAggregate  (cost=11701977.32..518842240.04 rows=19999616 width=51)
+              Output: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime)), st_area(st_convexhull(st_collect(st_geomfromwkb(t.t_dropoffloc)))), count(*)
+              Group Key: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime))
+              Filter: (count(*) > 5)
+              ->  Sort  (cost=11701977.32..11851974.44 rows=59998848 width=57)
+                    Output: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime)), t.t_dropoffloc
+                    Sort Key: c.c_custkey, c.c_name, (date_trunc('month'::text, t.t_pickuptime))
+                    ->  Hash Join  (cost=11056.00..2629332.76 rows=59998848 width=57)
+                          Output: c.c_custkey, c.c_name, date_trunc('month'::text, t.t_pickuptime), t.t_dropoffloc
+                          Hash Cond: (t.t_custkey = c.c_custkey)
+                          ->  Seq Scan on public.trip t  (cost=0.00..1643295.48 rows=59998848 width=38)
+                                Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                          ->  Hash  (cost=7306.00..7306.00 rows=300000 width=27)
+                                Output: c.c_custkey, c.c_name
+                                ->  Seq Scan on public.customer c  (cost=0.00..7306.00 rows=300000 width=27)
+                                      Output: c.c_custkey, c.c_name
+JIT:
+  Functions: 18
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

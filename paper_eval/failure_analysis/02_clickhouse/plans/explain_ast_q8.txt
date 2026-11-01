@@ -1,0 +1,1 @@
+SELECT\n    b.b_buildingkey,\n    b.b_name,\n    COUNT(*) AS nearby_pickup_count\nFROM trip AS t\nALL INNER JOIN building AS b ON lessOrEquals(polygonsDistanceCartesian(readWKBPolygon(b.b_boundary), array(array(readWKBPoint(t.t_pickuploc)))), 0.0045)\nGROUP BY\n    b.b_buildingkey,\n    b.b_name\nORDER BY\n    nearby_pickup_count DESC,\n    b.b_buildingkey ASC\nLIMIT 100

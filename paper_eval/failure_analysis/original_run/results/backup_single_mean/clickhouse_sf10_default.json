@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T21:38:13.071966+00:00",
+  "results": [
+    {
+      "engine": "clickhouse",
+      "version": "26.11.1.793",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-26T20:52:50.365549+00:00",
+      "total_time": 32.46,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 1.5,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.43,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 2.88,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Command '['/local/storage/liang/.anaconda3/envs/spatialbench/bin/clickhouse', 'local', '--multiquery', '--format', 'JSONEachRow']' returned non-zero exit status 241."
+        },
+        {
+          "query": "q5",
+          "time_seconds": 20.37,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q6 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q7",
+          "time_seconds": 7.28,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q8 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q9",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q9 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q10",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Command '['/local/storage/liang/.anaconda3/envs/spatialbench/bin/clickhouse', 'local', '--multiquery', '--format', 'JSONEachRow']' returned non-zero exit status 241."
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Command '['/local/storage/liang/.anaconda3/envs/spatialbench/bin/clickhouse', 'local', '--multiquery', '--format', 'JSONEachRow']' returned non-zero exit status 47."
+        }
+      ]
+    }
+  ]
+}

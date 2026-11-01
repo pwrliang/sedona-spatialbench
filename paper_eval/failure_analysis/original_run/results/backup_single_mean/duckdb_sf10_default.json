@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T18:50:51.837340+00:00",
+  "results": [
+    {
+      "engine": "duckdb",
+      "version": "1.4.4",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-26T18:23:29.640840+00:00",
+      "total_time": 11.25,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.87,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.71,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 0.45,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 0.56,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 4.33,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 1.13,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 0.97,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 2.23,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 300,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q9 timed out after 300 seconds (process killed)"
+        },
+        {
+          "query": "q10",
+          "time_seconds": 600,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q10 timed out after 600 seconds (process killed)"
+        },
+        {
+          "query": "q11",
+          "time_seconds": 600,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 timed out after 600 seconds (process killed)"
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q12 crashed (process exit code: -9)"
+        }
+      ]
+    }
+  ]
+}

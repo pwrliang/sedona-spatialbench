@@ -1,0 +1,33 @@
+Output: c_custkey, c_name, toStartOfMonth(t_pickuptime), abs(polygonAreaCartesian(polygonConvexHullCartesian(groupArray(readWKBPoint(t_dropoffloc))))), count()
+
+Limit (preliminary LIMIT)
+│  Limit 100
+│  Offset 0
+└──Sorting (Sorting for ORDER BY)
+   │  Sort description: abs(polygonAreaCartesian(polygonConvexHullCartesian(groupArray(readWKBPoint(t_dropoffloc))))) DESC, c_custkey ASC, toStartOfMonth(t_pickuptime) ASC
+   │  Limit 100
+   └──Filter (HAVING)
+      │  Filter column: count() > 5
+      └──Aggregating
+         │  Keys: c_custkey, c_name, toStartOfMonth(t_pickuptime)
+         │  Aggregates: groupArray(readWKBPoint(t_dropoffloc)), count()
+         │  Skip merging: 0
+         │  HAVING pre-filter: count() > 5
+         └──Join (JOIN FillRightFirst)
+            │  t ⋈ c
+            │  Type: inner | Strictness: all | Algorithm: SpillingHashJoin(ConcurrentHashJoin)
+            │  Cost: estimated 1.00
+            │  Selectivity: estimated (NDV) 1
+            │  Output rows: estimated no stats
+            │  Left: rows estimated no stats
+            │  Right: rows estimated no stats
+            │  Join conditions: t_custkey = c_custkey
+            │  Input (left): t_custkey, t_pickuptime, t_dropoffloc
+            │  Input (right): c_custkey, c_name
+            ├──ReadFromFile
+            │     Output: t_custkey, t_pickuptime, t_dropoffloc
+            │     Runtime filters: RF1(t_custkey, c_custkey)
+            └──BuildRuntimeFilter (Build runtime join filter on c_custkey)
+               │  Filter id: RF1
+               └──ReadFromFile
+                     Output: c_custkey, c_name

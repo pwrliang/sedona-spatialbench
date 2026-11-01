@@ -1,0 +1,65 @@
+┌───────────────────────────┐
+│          ORDER_BY         │
+│    ────────────────────   │
+│   date_trunc('month', t   │
+│     .t_pickuptime) ASC    │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│         Groups: #0        │
+│                           │
+│        Aggregates:        │
+│         count(#1)         │
+│          avg(#2)          │
+│          avg(#3)          │
+│          avg(#4)          │
+│                           │
+│      ~5,999,997 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│        pickup_month       │
+│         t_tripkey         │
+│         t_distance        │
+│      (t_dropofftime -     │
+│        t_pickuptime)      │
+│           t_fare          │
+│                           │
+│      ~11,999,994 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       READ_PARQUET        │
+│    ────────────────────   │
+│         Function:         │
+│        READ_PARQUET       │
+│                           │
+│        Projections:       │
+│         t_tripkey         │
+│        t_pickuptime       │
+│       t_dropofftime       │
+│           t_fare          │
+│         t_distance        │
+│                           │
+│          Filters:         │
+│ ST_DWithin(ST_GeomFromWKB │
+│  (t_pickuploc), '\x02\x04 │
+│  \x00\x00\x00\x00\x00\x00 │
+│   \xE0\xCF\xDF\xC2U\xF0   │
+│  \x0ABd;\xDF\xC2\xD1\x04  │
+│ \x0CB\x02\x00\x00\x00\x01 │
+│  \x00\x00\x00\x05\x00\x00 │
+│ \x00\x00\x00\x00\x00D\x8Bl│
+│  \xE7\xFB\xF9[\xC0\x83/L  │
+│ \xA6\x0A^A@\x81\x95C\x8Bl │
+│ \xE7[\xC0\x83/L\xA6\x0A^A@│
+│ \x81\x95C\x8Bl\xE7[\xC0F%u│
+│  \x02\x9A\x80A@D\x8Bl\xE7 │
+│  \xFB\xF9[\xC0F%u\x02\x9A │
+│ \x80A@D\x8Bl\xE7\xFB\xF9[ │
+│  \xC0\x83/L\xA6\x0A^A@':  │
+│         :GEOMETRY)        │
+│                           │
+│      ~11,999,994 rows     │
+└───────────────────────────┘

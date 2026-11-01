@@ -1,0 +1,45 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 100         │
+│                           │
+│         Order By:         │
+│ (t.reported_distance_m /  │
+│ "nullif"(t.line_distance_m│
+│         , 0)) DESC        │
+│ t.reported_distance_m DESC│
+│      t.t_tripkey ASC      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         t_tripkey         │
+│    reported_distance_m    │
+│      line_distance_m      │
+│        detour_ratio       │
+│                           │
+│      ~59,999,973 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         t_tripkey         │
+│    reported_distance_m    │
+│      line_distance_m      │
+│                           │
+│      ~59,999,973 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       READ_PARQUET        │
+│    ────────────────────   │
+│         Function:         │
+│        READ_PARQUET       │
+│                           │
+│        Projections:       │
+│         t_tripkey         │
+│         t_distance        │
+│        t_pickuploc        │
+│        t_dropoffloc       │
+│                           │
+│      ~59,999,973 rows     │
+└───────────────────────────┘

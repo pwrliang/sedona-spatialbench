@@ -1,0 +1,15 @@
+-- SedonaDB LOGICAL PLAN for q7
+Sort: detour_ratio DESC NULLS LAST, t.reported_distance_m DESC NULLS FIRST, t.t_tripkey ASC NULLS LAST, fetch=100
+  Projection: t.t_tripkey, t.reported_distance_m, t.line_distance_m, CAST(t.reported_distance_m AS Float64) / nullif(t.line_distance_m, Float64(0)) AS detour_ratio
+    SubqueryAlias: t
+      SubqueryAlias: trip_lengths
+        Projection: t.t_tripkey, t.t_distance AS reported_distance_m, st_length(st_makeline(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(t.t_dropoffloc))) / Float64(0.000009) AS line_distance_m
+          SubqueryAlias: t
+            SubqueryAlias: trip
+              TableScan: ?table? projection=[t_tripkey, t_distance, t_pickuploc, t_dropoffloc]
+
+-- SedonaDB PHYSICAL PLAN for q7
+SortPreservingMergeExec: [detour_ratio@3 DESC NULLS LAST, reported_distance_m@1 DESC, t_tripkey@0 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[detour_ratio@3 DESC NULLS LAST, reported_distance_m@1 DESC, t_tripkey@0 ASC NULLS LAST], preserve_partitioning=[true]
+    DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_tripkey, t_distance@9 as reported_distance_m, st_length(st_makeline(st_geomfromwkb(t_pickuploc@10), st_geomfromwkb(t_dropoffloc@11))) / 0.000009 as line_distance_m, CAST(t_distance@9 AS Float64) / nullif(st_length(st_makeline(st_geomfromwkb(t_pickuploc@10), st_geomfromwkb(t_dropoffloc@11))) / 0.000009, 0) as detour_ratio], file_type=parquet
+

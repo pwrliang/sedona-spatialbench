@@ -1,0 +1,28 @@
+Output: b_buildingkey, b_name, count()
+
+Limit (preliminary LIMIT)
+│  Limit 100
+│  Offset 0
+└──Sorting (Sorting for ORDER BY)
+   │  Sort description: count() DESC, b_buildingkey ASC
+   │  Limit 100
+   └──Aggregating
+      │  Keys: b_buildingkey, b_name
+      │  Aggregates: count()
+      │  Skip merging: 0
+      └──Filter (Post Join Actions)
+         │  Filter column: polygonsDistanceCartesian(readWKBPolygon(b_boundary), array(array(readWKBPoint(t_pickuploc)))) <= 0.0045
+         └──Join (JOIN FillRightFirst)
+            │  t ⋈ b
+            │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+            │  Cost: estimated 1.00
+            │  Selectivity: estimated (NDV) 1
+            │  Output rows: estimated no stats
+            │  Left: rows estimated no stats
+            │  Right: rows estimated no stats
+            │  Input (left): t_pickuploc
+            │  Input (right): b_buildingkey, b_name, b_boundary
+            ├──ReadFromFile
+            │     Output: t_pickuploc
+            └──ReadFromFile
+                  Output: b_buildingkey, b_name, b_boundary

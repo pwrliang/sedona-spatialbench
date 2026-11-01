@@ -1,0 +1,12 @@
+Output: toStartOfMonth(t_pickuptime), count(t_tripkey), avg(t_distance), avg(dateDiff(\'second\', t_pickuptime, t_dropofftime)), avg(t_fare)
+
+Sorting (Sorting for ORDER BY)
+│  Sort description: toStartOfMonth(t_pickuptime) ASC
+└──Aggregating
+   │  Keys: toStartOfMonth(t_pickuptime)
+   │  Aggregates: count(t_tripkey), avg(t_distance), avg(dateDiff(\'second\', t_pickuptime, t_dropofftime)), avg(t_fare)
+   │  Skip merging: 0
+   └──ReadFromFile
+         Output: t_pickuploc, t_tripkey, t_pickuptime, t_dropofftime, t_fare, t_distance
+         Prewhere filter
+         Prewhere filter column:  readWKBPoint(t_pickuploc).2 <= 35.0497 AND readWKBPoint(t_pickuploc).2 >= 34.6897 AND readWKBPoint(t_pickuploc).1 <= -111.571 AND readWKBPoint(t_pickuploc).1 >= -111.951

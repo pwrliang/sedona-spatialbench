@@ -1,0 +1,18 @@
+Finalize GroupAggregate  (cost=215433091.81..215434081.67 rows=6000 width=96)
+  Output: (date_trunc('month'::text, t_pickuptime)), count(t_tripkey), avg(t_distance), avg((t_dropofftime - t_pickuptime)), avg(t_fare)
+  Group Key: (date_trunc('month'::text, t.t_pickuptime))
+  ->  Gather Merge  (cost=215433091.81..215433856.68 rows=5999 width=112)
+        Output: (date_trunc('month'::text, t_pickuptime)), (PARTIAL count(t_tripkey)), (PARTIAL avg(t_distance)), (PARTIAL avg((t_dropofftime - t_pickuptime))), (PARTIAL avg(t_fare))
+        Workers Planned: 7
+        ->  Partial GroupAggregate  (cost=215432091.69..215432121.69 rows=857 width=112)
+              Output: (date_trunc('month'::text, t_pickuptime)), PARTIAL count(t_tripkey), PARTIAL avg(t_distance), PARTIAL avg((t_dropofftime - t_pickuptime)), PARTIAL avg(t_fare)
+              Group Key: (date_trunc('month'::text, t.t_pickuptime))
+              ->  Sort  (cost=215432091.69..215432093.83 rows=857 width=41)
+                    Output: (date_trunc('month'::text, t_pickuptime)), t_tripkey, t_distance, t_dropofftime, t_pickuptime, t_fare
+                    Sort Key: (date_trunc('month'::text, t.t_pickuptime))
+                    ->  Parallel Seq Scan on public.trip t  (cost=0.00..215432049.94 rows=857 width=41)
+                          Output: date_trunc('month'::text, t_pickuptime), t_tripkey, t_distance, t_dropofftime, t_pickuptime, t_fare
+                          Filter: st_dwithin(st_geomfromwkb(t.t_pickuploc), '01030000000100000005000000448B6CE7FBF95BC0832F4CA60A5E41408195438B6CE75BC0832F4CA60A5E41408195438B6CE75BC0462575029A804140448B6CE7FBF95BC0462575029A804140448B6CE7FBF95BC0832F4CA60A5E4140'::geometry, '0.045'::double precision)
+JIT:
+  Functions: 12
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

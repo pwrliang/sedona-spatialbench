@@ -1,0 +1,30 @@
+-- SedonaDB LOGICAL PLAN for q11
+Projection: count(Int64(1)) AS count(*) AS cross_zone_trip_count
+  Aggregate: groupBy=[[]], aggr=[[count(Int64(1))]]
+    Projection:
+      SpatialJoin: join_type=Inner, filter=pickup_zone.z_zonekey != dropoff_zone.z_zonekey AND st_within(st_geomfromwkb(t.t_dropoffloc), st_geomfromwkb(dropoff_zone.z_boundary))
+        Projection: t.t_dropoffloc, pickup_zone.z_zonekey
+          SpatialJoin: join_type=Inner, filter=st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(pickup_zone.z_boundary))
+            SubqueryAlias: t
+              SubqueryAlias: trip
+                TableScan: ?table? projection=[t_pickuploc, t_dropoffloc]
+            SubqueryAlias: pickup_zone
+              SubqueryAlias: zone
+                TableScan: ?table? projection=[z_zonekey, z_boundary]
+        SubqueryAlias: dropoff_zone
+          SubqueryAlias: zone
+            TableScan: ?table? projection=[z_zonekey, z_boundary]
+
+-- SedonaDB PHYSICAL PLAN for q11
+ProjectionExec: expr=[count(Int64(1))@0 as cross_zone_trip_count]
+  AggregateExec: mode=Final, gby=[], aggr=[count(Int64(1))]
+    CoalescePartitionsExec
+      AggregateExec: mode=Partial, gby=[], aggr=[count(Int64(1))]
+        SpatialJoinExec: join_type=Inner, on=ST_within(st_geomfromwkb(t_dropoffloc@0), st_geomfromwkb(z_boundary@1)), filter=z_zonekey@0 != z_zonekey@1, projection=[]
+          SpatialJoinExec: join_type=Inner, on=ST_contains(st_geomfromwkb(z_boundary@1), st_geomfromwkb(t_pickuploc@0)), projection=[t_dropoffloc@3, z_zonekey@0]
+            DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/zone/part-1.parquet:0..85616569], [local/storage/liang/sf10/zone/part-1.parquet:85616569..171233138], [local/storage/liang/sf10/zone/part-1.parquet:171233138..195108188, local/storage/liang/sf10/zone/part-2.parquet:0..61741519], [local/storage/liang/sf10/zone/part-2.parquet:61741519..147358088], [local/storage/liang/sf10/zone/part-2.parquet:147358088..232974657], ...]}, projection=[z_zonekey, z_boundary], file_type=parquet
+            ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+              DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_pickuploc, t_dropoffloc], file_type=parquet
+          ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+            DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/zone/part-1.parquet:0..85616569], [local/storage/liang/sf10/zone/part-1.parquet:85616569..171233138], [local/storage/liang/sf10/zone/part-1.parquet:171233138..195108188, local/storage/liang/sf10/zone/part-2.parquet:0..61741519], [local/storage/liang/sf10/zone/part-2.parquet:61741519..147358088], [local/storage/liang/sf10/zone/part-2.parquet:147358088..232974657], ...]}, projection=[z_zonekey, z_boundary], file_type=parquet
+

@@ -1,0 +1,1 @@
+SELECT COUNT(*) AS trip_count_in_coconino_county\nFROM trip AS t\nWHERE pointInPolygon(readWKBPoint(t.t_pickuploc), (\n    SELECT readWKBPolygon(z_boundary)\n    FROM zone\n    WHERE equals(z_name, \'Coconino County\')\n    LIMIT 1\n))

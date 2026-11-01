@@ -1,0 +1,77 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 100         │
+│                           │
+│         Order By:         │
+│     CASE  WHEN ((pairs    │
+│ .overlap_area = 0)) THEN  │
+│ (0.0) WHEN ((((pairs.area1│
+│   + pairs.area2) - pairs  │
+│ .overlap_area) = 0)) THEN │
+│     (1.0) ELSE (pairs     │
+│  .overlap_area / ((pairs  │
+│  .area1 + pairs.area2) -  │
+│  pairs.overlap_area)) END │
+│            DESC           │
+│    pairs.building_1 ASC   │
+│    pairs.building_2 ASC   │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         building_1        │
+│         building_2        │
+│           area1           │
+│           area2           │
+│        overlap_area       │
+│            iou            │
+│                           │
+│      ~3,821,843 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         building_1        │
+│         building_2        │
+│           area1           │
+│           area2           │
+│        overlap_area       │
+│                           │
+│      ~3,821,843 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│           FILTER          │
+│    ────────────────────   │
+│ ST_Intersects(geom, geom) │
+│                           │
+│      ~3,821,843 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│    PIECEWISE_MERGE_JOIN   │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│    Conditions: id < id    ├──────────────┐
+│                           │              │
+│      ~3,821,843 rows      │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         PROJECTION        ││         PROJECTION        │
+│    ────────────────────   ││    ────────────────────   │
+│             id            ││             id            │
+│            geom           ││            geom           │
+│                           ││                           │
+│        ~86,438 rows       ││        ~86,438 rows       │
+└─────────────┬─────────────┘└─────────────┬─────────────┘
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││       READ_PARQUET        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││         Function:         │
+│        READ_PARQUET       ││        READ_PARQUET       │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│       b_buildingkey       ││       b_buildingkey       │
+│         b_boundary        ││         b_boundary        │
+│                           ││                           │
+│        ~86,438 rows       ││        ~86,438 rows       │
+└───────────────────────────┘└───────────────────────────┘

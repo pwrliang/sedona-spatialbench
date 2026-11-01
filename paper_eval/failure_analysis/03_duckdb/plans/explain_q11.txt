@@ -1,0 +1,51 @@
+┌───────────────────────────┐
+│    UNGROUPED_AGGREGATE    │
+│    ────────────────────   │
+│        Aggregates:        │
+│        count_star()       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│           FILTER          │
+│    ────────────────────   │
+│  ST_Within(ST_GeomFromWKB │
+│      (t_dropoffloc),      │
+│  ST_GeomFromWKB(z_boundary│
+│             ))            │
+│                           │
+│    ~4,617,236,953 rows    │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      NESTED_LOOP_JOIN     │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├───────────────────────────────────────────┐
+│   z_zonekey != z_zonekey  │                                           │
+│                           │                                           │
+│    ~4,617,236,953 rows    │                                           │
+└─────────────┬─────────────┘                                           │
+┌─────────────┴─────────────┐                             ┌─────────────┴─────────────┐
+│        SPATIAL_JOIN       │                             │       READ_PARQUET        │
+│    ────────────────────   │                             │    ────────────────────   │
+│      Join Type: INNER     │                             │         Function:         │
+│                           │                             │        READ_PARQUET       │
+│        Conditions:        │                             │                           │
+│  ST_Within(ST_GeomFromWKB ├──────────────┐              │        Projections:       │
+│       (t_pickuploc),      │              │              │         z_zonekey         │
+│  ST_GeomFromWKB(z_boundary│              │              │         z_boundary        │
+│             ))            │              │              │                           │
+│                           │              │              │                           │
+│      ~59,999,973 rows     │              │              │       ~455,715 rows       │
+└─────────────┬─────────────┘              │              └───────────────────────────┘
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││       READ_PARQUET        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││         Function:         │
+│        READ_PARQUET       ││        READ_PARQUET       │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│        t_pickuploc        ││         z_zonekey         │
+│        t_dropoffloc       ││         z_boundary        │
+│                           ││                           │
+│      ~59,999,973 rows     ││       ~455,715 rows       │
+└───────────────────────────┘└───────────────────────────┘

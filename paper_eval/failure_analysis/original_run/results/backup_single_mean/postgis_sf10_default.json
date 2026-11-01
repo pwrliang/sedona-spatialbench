@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-27T17:50:54.164106+00:00",
+  "results": [
+    {
+      "engine": "postgis",
+      "version": "3.0.0",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-27T17:28:59.957305+00:00",
+      "total_time": 1675.98,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 250.4,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 253.17,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 250.39,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 4.16,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 337.34,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 253.64,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 4.78,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 322.1,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "lwgeom_intersection: GEOS Error: TopologyException: Input geom 1 is invalid: Self-intersection at or near point 21.952479743000001 -40.044424999999997 at 21.952479743000001 -40.044424999999997"
+        },
+        {
+          "query": "q10",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q10 exceeded 10-minute time limit (index overhead: 253.11s, run timeout: 346s) and was killed"
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 exceeded 10-minute time limit (index overhead: 503.53s, run timeout: 96s) and was killed"
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q12 exceeded 10-minute time limit (index overhead: 250.64s, run timeout: 349s) and was killed"
+        }
+      ]
+    }
+  ]
+}

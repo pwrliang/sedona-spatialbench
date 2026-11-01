@@ -1,0 +1,12 @@
+Limit  (cost=159110.73..159110.98 rows=100 width=40)
+  Output: t_tripkey, (st_x(st_geomfromwkb(t_pickuploc))), (st_y(st_geomfromwkb(t_pickuploc))), t_pickuptime, (st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry))
+  ->  Sort  (cost=159110.73..159125.73 rows=6000 width=40)
+        Output: t_tripkey, (st_x(st_geomfromwkb(t_pickuploc))), (st_y(st_geomfromwkb(t_pickuploc))), t_pickuptime, (st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry))
+        Sort Key: (st_distance(st_geomfromwkb(t.t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry)), t.t_tripkey
+        ->  Index Scan using idx_trip_pickuploc on public.trip t  (cost=0.67..158881.41 rows=6000 width=40)
+              Output: t_tripkey, st_x(st_geomfromwkb(t_pickuploc)), st_y(st_geomfromwkb(t_pickuploc)), t_pickuptime, st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry)
+              Index Cond: (st_geomfromwkb(t.t_pickuploc) && st_expand('010100000062105839B4F05BC065AA6054526F4140'::geometry, '0.45'::double precision))
+              Filter: st_dwithin(st_geomfromwkb(t.t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry, '0.45'::double precision)
+JIT:
+  Functions: 7
+  Options: Inlining false, Optimization false, Expressions true, Deforming true

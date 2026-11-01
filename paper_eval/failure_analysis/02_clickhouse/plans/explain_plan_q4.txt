@@ -1,0 +1,39 @@
+Output: z_zonekey, z_name, count()
+
+Sorting (Sorting for ORDER BY)
+│  Sort description: count() DESC, z_zonekey ASC
+└──Aggregating
+   │  Keys: z_zonekey, z_name
+   │  Aggregates: count()
+   │  Skip merging: 0
+   └──Filter (Post Join Actions)
+      │  Filter column: geometryIntersectCartesian(readWKB(t_pickuploc), readWKB(z_boundary))
+      └──Join (JOIN FillRightFirst)
+         │  z ⋈ top_trips[1000]
+         │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+         │  Cost: estimated 1.00 thousand
+         │  Selectivity: estimated (NDV) 1
+         │  Output rows: estimated no stats
+         │  Left: rows estimated no stats
+         │  Right: rows estimated 1.00 thousand
+         │  Input (left): z_zonekey, z_name, boundary
+         │  Input (right): pt
+         ├──ReadFromFile
+         │     Output: z_zonekey, z_name, z_boundary
+         └──Limit (preliminary LIMIT)
+            │  Limit 1000
+            │  Offset 0
+            └──Sorting (Sorting for ORDER BY)
+               │  Sort description: t_tip DESC, t_tripkey ASC
+               │  Limit 1000
+               └──JoinLazyColumnsStep
+                  ├──Limit (preliminary LIMIT)
+                  │  │  Limit 1000
+                  │  │  Offset 0
+                  │  └──Sorting (Sorting for ORDER BY)
+                  │     │  Sort description: t_tip DESC, t_tripkey ASC
+                  │     │  Limit 1000
+                  │     └──ReadFromFile
+                  │           Output: t_tripkey, t_tip, __global_row_index
+                  └──LazilyReadFromFile
+                        Lazily read columns: t_pickuploc

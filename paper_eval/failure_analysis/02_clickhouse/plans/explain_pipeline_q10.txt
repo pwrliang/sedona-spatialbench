@@ -1,0 +1,40 @@
+(Expression)
+ExpressionTransform
+  (Limit)
+  Limit
+    (Sorting)
+    MergingSortedTransform 24 → 1
+      MergeSortingTransform × 24
+        LimitsCheckingTransform × 24
+          PartialSortingTransform × 24
+            (Expression)
+            ExpressionTransform × 24
+              (Aggregating)
+              Resize 24 → 24
+                AggregatingTransform × 24
+                  (Expression)
+                  ExpressionTransform × 24
+                    (Expression)
+                    ExpressionTransform × 24
+                      (BlockNestedLoopJoin)
+                      BlockNestedLoopProbe × 24
+                        SimpleSquashingTransform × 24
+                          DelayedPorts 25 → 24
+                            Resize × 2 24 → 1
+                              BlockNestedLoopBuild × 24
+                                SimpleSquashingTransform × 24
+                                  Resize 24 → 24
+                                    (Expression)
+                                    ExpressionTransform × 24
+                                      (Expression)
+                                      ExpressionTransform × 24
+                                        (ReadFromFile)
+                                        Resize 8 → 24
+                                          File × 8 0 → 1
+                                    (Expression)
+                                    ExpressionTransform × 24
+                                      (Expression)
+                                      ExpressionTransform × 24
+                                        (ReadFromFile)
+                                        Resize 15 → 24
+                                          File × 15 0 → 1

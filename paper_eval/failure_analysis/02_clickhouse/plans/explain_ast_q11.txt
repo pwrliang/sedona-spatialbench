@@ -1,0 +1,1 @@
+SELECT COUNT(*) AS cross_zone_trip_count\nFROM trip AS t\nALL INNER JOIN zone AS pickup_zone ON geometryIntersectCartesian(readWKB(t.t_pickuploc), readWKB(pickup_zone.z_boundary))\nALL INNER JOIN zone AS dropoff_zone ON geometryIntersectCartesian(readWKB(t.t_dropoffloc), readWKB(dropoff_zone.z_boundary))\nWHERE notEquals(pickup_zone.z_zonekey, dropoff_zone.z_zonekey)

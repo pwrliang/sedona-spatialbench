@@ -1,0 +1,10 @@
+GroupAggregate  (cost=1882.13..2107.13 rows=6000 width=96)
+  Output: (date_trunc('month'::text, t_pickuptime)), count(t_tripkey), avg(t_distance), avg((t_dropofftime - t_pickuptime)), avg(t_fare)
+  Group Key: (date_trunc('month'::text, t.t_pickuptime))
+  ->  Sort  (cost=1882.13..1897.13 rows=6000 width=41)
+        Output: (date_trunc('month'::text, t_pickuptime)), t_tripkey, t_distance, t_dropofftime, t_pickuptime, t_fare
+        Sort Key: (date_trunc('month'::text, t.t_pickuptime))
+        ->  Index Scan using idx_trip_pickuploc on public.trip t  (cost=0.67..1505.61 rows=6000 width=41)
+              Output: date_trunc('month'::text, t_pickuptime), t_tripkey, t_distance, t_dropofftime, t_pickuptime, t_fare
+              Index Cond: (st_geomfromwkb(t.t_pickuploc) && st_expand('01030000000100000005000000448B6CE7FBF95BC0832F4CA60A5E41408195438B6CE75BC0832F4CA60A5E41408195438B6CE75BC0462575029A804140448B6CE7FBF95BC0462575029A804140448B6CE7FBF95BC0832F4CA60A5E4140'::geometry, '0.045'::double precision))
+              Filter: st_dwithin(st_geomfromwkb(t.t_pickuploc), '01030000000100000005000000448B6CE7FBF95BC0832F4CA60A5E41408195438B6CE75BC0832F4CA60A5E41408195438B6CE75BC0462575029A804140448B6CE7FBF95BC0462575029A804140448B6CE7FBF95BC0832F4CA60A5E4140'::geometry, '0.045'::double precision)

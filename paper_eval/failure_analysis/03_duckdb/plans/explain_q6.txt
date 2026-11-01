@@ -1,0 +1,83 @@
+┌───────────────────────────┐
+│          ORDER_BY         │
+│    ────────────────────   │
+│  count(t.t_tripkey) DESC  │
+│      z.z_zonekey ASC      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│          Groups:          │
+│             #0            │
+│             #1            │
+│                           │
+│        Aggregates:        │
+│         count(#2)         │
+│          avg(#3)          │
+│          avg(#4)          │
+│                           │
+│      ~59,999,972 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         z_zonekey         │
+│           z_name          │
+│         t_tripkey         │
+│         t_distance        │
+│      (t_dropofftime -     │
+│        t_pickuptime)      │
+│                           │
+│      ~59,999,973 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│        SPATIAL_JOIN       │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  ST_Within(ST_GeomFromWKB ├──────────────┐
+│       (t_pickuploc),      │              │
+│  ST_GeomFromWKB(z_boundary│              │
+│             ))            │              │
+│                           │              │
+│      ~59,999,973 rows     │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││           FILTER          │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││  ST_Intersects('\x02\x04  │
+│        READ_PARQUET       ││  \x00\x00\x00\x00\x00\x00 │
+│                           ││ \x09l\xE0\xC2\xC5\xAD\x09B│
+│        Projections:       ││  ;\x9F\xDE\xC2`G\x0DB\x02 │
+│         t_tripkey         ││  \x00\x00\x00\x01\x00\x00 │
+│        t_pickuptime       ││  \x00\x05\x00\x00\x00\x00 │
+│       t_dropofftime       ││ \x00\x00\x00/\xDD$\x06\x81│
+│         t_distance        ││  \x0D\x5C\xC0\xCB\x10\xC7 │
+│        t_pickuploc        ││ \xBA\xB85A@\x96C\x8Bl\xE7 │
+│                           ││ \xD3[\xC0\xCB\x10\xC7\xBA │
+│                           ││ \xB85A@\x96C\x8Bl\xE7\xD3[│
+│                           ││ \xC0\xFEC\xFA\xED\xEB\xA8A│
+│                           ││  @/\xDD$\x06\x81\x0D\x5C  │
+│                           ││ \xC0\xFEC\xFA\xED\xEB\xA8A│
+│                           ││  @/\xDD$\x06\x81\x0D\x5C  │
+│                           ││ \xC0\xCB\x10\xC7\xBA\xB85A│
+│                           ││       @'::GEOMETRY,       │
+│                           ││  ST_GeomFromWKB(z_boundary│
+│                           ││             ))            │
+│                           ││                           │
+│      ~59,999,973 rows     ││       ~455,715 rows       │
+└───────────────────────────┘└─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │       READ_PARQUET        │
+                             │    ────────────────────   │
+                             │         Function:         │
+                             │        READ_PARQUET       │
+                             │                           │
+                             │        Projections:       │
+                             │         z_zonekey         │
+                             │           z_name          │
+                             │         z_boundary        │
+                             │                           │
+                             │       ~455,715 rows       │
+                             └───────────────────────────┘

@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T19:33:49.115077+00:00",
+  "results": [
+    {
+      "engine": "spatial_polars",
+      "version": "0.2.3",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-26T18:51:02.374732+00:00",
+      "total_time": 986.4,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 29.02,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 27.38,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 27.95,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 18.28,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 79.03,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 37.48,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 51.19,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 81.33,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.49,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 277.25,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 crashed (process exit code: -9)"
+        },
+        {
+          "query": "q12",
+          "time_seconds": 357.0,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

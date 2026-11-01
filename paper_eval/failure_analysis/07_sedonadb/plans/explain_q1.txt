@@ -1,0 +1,17 @@
+-- SedonaDB LOGICAL PLAN for q1
+Sort: distance_to_center ASC NULLS LAST, t.t_tripkey ASC NULLS LAST, fetch=100
+  Projection: t.t_tripkey, st_x(__common_expr_1) AS pickup_lon, st_y(__common_expr_1) AS pickup_lat, t.t_pickuptime, st_distance(__common_expr_1, Binary("1,1,0,0,0,98,16,88,57,180,240,91,192,101,170,96,84,82,111,65,64") FieldMetadata { inner: {"ARROW:extension:metadata": "{}", "ARROW:extension:name": "geoarrow.wkb"} }) AS distance_to_center
+    Projection: st_geomfromwkb(t.t_pickuploc) AS __common_expr_1, t.t_tripkey, t.t_pickuptime
+      SubqueryAlias: t
+        SubqueryAlias: trip
+          Filter: st_dwithin(st_geomfromwkb(?table?.t_pickuploc), Binary("1,1,0,0,0,98,16,88,57,180,240,91,192,101,170,96,84,82,111,65,64") FieldMetadata { inner: {"ARROW:extension:metadata": "{}", "ARROW:extension:name": "geoarrow.wkb"} }, Float64(0.45))
+            TableScan: ?table? projection=[t_tripkey, t_pickuptime, t_pickuploc], partial_filters=[st_dwithin(st_geomfromwkb(?table?.t_pickuploc), Binary("1,1,0,0,0,98,16,88,57,180,240,91,192,101,170,96,84,82,111,65,64") FieldMetadata { inner: {"ARROW:extension:metadata": "{}", "ARROW:extension:name": "geoarrow.wkb"} }, Float64(0.45))]
+
+-- SedonaDB PHYSICAL PLAN for q1
+SortPreservingMergeExec: [distance_to_center@4 ASC NULLS LAST, t_tripkey@0 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[distance_to_center@4 ASC NULLS LAST, t_tripkey@0 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[t_tripkey@1 as t_tripkey, st_x(__common_expr_1@0) as pickup_lon, st_y(__common_expr_1@0) as pickup_lat, t_pickuptime@2 as t_pickuptime, st_distance(__common_expr_1@0, 010100000062105839B4...) as distance_to_center]
+      ProjectionExec: expr=[st_geomfromwkb(t_pickuploc@2) as __common_expr_1, t_tripkey@0 as t_tripkey, t_pickuptime@1 as t_pickuptime]
+        FilterExec: st_dwithin(st_geomfromwkb(t_pickuploc@2), 010100000062105839B4..., 0.45)
+          DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_tripkey, t_pickuptime, t_pickuploc], file_type=parquet
+

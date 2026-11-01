@@ -1,0 +1,20 @@
+Output: z_zonekey, z_name, avg(dateDiff(\'second\', t_pickuptime, t_dropofftime)), avg(t_distance), count(t_tripkey)
+
+Limit (preliminary LIMIT)
+│  Limit 100
+│  Offset 0
+└──Sorting (Sorting for ORDER BY)
+   │  Sort description: avg(dateDiff(\'second\', t_pickuptime, t_dropofftime)) DESC, z_zonekey ASC
+   │  Limit 100
+   └──Aggregating
+      │  Keys: z_zonekey, z_name
+      │  Aggregates: avg(dateDiff(\'second\', t_pickuptime, t_dropofftime)), avg(t_distance), count(t_tripkey)
+      │  Skip merging: 0
+      └──BlockNestedLoopJoin
+         │  Type: LEFT
+         │  Strictness: ALL
+         │  Condition: geometryIntersectCartesian(readWKB(t_pickuploc), readWKB(z_boundary))
+         ├──ReadFromFile
+         │     Output: z_zonekey, z_name, z_boundary
+         └──ReadFromFile
+               Output: t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickuploc

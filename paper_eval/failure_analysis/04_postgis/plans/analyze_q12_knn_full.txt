@@ -1,0 +1,25 @@
+-- {"tag": "q12_knn_full", "query": null, "sql_file": "/home/geng.161/sedona-spatialbench/paper_eval/failure_analysis/04_postgis/sql/q12_knn_operator.sql", "config": "indexed", "sets": null, "timeout": 3600, "started_utc": "2026-11-01T14:32:20.461782+00:00", "status": "timeout", "error": "canceling statement due to user request", "wall_seconds": 42.254}
+-- TIMEOUT after 3600s; plain EXPLAIN follows
+Limit  (cost=8342004462.16..8342004462.41 rows=100 width=16)
+  Output: t.t_tripkey, (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+  ->  Sort  (cost=8342004462.16..8342154459.28 rows=59998848 width=16)
+        Output: t.t_tripkey, (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+        Sort Key: (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))))) DESC, t.t_tripkey
+        ->  GroupAggregate  (cost=8336711406.93..8339711349.33 rows=59998848 width=16)
+              Output: t.t_tripkey, avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))))
+              Group Key: t.t_tripkey
+              ->  Sort  (cost=8336711406.93..8337461392.53 rows=299994240 width=16)
+                    Output: t.t_tripkey, (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                    Sort Key: t.t_tripkey
+                    ->  Nested Loop  (cost=0.28..8291468805.81 rows=299994240 width=16)
+                          Output: t.t_tripkey, (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                          ->  Seq Scan on public.trip t  (cost=0.00..1643295.48 rows=59998848 width=30)
+                                Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                          ->  Limit  (cost=0.28..138.07 rows=5 width=16)
+                                Output: (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))), ((st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(t.t_pickuploc)))
+                                ->  Index Scan using idx_building_geom on public.building b  (cost=0.28..2381953.43 rows=86438 width=16)
+                                      Output: st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)), (st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(t.t_pickuploc))
+                                      Order By: (st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(t.t_pickuploc))
+JIT:
+  Functions: 13
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

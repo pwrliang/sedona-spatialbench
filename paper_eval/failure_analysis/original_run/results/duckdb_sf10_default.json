@@ -1,0 +1,180 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-27T21:35:33.444042+00:00",
+  "results": [
+    {
+      "engine": "duckdb",
+      "version": "1.4.4",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-27T21:02:08.419015+00:00",
+      "total_time": 40.22,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 11.82,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            34.82,
+            0.32,
+            0.33
+          ],
+          "std_dev": 19.92,
+          "min_time": 0.32,
+          "max_time": 34.82
+        },
+        {
+          "query": "q2",
+          "time_seconds": 0.93,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            1.29,
+            0.75,
+            0.74
+          ],
+          "std_dev": 0.31,
+          "min_time": 0.74,
+          "max_time": 1.29
+        },
+        {
+          "query": "q3",
+          "time_seconds": 3.92,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            10.79,
+            0.5,
+            0.47
+          ],
+          "std_dev": 5.95,
+          "min_time": 0.47,
+          "max_time": 10.79
+        },
+        {
+          "query": "q4",
+          "time_seconds": 6.18,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            17.49,
+            0.51,
+            0.55
+          ],
+          "std_dev": 9.79,
+          "min_time": 0.51,
+          "max_time": 17.49
+        },
+        {
+          "query": "q5",
+          "time_seconds": 12.26,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            27.89,
+            4.47,
+            4.43
+          ],
+          "std_dev": 13.53,
+          "min_time": 4.43,
+          "max_time": 27.89
+        },
+        {
+          "query": "q6",
+          "time_seconds": 1.58,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            2.28,
+            1.22,
+            1.23
+          ],
+          "std_dev": 0.61,
+          "min_time": 1.22,
+          "max_time": 2.28
+        },
+        {
+          "query": "q7",
+          "time_seconds": 1.0,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            1.01,
+            0.98,
+            1.0
+          ],
+          "std_dev": 0.02,
+          "min_time": 0.98,
+          "max_time": 1.01
+        },
+        {
+          "query": "q8",
+          "time_seconds": 2.53,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            2.57,
+            2.51,
+            2.5
+          ],
+          "std_dev": 0.04,
+          "min_time": 2.5,
+          "max_time": 2.57
+        },
+        {
+          "query": "q9",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q9 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q10 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q12 crashed (process exit code: -9)",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        }
+      ]
+    }
+  ]
+}

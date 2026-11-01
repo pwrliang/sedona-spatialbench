@@ -1,0 +1,10 @@
+Output: t_tripkey, t_distance, L2Distance(readWKBPoint(t_pickuploc), readWKBPoint(t_dropoffloc)) / 0.000009, if(L2Distance(readWKBPoint(t_pickuploc), readWKBPoint(t_dropoffloc)) / 0.000009 = 0, NULL, t_distance / L2Distance(readWKBPoint(t_pickuploc), readWKBPoint(t_dropoffloc)) / 0.000009)
+
+Limit (preliminary LIMIT)
+│  Limit 100
+│  Offset 0
+└──Sorting (Sorting for ORDER BY)
+   │  Sort description: if(L2Distance(readWKBPoint(t_pickuploc), readWKBPoint(t_dropoffloc)) / 0.000009 = 0, NULL, t_distance / L2Distance(readWKBPoint(t_pickuploc), readWKBPoint(t_dropoffloc)) / 0.000009) DESC, t_distance DESC, t_tripkey ASC
+   │  Limit 100
+   └──ReadFromFile
+         Output: t_tripkey, t_distance, t_pickuploc, t_dropoffloc

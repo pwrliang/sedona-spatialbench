@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T18:23:28.709980+00:00",
+  "results": [
+    {
+      "engine": "sedonadb",
+      "version": "0.3.0",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-26T18:19:06.645751+00:00",
+      "total_time": 133.14,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 2.76,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 6.73,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 5.12,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": 10.52,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q5",
+          "time_seconds": 13.8,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": 4.08,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 5.3,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": 4.71,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.13,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": 16.21,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": 19.74,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q12",
+          "time_seconds": 44.04,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+Output: b_buildingkey, b_buildingkey, abs(polygonAreaCartesian(readWKBPolygon(b_boundary))), abs(polygonAreaCartesian(readWKBPolygon(b_boundary))), abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))), if(abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) + abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) − abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))) = 0, 0., abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))) / (abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) + abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) − abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary))))))
+
+Limit (preliminary LIMIT)
+│  Limit 100
+│  Offset 0
+└──Sorting (Sorting for ORDER BY)
+   │  Sort description: if(abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) + abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) − abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))) = 0, 0., abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))) / (abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) + abs(polygonAreaCartesian(readWKBPolygon(b_boundary))) − abs(polygonAreaCartesian(polygonsIntersectionCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary)))))) DESC, b_buildingkey ASC, b_buildingkey ASC
+   │  Limit 100
+   └──Filter (Post Join Actions)
+      │  Filter column: b_buildingkey < b_buildingkey AND polygonsIntersectCartesian(readWKBPolygon(b_boundary), readWKBPolygon(b_boundary))
+      └──Join (JOIN FillRightFirst)
+         │  R0 ⋈ R1
+         │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+         │  Cost: estimated 1.00
+         │  Selectivity: estimated (NDV) 1
+         │  Output rows: estimated no stats
+         │  Left: rows estimated no stats
+         │  Right: rows estimated no stats
+         │  Input (left): id, geom
+         │  Input (right): id, geom
+         ├──ReadFromFile
+         │     Output: b_buildingkey, b_boundary
+         └──ReadFromFile
+               Output: b_buildingkey, b_boundary

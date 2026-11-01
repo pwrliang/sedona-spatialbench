@@ -1,0 +1,14 @@
+Limit  (cost=215454516.39..215454528.67 rows=100 width=40)
+  Output: t_tripkey, (st_x(st_geomfromwkb(t_pickuploc))), (st_y(st_geomfromwkb(t_pickuploc))), t_pickuptime, (st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry))
+  ->  Gather Merge  (cost=215454516.39..215455253.41 rows=5999 width=40)
+        Output: t_tripkey, (st_x(st_geomfromwkb(t_pickuploc))), (st_y(st_geomfromwkb(t_pickuploc))), t_pickuptime, (st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry))
+        Workers Planned: 7
+        ->  Sort  (cost=215453516.27..215453518.41 rows=857 width=40)
+              Output: t_tripkey, (st_x(st_geomfromwkb(t_pickuploc))), (st_y(st_geomfromwkb(t_pickuploc))), t_pickuptime, (st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry))
+              Sort Key: (st_distance(st_geomfromwkb(t.t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry)), t.t_tripkey
+              ->  Parallel Seq Scan on public.trip t  (cost=0.00..215453483.51 rows=857 width=40)
+                    Output: t_tripkey, st_x(st_geomfromwkb(t_pickuploc)), st_y(st_geomfromwkb(t_pickuploc)), t_pickuptime, st_distance(st_geomfromwkb(t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry)
+                    Filter: st_dwithin(st_geomfromwkb(t.t_pickuploc), '010100000062105839B4F05BC065AA6054526F4140'::geometry, '0.45'::double precision)
+JIT:
+  Functions: 5
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

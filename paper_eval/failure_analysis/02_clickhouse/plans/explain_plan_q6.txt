@@ -1,0 +1,26 @@
+Output: z_zonekey, z_name, count(t_tripkey), avg(t_distance), avg(dateDiff(\'second\', t_pickuptime, t_dropofftime))
+
+Sorting (Sorting for ORDER BY)
+│  Sort description: count(t_tripkey) DESC, z_zonekey ASC
+└──Aggregating
+   │  Keys: z_zonekey, z_name
+   │  Aggregates: count(t_tripkey), avg(t_distance), avg(dateDiff(\'second\', t_pickuptime, t_dropofftime))
+   │  Skip merging: 0
+   └──Filter (Post Join Actions)
+      │  Filter column: geometryIntersectCartesian(readWKB(t_pickuploc), readWKB(z_boundary))
+      └──Join (JOIN FillRightFirst)
+         │  t ⋈ z
+         │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+         │  Cost: estimated 1.00
+         │  Selectivity: estimated (NDV) 1
+         │  Output rows: estimated no stats
+         │  Left: rows estimated no stats
+         │  Right: rows estimated no stats
+         │  Input (left): t_tripkey, t_distance, t_pickuptime, t_dropofftime, t_pickuploc
+         │  Input (right): z_zonekey, z_name, boundary
+         ├──ReadFromFile
+         │     Output: t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickuploc
+         └──ReadFromFile
+               Output: readWKB(z_boundary), z_boundary, z_zonekey, z_name
+               Prewhere filter
+               Prewhere filter column:  geometryIntersectCartesian([[(-112.211, 34.4197), (-111.311, 34.4197), (-111.311, 35.3197), (-112.211, 35.3197), (-112.211, 34.4197)]], readWKB(z_boundary))

@@ -1,0 +1,84 @@
+(Expression)
+ExpressionTransform
+  (Sorting)
+  MergingSortedTransform 24 → 1
+    MergeSortingTransform × 24
+      LimitsCheckingTransform × 24
+        PartialSortingTransform × 24
+          (Expression)
+          ExpressionTransform × 24
+            (Aggregating)
+            Resize 24 → 24
+              AggregatingTransform × 24
+                (Expression)
+                ExpressionTransform × 24
+                  (Filter)
+                  FilterTransform × 24
+                    (Join)
+                    Resize 1 → 24
+                      FillingRightJoinSide
+                        Resize 24 → 1
+                          JoiningTransform 2 → 1
+                            SimpleSquashingTransform
+                              JoiningTransform 2 → 1
+                                SimpleSquashingTransform
+                                  JoiningTransform 2 → 1
+                                    SimpleSquashingTransform
+                                      JoiningTransform 2 → 1
+                                        SimpleSquashingTransform
+                                          JoiningTransform 2 → 1
+                                            SimpleSquashingTransform
+                                              JoiningTransform 2 → 1
+                                                SimpleSquashingTransform
+                                                  JoiningTransform 2 → 1
+                                                    SimpleSquashingTransform
+                                                      JoiningTransform 2 → 1
+                                                        SimpleSquashingTransform
+                                                          JoiningTransform 2 → 1
+                                                            SimpleSquashingTransform
+                                                              JoiningTransform 2 → 1
+                                                                SimpleSquashingTransform
+                                                                  JoiningTransform 2 → 1
+                                                                    SimpleSquashingTransform
+                                                                      JoiningTransform 2 → 1
+                                                                        SimpleSquashingTransform
+                                                                          JoiningTransform 2 → 1
+                                                                            SimpleSquashingTransform
+                                                                              JoiningTransform 2 → 1
+                                                                                SimpleSquashingTransform
+                                                                                  JoiningTransform 2 → 1
+                                                                                    SimpleSquashingTransform
+                                                                                      JoiningTransform 2 → 1
+                                                                                        SimpleSquashingTransform
+                                                                                          JoiningTransform 2 → 1
+                                                                                            SimpleSquashingTransform
+                                                                                              JoiningTransform 2 → 1
+                                                                                                SimpleSquashingTransform
+                                                                                                  JoiningTransform 2 → 1
+                                                                                                    SimpleSquashingTransform
+                                                                                                      JoiningTransform 2 → 1
+                                                                                                        SimpleSquashingTransform
+                                                                                                          JoiningTransform 2 → 1
+                                                                                                            SimpleSquashingTransform
+                                                                                                              JoiningTransform 2 → 1
+                                                                                                                SimpleSquashingTransform
+                                                                                                                  JoiningTransform 2 → 1
+                                                                                                                    SimpleSquashingTransform
+                                                                                                                      JoiningTransform 2 → 1
+                                                                                                                        SimpleSquashingTransform
+                                                                                                                          (Expression)
+                                                                                                                          ExpressionTransform × 24
+                                                                                                                            (Expression)
+                                                                                                                            ExpressionTransform × 24
+                                                                                                                              (ReadFromFile)
+                                                                                                                              Resize 15 → 24
+                                                                                                                                File × 15 0 → 1
+                                                                                                                          (Expression)
+                                                                                                                          ExpressionTransform × 24
+                                                                                                                            (Expression)
+                                                                                                                            ExpressionTransform × 24
+                                                                                                                              (Expression)
+                                                                                                                              ExpressionTransform × 24
+                                                                                                                                (ReadFromFile)
+                                                                                                                                Resize 8 → 24
+                                                                                                                                  File × 8 0 → 1

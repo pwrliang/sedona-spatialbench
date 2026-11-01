@@ -1,0 +1,80 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 100         │
+│                           │
+│         Order By:         │
+│   st_area(st_convexhull   │
+│   (st_collect(array_agg   │
+│     (st_geomfromwkb(t     │
+│  .t_dropoffloc))))) DESC  │
+│      c.c_custkey ASC      │
+│   date_trunc('month', t   │
+│     .t_pickuptime) ASC    │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         c_custkey         │
+│       customer_name       │
+│             2             │
+│  monthly_travel_hull_area │
+│       dropoff_count       │
+│                           │
+│      ~11,999,994 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│           FILTER          │
+│    ────────────────────   │
+│    (dropoff_count > 5)    │
+│                           │
+│      ~11,999,994 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│          Groups:          │
+│             #0            │
+│             #1            │
+│             #2            │
+│                           │
+│        Aggregates:        │
+│        count_star()       │
+│       array_agg(#3)       │
+│                           │
+│      ~59,999,972 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         c_custkey         │
+│           c_name          │
+│        pickup_month       │
+│       ST_GeomFromWKB      │
+│       (t_dropoffloc)      │
+│                           │
+│      ~59,999,973 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│   t_custkey = c_custkey   │              │
+│                           │              │
+│      ~59,999,973 rows     │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│       READ_PARQUET        ││       READ_PARQUET        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││         Function:         │
+│        READ_PARQUET       ││        READ_PARQUET       │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         t_custkey         ││         c_custkey         │
+│        t_pickuptime       ││           c_name          │
+│        t_dropoffloc       ││                           │
+│                           ││                           │
+│      ~59,999,973 rows     ││       ~300,000 rows       │
+└───────────────────────────┘└───────────────────────────┘

@@ -1,0 +1,80 @@
+-- {"tag": "q12_knn_trip1000", "query": null, "sql_file": "/home/geng.161/sedona-spatialbench/paper_eval/failure_analysis/04_postgis/sql/q12_knn_trip1000.sql", "config": "indexed", "sets": null, "timeout": 50, "started_utc": "2026-11-01T15:18:48.291189+00:00", "status": "ok", "wall_seconds": 1.523}
+Limit  (cost=1738347.91..1738348.16 rows=100 width=16) (actual time=1472.339..1477.504 rows=100 loops=1)
+  Output: trip.t_tripkey, (avg((st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+  Buffers: shared hit=11130 read=1041995
+  ->  Sort  (cost=1738347.91..1738350.41 rows=1000 width=16) (actual time=1348.714..1353.875 rows=100 loops=1)
+        Output: trip.t_tripkey, (avg((st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+        Sort Key: (avg((st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary))))) DESC, trip.t_tripkey
+        Sort Method: top-N heapsort  Memory: 32kB
+        Buffers: shared hit=11130 read=1041995
+        ->  GroupAggregate  (cost=1599973.20..1738309.69 rows=1000 width=16) (actual time=1303.679..1353.768 rows=1000 loops=1)
+              Output: trip.t_tripkey, avg((st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary))))
+              Group Key: trip.t_tripkey
+              Buffers: shared hit=11130 read=1041995
+              ->  Nested Loop  (cost=1599973.20..1738272.19 rows=5000 width=16) (actual time=1303.597..1353.450 rows=5000 loops=1)
+                    Output: trip.t_tripkey, (st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                    Buffers: shared hit=11130 read=1041995
+                    ->  Limit  (cost=1599972.92..1600095.78 rows=1000 width=174) (actual time=1303.406..1308.741 rows=1000 loops=1)
+                          Output: trip.t_tripkey, NULL::bigint, NULL::bigint, NULL::bigint, NULL::timestamp without time zone, NULL::timestamp without time zone, NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), trip.t_pickuploc, NULL::bytea
+                          Buffers: shared hit=1641 read=1041995
+                          ->  Gather Merge  (cost=1599972.92..8971259.96 rows=59998848 width=174) (actual time=1303.404..1308.705 rows=1000 loops=1)
+                                Output: trip.t_tripkey, NULL::bigint, NULL::bigint, NULL::bigint, NULL::timestamp without time zone, NULL::timestamp without time zone, NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), trip.t_pickuploc, NULL::bytea
+                                Workers Planned: 7
+                                Workers Launched: 7
+                                Buffers: shared hit=1641 read=1041995
+                                ->  Sort  (cost=1598972.80..1620400.96 rows=8571264 width=174) (actual time=1280.353..1280.376 rows=818 loops=8)
+                                      Output: trip.t_tripkey, NULL::bigint, NULL::bigint, NULL::bigint, NULL::timestamp without time zone, NULL::timestamp without time zone, NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), trip.t_pickuploc, NULL::bytea
+                                      Sort Key: trip.t_tripkey
+                                      Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 0:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 1:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 2:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 3:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 4:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 5:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Worker 6:  Sort Method: top-N heapsort  Memory: 127kB
+                                      Buffers: shared hit=1641 read=1041995
+                                      Worker 0: actual time=1289.642..1289.667 rows=910 loops=1
+                                        Buffers: shared hit=211 read=129250
+                                      Worker 1: actual time=1268.309..1268.334 rows=910 loops=1
+                                        Buffers: shared hit=205 read=129298
+                                      Worker 2: actual time=1289.640..1289.665 rows=910 loops=1
+                                        Buffers: shared hit=215 read=128877
+                                      Worker 3: actual time=1273.041..1273.066 rows=911 loops=1
+                                        Buffers: shared hit=209 read=130445
+                                      Worker 4: actual time=1273.046..1273.070 rows=910 loops=1
+                                        Buffers: shared hit=213 read=129005
+                                      Worker 5: actual time=1273.052..1273.077 rows=910 loops=1
+                                        Buffers: shared hit=206 read=129131
+                                      Worker 6: actual time=1273.060..1273.085 rows=910 loops=1
+                                        Buffers: shared hit=211 read=129095
+                                      ->  Parallel Seq Scan on public.trip  (cost=0.00..1129019.64 rows=8571264 width=174) (actual time=82.886..693.019 rows=7500000 loops=8)
+                                            Output: trip.t_tripkey, NULL::bigint, NULL::bigint, NULL::bigint, NULL::timestamp without time zone, NULL::timestamp without time zone, NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), NULL::numeric(15,5), trip.t_pickuploc, NULL::bytea
+                                            Buffers: shared hit=1312 read=1041995
+                                            Worker 0: actual time=107.234..708.780 rows=7442589 loops=1
+                                              Buffers: shared hit=164 read=129250
+                                            Worker 1: actual time=85.915..687.478 rows=7444775 loops=1
+                                              Buffers: shared hit=158 read=129298
+                                            Worker 2: actual time=107.237..709.922 rows=7421558 loops=1
+                                              Buffers: shared hit=168 read=128877
+                                            Worker 3: actual time=90.661..687.103 rows=7511222 loops=1
+                                              Buffers: shared hit=162 read=130445
+                                            Worker 4: actual time=90.658..692.464 rows=7428664 loops=1
+                                              Buffers: shared hit=166 read=129005
+                                            Worker 5: actual time=90.685..693.152 rows=7434863 loops=1
+                                              Buffers: shared hit=159 read=129131
+                                            Worker 6: actual time=90.676..691.413 rows=7433396 loops=1
+                                              Buffers: shared hit=164 read=129095
+                    ->  Limit  (cost=0.28..138.07 rows=5 width=16) (actual time=0.033..0.044 rows=5 loops=1000)
+                          Output: (st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary))), ((st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(trip.t_pickuploc)))
+                          Buffers: shared hit=9489
+                          ->  Index Scan using idx_building_geom on public.building b  (cost=0.28..2381953.43 rows=86438 width=16) (actual time=0.032..0.044 rows=5 loops=1000)
+                                Output: st_distance(st_geomfromwkb(trip.t_pickuploc), st_geomfromwkb(b.b_boundary)), (st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(trip.t_pickuploc))
+                                Order By: (st_geomfromwkb(b.b_boundary) <-> st_geomfromwkb(trip.t_pickuploc))
+                                Buffers: shared hit=9489
+Planning Time: 0.411 ms
+JIT:
+  Functions: 29
+  Options: Inlining true, Optimization true, Expressions true, Deforming true
+  Timing: Generation 3.589 ms, Inlining 398.466 ms, Optimization 172.592 ms, Emission 104.821 ms, Total 679.468 ms
+Execution Time: 1521.496 ms

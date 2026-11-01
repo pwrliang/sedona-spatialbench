@@ -1,0 +1,159 @@
+(Expression)
+ExpressionTransform
+  (Limit)
+  Limit
+    (Sorting)
+    MergingSortedTransform 24 → 1
+      MergeSortingTransform × 24
+        LimitsCheckingTransform × 24
+          PartialSortingTransform × 24
+            (Expression)
+            ExpressionTransform × 24
+              (Filter)
+              FilterTransform × 24
+                (Aggregating)
+                Resize 24 → 24
+                  AggregatingTransform × 24
+                    (Expression)
+                    ExpressionTransform × 24
+                      (Join)
+                      SimpleSquashingTransform × 24
+                        ColumnPermuteTransform × 24
+                          Resize × 2 24 → 1
+                            FillingRightJoinSide
+                              SimpleSquashingTransform
+                                FillingRightJoinSide
+                                  SimpleSquashingTransform
+                                    FillingRightJoinSide
+                                      SimpleSquashingTransform
+                                        FillingRightJoinSide
+                                          SimpleSquashingTransform
+                                            FillingRightJoinSide
+                                              SimpleSquashingTransform
+                                                FillingRightJoinSide
+                                                  SimpleSquashingTransform
+                                                    FillingRightJoinSide
+                                                      SimpleSquashingTransform
+                                                        FillingRightJoinSide
+                                                          SimpleSquashingTransform
+                                                            FillingRightJoinSide
+                                                              SimpleSquashingTransform
+                                                                FillingRightJoinSide
+                                                                  SimpleSquashingTransform
+                                                                    FillingRightJoinSide
+                                                                      SimpleSquashingTransform
+                                                                        FillingRightJoinSide
+                                                                          SimpleSquashingTransform
+                                                                            FillingRightJoinSide
+                                                                              SimpleSquashingTransform
+                                                                                FillingRightJoinSide
+                                                                                  SimpleSquashingTransform
+                                                                                    FillingRightJoinSide
+                                                                                      SimpleSquashingTransform
+                                                                                        FillingRightJoinSide
+                                                                                          SimpleSquashingTransform
+                                                                                            FillingRightJoinSide
+                                                                                              SimpleSquashingTransform
+                                                                                                FillingRightJoinSide
+                                                                                                  SimpleSquashingTransform
+                                                                                                    FillingRightJoinSide
+                                                                                                      SimpleSquashingTransform
+                                                                                                        FillingRightJoinSide
+                                                                                                          SimpleSquashingTransform
+                                                                                                            FillingRightJoinSide
+                                                                                                              SimpleSquashingTransform
+                                                                                                                FillingRightJoinSide
+                                                                                                                  SimpleSquashingTransform
+                                                                                                                    FillingRightJoinSide
+                                                                                                                      SimpleSquashingTransform
+                                                                                                                        FillingRightJoinSide
+                                                                                                                          SimpleSquashingTransform
+                                                                                                                            Resize 24 → 24
+                                                                                                                              JoiningTransform 3 → 1
+                                                                                                                                DelayedJoinedBlocksWorkerTransform
+                                                                                                                                  SimpleSquashingTransform
+                                                                                                                                    JoiningTransform 3 → 1
+                                                                                                                                      DelayedJoinedBlocksWorkerTransform
+                                                                                                                                        SimpleSquashingTransform
+                                                                                                                                          JoiningTransform 3 → 1
+                                                                                                                                            DelayedJoinedBlocksWorkerTransform
+                                                                                                                                              SimpleSquashingTransform
+                                                                                                                                                JoiningTransform 3 → 1
+                                                                                                                                                  DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                    SimpleSquashingTransform
+                                                                                                                                                      JoiningTransform 3 → 1
+                                                                                                                                                        DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                          SimpleSquashingTransform
+                                                                                                                                                            JoiningTransform 3 → 1
+                                                                                                                                                              DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                SimpleSquashingTransform
+                                                                                                                                                                  JoiningTransform 3 → 1
+                                                                                                                                                                    DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                      SimpleSquashingTransform
+                                                                                                                                                                        JoiningTransform 3 → 1
+                                                                                                                                                                          DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                            SimpleSquashingTransform
+                                                                                                                                                                              JoiningTransform 3 → 1
+                                                                                                                                                                                DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                  SimpleSquashingTransform
+                                                                                                                                                                                    JoiningTransform 3 → 1
+                                                                                                                                                                                      DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                        SimpleSquashingTransform
+                                                                                                                                                                                          JoiningTransform 3 → 1
+                                                                                                                                                                                            DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                              SimpleSquashingTransform
+                                                                                                                                                                                                JoiningTransform 3 → 1
+                                                                                                                                                                                                  DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                    SimpleSquashingTransform
+                                                                                                                                                                                                      JoiningTransform 3 → 1
+                                                                                                                                                                                                        DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                          SimpleSquashingTransform
+                                                                                                                                                                                                            JoiningTransform 3 → 1
+                                                                                                                                                                                                              DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                SimpleSquashingTransform
+                                                                                                                                                                                                                  JoiningTransform 3 → 1
+                                                                                                                                                                                                                    DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                      SimpleSquashingTransform
+                                                                                                                                                                                                                        JoiningTransform 3 → 1
+                                                                                                                                                                                                                          DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                            SimpleSquashingTransform
+                                                                                                                                                                                                                              JoiningTransform 3 → 1
+                                                                                                                                                                                                                                DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                  SimpleSquashingTransform
+                                                                                                                                                                                                                                    JoiningTransform 3 → 1
+                                                                                                                                                                                                                                      DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                        SimpleSquashingTransform
+                                                                                                                                                                                                                                          JoiningTransform 3 → 1
+                                                                                                                                                                                                                                            DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                              SimpleSquashingTransform
+                                                                                                                                                                                                                                                JoiningTransform 3 → 1
+                                                                                                                                                                                                                                                  DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                                    SimpleSquashingTransform
+                                                                                                                                                                                                                                                      JoiningTransform 3 → 1
+                                                                                                                                                                                                                                                        DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                                          SimpleSquashingTransform
+                                                                                                                                                                                                                                                            JoiningTransform 3 → 1
+                                                                                                                                                                                                                                                              DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                                                SimpleSquashingTransform
+                                                                                                                                                                                                                                                                  JoiningTransform 3 → 1
+                                                                                                                                                                                                                                                                    DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                                                      SimpleSquashingTransform
+                                                                                                                                                                                                                                                                        JoiningTransform 3 → 1
+                                                                                                                                                                                                                                                                          DelayedJoinedBlocksWorkerTransform
+                                                                                                                                                                                                                                                                            SimpleSquashingTransform
+                                                                                                                                                                                                                                                                              DelayedJoinedBlocksTransform 0 → 24
+                                                                                                                                                                                                                                                                                Resize 24 → 24
+                                                                                                                                                                                                                                                                                  (Expression)
+                                                                                                                                                                                                                                                                                  ExpressionTransform × 24
+                                                                                                                                                                                                                                                                                    (ReadFromFile)
+                                                                                                                                                                                                                                                                                    Resize 11 → 24
+                                                                                                                                                                                                                                                                                      File × 11 0 → 1
+                                                                                                                                                                                                                                                                                  (Expression)
+                                                                                                                                                                                                                                                                                  ExpressionTransform × 24
+                                                                                                                                                                                                                                                                                    (BuildRuntimeFilter)
+                                                                                                                                                                                                                                                                                    BuildRuntimeFilterTransform × 24
+                                                                                                                                                                                                                                                                                      (Expression)
+                                                                                                                                                                                                                                                                                      ExpressionTransform × 24
+                                                                                                                                                                                                                                                                                        (ReadFromFile)
+                                                                                                                                                                                                                                                                                        Resize 1 → 24
+                                                                                                                                                                                                                                                                                          File 0 → 1

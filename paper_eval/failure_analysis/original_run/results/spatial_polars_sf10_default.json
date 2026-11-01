@@ -1,0 +1,196 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-27T22:27:00.807917+00:00",
+  "results": [
+    {
+      "engine": "spatial_polars",
+      "version": "0.2.3",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-27T21:35:36.381325+00:00",
+      "total_time": 985.04,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 41.37,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            68.78,
+            27.58,
+            27.76
+          ],
+          "std_dev": 23.74,
+          "min_time": 27.58,
+          "max_time": 68.78
+        },
+        {
+          "query": "q2",
+          "time_seconds": 43.37,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            77.72,
+            26.45,
+            25.95
+          ],
+          "std_dev": 29.75,
+          "min_time": 25.95,
+          "max_time": 77.72
+        },
+        {
+          "query": "q3",
+          "time_seconds": 29.6,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            37.85,
+            25.55,
+            25.41
+          ],
+          "std_dev": 7.14,
+          "min_time": 25.41,
+          "max_time": 37.85
+        },
+        {
+          "query": "q4",
+          "time_seconds": 19.06,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            42.96,
+            7.1,
+            7.12
+          ],
+          "std_dev": 20.7,
+          "min_time": 7.1,
+          "max_time": 42.96
+        },
+        {
+          "query": "q5",
+          "time_seconds": 55.96,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            56.33,
+            55.89,
+            55.65
+          ],
+          "std_dev": 0.34,
+          "min_time": 55.65,
+          "max_time": 56.33
+        },
+        {
+          "query": "q6",
+          "time_seconds": 37.65,
+          "row_count": 3,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            37.63,
+            37.64,
+            37.68
+          ],
+          "std_dev": 0.03,
+          "min_time": 37.63,
+          "max_time": 37.68
+        },
+        {
+          "query": "q7",
+          "time_seconds": 45.83,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            45.9,
+            45.75,
+            45.85
+          ],
+          "std_dev": 0.08,
+          "min_time": 45.75,
+          "max_time": 45.9
+        },
+        {
+          "query": "q8",
+          "time_seconds": 42.56,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            42.54,
+            42.98,
+            42.17
+          ],
+          "std_dev": 0.41,
+          "min_time": 42.17,
+          "max_time": 42.98
+        },
+        {
+          "query": "q9",
+          "time_seconds": 0.29,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            0.34,
+            0.27,
+            0.27
+          ],
+          "std_dev": 0.04,
+          "min_time": 0.27,
+          "max_time": 0.34
+        },
+        {
+          "query": "q10",
+          "time_seconds": 83.87,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            84.04,
+            83.12,
+            84.45
+          ],
+          "std_dev": 0.68,
+          "min_time": 83.12,
+          "max_time": 84.45
+        },
+        {
+          "query": "q11",
+          "time_seconds": 227.02,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            140.42,
+            268.81,
+            271.83
+          ],
+          "std_dev": 75.01,
+          "min_time": 140.42,
+          "max_time": 271.83
+        },
+        {
+          "query": "q12",
+          "time_seconds": 358.46,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            379.35,
+            352.8,
+            343.23
+          ],
+          "std_dev": 18.71,
+          "min_time": 343.23,
+          "max_time": 379.35
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+Sort  (cost=1513916060.35..1513916060.35 rows=1 width=79)
+  Output: z.z_zonekey, z.z_name, (count(t.t_tripkey)), (avg(t.t_distance)), (avg((t.t_dropofftime - t.t_pickuptime)))
+  Sort Key: (count(t.t_tripkey)) DESC, z.z_zonekey
+  ->  GroupAggregate  (cost=1513915010.34..1513916060.34 rows=1 width=79)
+        Output: z.z_zonekey, z.z_name, count(t.t_tripkey), avg(t.t_distance), avg((t.t_dropofftime - t.t_pickuptime))
+        Group Key: z.z_zonekey, z.z_name
+        ->  Sort  (cost=1513915010.34..1513915160.34 rows=59999 width=51)
+              Output: z.z_zonekey, z.z_name, t.t_tripkey, t.t_distance, t.t_dropofftime, t.t_pickuptime
+              Sort Key: z.z_zonekey, z.z_name
+              ->  Nested Loop  (cost=0.00..1513910248.63 rows=59999 width=51)
+                    Output: z.z_zonekey, z.z_name, t.t_tripkey, t.t_distance, t.t_dropofftime, t.t_pickuptime
+                    Join Filter: st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(z.z_boundary))
+                    ->  Seq Scan on public.zone z  (cost=0.00..11395770.43 rows=1 width=466)
+                          Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+                          Filter: st_intersects('010300000001000000050000002FDD2406810D5CC0CB10C7BAB835414096438B6CE7D35BC0CB10C7BAB835414096438B6CE7D35BC0FE43FAEDEBA841402FDD2406810D5CC0FE43FAEDEBA841402FDD2406810D5CC0CB10C7BAB8354140'::geometry, st_geomfromwkb(z.z_boundary))
+                    ->  Seq Scan on public.trip t  (cost=0.00..1643295.48 rows=59998848 width=50)
+                          Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+JIT:
+  Functions: 13
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

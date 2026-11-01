@@ -1,0 +1,25 @@
+Limit  (cost=129919600871922.25..129919600871922.50 rows=100 width=16)
+  Output: t.t_tripkey, (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+  ->  Sort  (cost=129919600871922.25..129919601021919.38 rows=59998848 width=16)
+        Output: t.t_tripkey, (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))))
+        Sort Key: (avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))))) DESC, t.t_tripkey
+        ->  GroupAggregate  (cost=129919595578867.03..129919598578809.42 rows=59998848 width=16)
+              Output: t.t_tripkey, avg((st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))))
+              Group Key: t.t_tripkey
+              ->  Sort  (cost=129919595578867.03..129919596328852.62 rows=299994240 width=16)
+                    Output: t.t_tripkey, (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                    Sort Key: t.t_tripkey
+                    ->  Nested Loop  (cost=2165367.27..129919550336265.91 rows=299994240 width=16)
+                          Output: t.t_tripkey, (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                          ->  Seq Scan on public.trip t  (cost=0.00..1643295.48 rows=59998848 width=30)
+                                Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                          ->  Limit  (cost=2165367.27..2165367.29 rows=5 width=8)
+                                Output: (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                                ->  Sort  (cost=2165367.27..2165583.37 rows=86438 width=8)
+                                      Output: (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                                      Sort Key: (st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary)))
+                                      ->  Seq Scan on public.building b  (cost=0.00..2163931.57 rows=86438 width=8)
+                                            Output: st_distance(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(b.b_boundary))
+JIT:
+  Functions: 12
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

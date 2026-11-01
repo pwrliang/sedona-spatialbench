@@ -1,0 +1,282 @@
+{
+  "data_dir": "/home/geng.161/sedona-spatialbench/paper_eval/benchmark-data-sf10",
+  "rows_building": [
+    {
+      "n": 86438
+    }
+  ],
+  "rows_customer": [
+    {
+      "n": 300000
+    }
+  ],
+  "rows_driver": [
+    {
+      "n": 5000
+    }
+  ],
+  "rows_trip": [
+    {
+      "n": 60000000
+    }
+  ],
+  "rows_vehicle": [
+    {
+      "n": 1000
+    }
+  ],
+  "rows_zone": [
+    {
+      "n": 454710
+    }
+  ],
+  "schema_trip": [
+    {
+      "column_name": "t_tripkey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "t_custkey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "t_driverkey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "t_vehiclekey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "t_pickuptime",
+      "column_type": "TIMESTAMP"
+    },
+    {
+      "column_name": "t_dropofftime",
+      "column_type": "TIMESTAMP"
+    },
+    {
+      "column_name": "t_fare",
+      "column_type": "DECIMAL(15,5)"
+    },
+    {
+      "column_name": "t_tip",
+      "column_type": "DECIMAL(15,5)"
+    },
+    {
+      "column_name": "t_totalamount",
+      "column_type": "DECIMAL(15,5)"
+    },
+    {
+      "column_name": "t_distance",
+      "column_type": "DECIMAL(15,5)"
+    },
+    {
+      "column_name": "t_pickuploc",
+      "column_type": "BLOB"
+    },
+    {
+      "column_name": "t_dropoffloc",
+      "column_type": "BLOB"
+    }
+  ],
+  "schema_zone": [
+    {
+      "column_name": "z_zonekey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "z_gersid",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "z_country",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "z_region",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "z_name",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "z_subtype",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "z_boundary",
+      "column_type": "BLOB"
+    }
+  ],
+  "schema_building": [
+    {
+      "column_name": "b_buildingkey",
+      "column_type": "BIGINT"
+    },
+    {
+      "column_name": "b_name",
+      "column_type": "VARCHAR"
+    },
+    {
+      "column_name": "b_boundary",
+      "column_type": "BLOB"
+    }
+  ],
+  "zone_complexity": [
+    {
+      "zones": 454710,
+      "total_vertices": 126279540,
+      "avg_vertices": 277.7144553671571,
+      "median_vertices": 54.0,
+      "p99_vertices": 4455.819999999949,
+      "max_vertices": 345461,
+      "avg_wkb_bytes": 4459.441336236282,
+      "total_wkb_bytes": 2027752570
+    }
+  ],
+  "zone_types": [
+    {
+      "gtype": "POLYGON",
+      "n": 444885
+    },
+    {
+      "gtype": "MULTIPOLYGON",
+      "n": 9825
+    }
+  ],
+  "zone_subtypes": [
+    {
+      "z_subtype": "neighborhood",
+      "n": 298615,
+      "avg_vertices": 130.84855080957084
+    },
+    {
+      "z_subtype": "microhood",
+      "n": 74797,
+      "avg_vertices": 37.25595946361485
+    },
+    {
+      "z_subtype": "macrohood",
+      "n": 42619,
+      "avg_vertices": 139.64522865388676
+    },
+    {
+      "z_subtype": "county",
+      "n": 38679,
+      "avg_vertices": 2028.6984151606814
+    }
+  ],
+  "zone_top10_vertices": [
+    {
+      "z_zonekey": 110643,
+      "z_name": "Unorganized Division No. 23",
+      "z_subtype": "county",
+      "vertices": 345461
+    },
+    {
+      "z_zonekey": 174601,
+      "z_name": "\u1404\u1528\u1528\u1424 \u140a\u1505\u148c Eeyou Istchee",
+      "z_subtype": "county",
+      "vertices": 221895
+    },
+    {
+      "z_zonekey": 202153,
+      "z_name": "Unorganized Division No. 22",
+      "z_subtype": "county",
+      "vertices": 204102
+    },
+    {
+      "z_zonekey": 360250,
+      "z_name": "Girona",
+      "z_subtype": "county",
+      "vertices": 140479
+    },
+    {
+      "z_zonekey": 12346,
+      "z_name": "Saaremaa vald",
+      "z_subtype": "county",
+      "vertices": 132946
+    },
+    {
+      "z_zonekey": 319584,
+      "z_name": "Finist\u00e8re",
+      "z_subtype": "county",
+      "vertices": 120976
+    },
+    {
+      "z_zonekey": 307802,
+      "z_name": "\u1472\u144e\u1555\u1483 Kativik",
+      "z_subtype": "county",
+      "vertices": 120499
+    },
+    {
+      "z_zonekey": 69801,
+      "z_name": "Southland District",
+      "z_subtype": "county",
+      "vertices": 102867
+    },
+    {
+      "z_zonekey": 32064,
+      "z_name": "Antsiranana II",
+      "z_subtype": "county",
+      "vertices": 99934
+    },
+    {
+      "z_zonekey": 312036,
+      "z_name": "Unorganized Division No. 19",
+      "z_subtype": "county",
+      "vertices": 95739
+    }
+  ],
+  "coconino_county": [
+    {
+      "z_zonekey": 434037,
+      "z_name": "Coconino County",
+      "vertices": 10583,
+      "gtype": "POLYGON"
+    }
+  ],
+  "q6_bbox_zones": [
+    {
+      "zones_intersecting_q6_bbox": 18,
+      "vertices": 21690
+    }
+  ],
+  "zone_overlap_hint": [
+    {
+      "z_subtype": "neighborhood",
+      "count_star()": 298615
+    },
+    {
+      "z_subtype": "microhood",
+      "count_star()": 74797
+    },
+    {
+      "z_subtype": "macrohood",
+      "count_star()": 42619
+    },
+    {
+      "z_subtype": "county",
+      "count_star()": 38679
+    }
+  ],
+  "building_complexity": [
+    {
+      "buildings": 86438,
+      "avg_vertices": 5.992109951641639,
+      "max_vertices": 8,
+      "invalid_polygons": 0
+    }
+  ],
+  "building_invalid_examples": [],
+  "trip_extent": [
+    {
+      "min_x": -179.999757179,
+      "max_x": 179.999955669,
+      "min_y": -56.170016,
+      "max_y": 77.897255
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+┌───────────────────────────┐
+│           TOP_N           │
+│    ────────────────────   │
+│          Top: 100         │
+│                           │
+│         Order By:         │
+│ st_distance(st_geomfromwkb│
+│      (t.t_pickuploc),     │
+│  st_geomfromtext('POINT ( │
+│ -111.7610 34.8697)')) ASC │
+│      t.t_tripkey ASC      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         t_tripkey         │
+│         pickup_lon        │
+│         pickup_lat        │
+│        t_pickuptime       │
+│     distance_to_center    │
+│                           │
+│      ~11,999,994 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         t_tripkey         │
+│ST_GeomFromWKB(t_pickuploc)│
+│        t_pickuptime       │
+│                           │
+│      ~11,999,994 rows     │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       READ_PARQUET        │
+│    ────────────────────   │
+│         Function:         │
+│        READ_PARQUET       │
+│                           │
+│        Projections:       │
+│         t_tripkey         │
+│        t_pickuptime       │
+│        t_pickuploc        │
+│                           │
+│          Filters:         │
+│ ST_DWithin(ST_GeomFromWKB │
+│  (t_pickuploc), '\x00\x00 │
+│  \x00\x00\x00\x00\x00\x00 │
+│  \x00\x00\x00\x00\x01\x00 │
+│  \x00\x00b\x10X9\xB4\xF0[ │
+│\xC0e\xAA`TRoA@'::GEOMETRY)│
+│                           │
+│      ~11,999,994 rows     │
+└───────────────────────────┘

@@ -1,0 +1,24 @@
+Finalize Aggregate  (cost=44338409463084.59..44338409463084.60 rows=1 width=8)
+  Output: count(*)
+  ->  Gather  (cost=44338409463083.87..44338409463084.58 rows=7 width=8)
+        Output: (PARTIAL count(*))
+        Workers Planned: 7
+        ->  Partial Aggregate  (cost=44338409462083.87..44338409462083.88 rows=1 width=8)
+              Output: PARTIAL count(*)
+              ->  Nested Loop  (cost=0.57..44333987452428.09 rows=1768803862308 width=0)
+                    Join Filter: (pickup_zone.z_zonekey <> dropoff_zone.z_zonekey)
+                    ->  Nested Loop  (cost=0.29..97378858223.83 rows=3893702382 width=30)
+                          Output: t.t_dropoffloc, pickup_zone.z_zonekey
+                          ->  Parallel Seq Scan on public.trip t  (cost=0.00..1129019.64 rows=8571264 width=44)
+                                Output: t.t_tripkey, t.t_custkey, t.t_driverkey, t.t_vehiclekey, t.t_pickuptime, t.t_dropofftime, t.t_fare, t.t_tip, t.t_totalamount, t.t_distance, t.t_pickuploc, t.t_dropoffloc
+                          ->  Index Scan using idx_zone_geom on public.zone pickup_zone  (cost=0.29..11360.50 rows=45 width=451)
+                                Output: pickup_zone.z_zonekey, pickup_zone.z_gersid, pickup_zone.z_country, pickup_zone.z_region, pickup_zone.z_name, pickup_zone.z_subtype, pickup_zone.z_boundary
+                                Index Cond: (st_geomfromwkb(pickup_zone.z_boundary) ~ st_geomfromwkb(t.t_pickuploc))
+                                Filter: st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(pickup_zone.z_boundary))
+                    ->  Index Scan using idx_zone_geom on public.zone dropoff_zone  (cost=0.29..11360.50 rows=45 width=451)
+                          Output: dropoff_zone.z_zonekey, dropoff_zone.z_gersid, dropoff_zone.z_country, dropoff_zone.z_region, dropoff_zone.z_name, dropoff_zone.z_subtype, dropoff_zone.z_boundary
+                          Index Cond: (st_geomfromwkb(dropoff_zone.z_boundary) ~ st_geomfromwkb(t.t_dropoffloc))
+                          Filter: st_within(st_geomfromwkb(t.t_dropoffloc), st_geomfromwkb(dropoff_zone.z_boundary))
+JIT:
+  Functions: 18
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

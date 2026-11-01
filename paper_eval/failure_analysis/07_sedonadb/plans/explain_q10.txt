@@ -1,0 +1,25 @@
+-- SedonaDB LOGICAL PLAN for q10
+Sort: avg_duration DESC NULLS LAST, z.z_zonekey ASC NULLS LAST, fetch=100
+  Projection: z.z_zonekey, z.z_name AS pickup_zone, avg(t.t_dropofftime - t.t_pickuptime) AS avg_duration, avg(t.t_distance) AS avg_distance, count(t.t_tripkey) AS num_trips
+    Aggregate: groupBy=[[z.z_zonekey, z.z_name]], aggr=[[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), count(t.t_tripkey)]]
+      Projection: z.z_zonekey, z.z_name, t.t_tripkey, t.t_pickuptime, t.t_dropofftime, t.t_distance
+        SpatialJoin: join_type=Left, filter=st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(z.z_boundary))
+          SubqueryAlias: z
+            SubqueryAlias: zone
+              TableScan: ?table? projection=[z_zonekey, z_name, z_boundary]
+          SubqueryAlias: t
+            SubqueryAlias: trip
+              TableScan: ?table? projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickuploc]
+
+-- SedonaDB PHYSICAL PLAN for q10
+SortPreservingMergeExec: [avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], fetch=100
+  SortExec: TopK(fetch=100), expr=[avg_duration@2 DESC NULLS LAST, z_zonekey@0 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[z_zonekey@0 as z_zonekey, z_name@1 as pickup_zone, avg(t.t_dropofftime - t.t_pickuptime)@2 as avg_duration, avg(t.t_distance)@3 as avg_distance, count(t.t_tripkey)@4 as num_trips]
+      AggregateExec: mode=FinalPartitioned, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z_name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), count(t.t_tripkey)]
+        RepartitionExec: partitioning=Hash([z_zonekey@0, z_name@1], 24), input_partitions=24
+          AggregateExec: mode=Partial, gby=[z_zonekey@0 as z_zonekey, z_name@1 as z_name], aggr=[avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_distance), count(t.t_tripkey)]
+            SpatialJoinExec: join_type=Left, on=ST_contains(st_geomfromwkb(z_boundary@2), st_geomfromwkb(t_pickuploc@4)), projection=[z_zonekey@0, z_name@1, t_tripkey@3, t_pickuptime@4, t_dropofftime@5, t_distance@6]
+              DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/zone/part-1.parquet:0..85616569], [local/storage/liang/sf10/zone/part-1.parquet:85616569..171233138], [local/storage/liang/sf10/zone/part-1.parquet:171233138..195108188, local/storage/liang/sf10/zone/part-2.parquet:0..61741519], [local/storage/liang/sf10/zone/part-2.parquet:61741519..147358088], [local/storage/liang/sf10/zone/part-2.parquet:147358088..232974657], ...]}, projection=[z_zonekey, z_name, z_boundary], file_type=parquet
+              ProbeShuffleExec: partitioning=RoundRobinBatch(24)
+                DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_distance, t_pickuploc], file_type=parquet
+

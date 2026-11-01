@@ -1,0 +1,31 @@
+Sort  (cost=11366532146.13..11366533281.82 rows=454274 width=31)
+  Output: z.z_zonekey, z.z_name, (count(*))
+  Sort Key: (count(*)) DESC, z.z_zonekey
+  ->  GroupAggregate  (cost=11366480374.34..11366489459.82 rows=454274 width=31)
+        Output: z.z_zonekey, z.z_name, count(*)
+        Group Key: z.z_zonekey, z.z_name
+        ->  Sort  (cost=11366480374.34..11366481510.02 rows=454274 width=23)
+              Output: z.z_zonekey, z.z_name
+              Sort Key: z.z_zonekey, z.z_name
+              ->  Nested Loop  (cost=1599972.92..11366437688.02 rows=454274 width=23)
+                    Output: z.z_zonekey, z.z_name
+                    Join Filter: st_within(st_geomfromwkb(top_trips.t_pickuploc), st_geomfromwkb(z.z_boundary))
+                    ->  Seq Scan on public.zone z  (cost=0.00..37784.74 rows=454274 width=466)
+                          Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+                    ->  Materialize  (cost=1599972.92..1600110.78 rows=1000 width=22)
+                          Output: top_trips.t_pickuploc
+                          ->  Subquery Scan on top_trips  (cost=1599972.92..1600105.78 rows=1000 width=22)
+                                Output: top_trips.t_pickuploc
+                                ->  Limit  (cost=1599972.92..1600095.78 rows=1000 width=33)
+                                      Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                                      ->  Gather Merge  (cost=1599972.92..8971259.96 rows=59998848 width=33)
+                                            Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                                            Workers Planned: 7
+                                            ->  Sort  (cost=1598972.80..1620400.96 rows=8571264 width=33)
+                                                  Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                                                  Sort Key: t.t_tip DESC, t.t_tripkey
+                                                  ->  Parallel Seq Scan on public.trip t  (cost=0.00..1129019.64 rows=8571264 width=33)
+                                                        Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+JIT:
+  Functions: 13
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

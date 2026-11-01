@@ -1,0 +1,15 @@
+Output: t_tripkey, readWKBPoint(t_pickuploc).1, readWKBPoint(t_pickuploc).2, t_pickuptime, L2Distance(readWKBPoint(t_pickuploc), _CAST((-111.761, 34.8697)_Tuple(Float64, Float64), \'Tuple(Float64, Float64)\'_String))
+
+JoinLazyColumnsStep
+├──Limit (preliminary LIMIT)
+│  │  Limit 100
+│  │  Offset 0
+│  └──Sorting (Sorting for ORDER BY)
+│     │  Sort description: L2Distance(readWKBPoint(t_pickuploc), _CAST((-111.761, 34.8697)_Tuple(Float64, Float64), \'Tuple(Float64, Float64)\'_String)) ASC, t_tripkey ASC
+│     │  Limit 100
+│     └──ReadFromFile
+│           Output: readWKBPoint(t_pickuploc), L2Distance(readWKBPoint(t_pickuploc), _CAST((-111.761, 34.8697)_Tuple(Float64, Float64), \'Tuple(Float64, Float64)\'_String)), t_pickuploc, t_tripkey, __global_row_index
+│           Prewhere filter
+│           Prewhere filter column:  L2Distance(readWKBPoint(t_pickuploc), (-111.761, 34.8697)) <= 0.45
+└──LazilyReadFromFile
+      Lazily read columns: t_pickuptime

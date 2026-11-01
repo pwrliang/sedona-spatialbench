@@ -1,0 +1,20 @@
+-- SedonaDB LOGICAL PLAN for q3
+Sort: pickup_month ASC NULLS LAST
+  Projection: date_trunc(Utf8("month"),t.t_pickuptime) AS pickup_month, count(t.t_tripkey) AS total_trips, avg(t.t_distance) AS avg_distance, avg(t.t_dropofftime - t.t_pickuptime) AS avg_duration, avg(t.t_fare) AS avg_fare
+    Aggregate: groupBy=[[date_trunc(Utf8("month"), t.t_pickuptime)]], aggr=[[count(t.t_tripkey), avg(t.t_distance), avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_fare)]]
+      SubqueryAlias: t
+        SubqueryAlias: trip
+          Projection: ?table?.t_tripkey, ?table?.t_pickuptime, ?table?.t_dropofftime, ?table?.t_fare, ?table?.t_distance
+            Filter: st_dwithin(st_geomfromwkb(?table?.t_pickuploc), Binary("1,3,0,0,0,1,0,0,0,5,0,0,0,68,139,108,231,251,249,91,192,131,47,76,166,10,94,65,64,129,149,67,139,108,231,91,192,131,47,76,166,10,94,65,64,129,149,67,139,108,231,91,192,70,37,117,2,154,128,65,64,68,139,108,231,251,249,91,192,70,37,117,2,154,128,65,64,68,139,108,231,251,249,91,192,131,47,76,166,10,94,65,64") FieldMetadata { inner: {"ARROW:extension:metadata": "{}", "ARROW:extension:name": "geoarrow.wkb"} }, Float64(0.045))
+              TableScan: ?table? projection=[t_tripkey, t_pickuptime, t_dropofftime, t_fare, t_distance, t_pickuploc], partial_filters=[st_dwithin(st_geomfromwkb(?table?.t_pickuploc), Binary("1,3,0,0,0,1,0,0,0,5,0,0,0,68,139,108,231,251,249,91,192,131,47,76,166,10,94,65,64,129,149,67,139,108,231,91,192,131,47,76,166,10,94,65,64,129,149,67,139,108,231,91,192,70,37,117,2,154,128,65,64,68,139,108,231,251,249,91,192,70,37,117,2,154,128,65,64,68,139,108,231,251,249,91,192,131,47,76,166,10,94,65,64") FieldMetadata { inner: {"ARROW:extension:metadata": "{}", "ARROW:extension:name": "geoarrow.wkb"} }, Float64(0.045))]
+
+-- SedonaDB PHYSICAL PLAN for q3
+SortPreservingMergeExec: [pickup_month@0 ASC NULLS LAST]
+  SortExec: expr=[pickup_month@0 ASC NULLS LAST], preserve_partitioning=[true]
+    ProjectionExec: expr=[date_trunc(Utf8("month"),t.t_pickuptime)@0 as pickup_month, count(t.t_tripkey)@1 as total_trips, avg(t.t_distance)@2 as avg_distance, avg(t.t_dropofftime - t.t_pickuptime)@3 as avg_duration, avg(t.t_fare)@4 as avg_fare]
+      AggregateExec: mode=FinalPartitioned, gby=[date_trunc(Utf8("month"),t.t_pickuptime)@0 as date_trunc(Utf8("month"),t.t_pickuptime)], aggr=[count(t.t_tripkey), avg(t.t_distance), avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_fare)]
+        RepartitionExec: partitioning=Hash([date_trunc(Utf8("month"),t.t_pickuptime)@0], 24), input_partitions=24
+          AggregateExec: mode=Partial, gby=[date_trunc(month, t_pickuptime@1) as date_trunc(Utf8("month"),t.t_pickuptime)], aggr=[count(t.t_tripkey), avg(t.t_distance), avg(t.t_dropofftime - t.t_pickuptime), avg(t.t_fare)]
+            FilterExec: st_dwithin(st_geomfromwkb(t_pickuploc@5), 01030000000100000005..., 0.045), projection=[t_tripkey@0, t_pickuptime@1, t_dropofftime@2, t_fare@3, t_distance@4]
+              DataSourceExec: file_groups={24 groups: [[local/storage/liang/sf10/trip/part-1.parquet:0..160739138], [local/storage/liang/sf10/trip/part-1.parquet:160739138..321478276], [local/storage/liang/sf10/trip/part-1.parquet:321478276..350756142, local/storage/liang/sf10/trip/part-10.parquet:0..131461272], [local/storage/liang/sf10/trip/part-10.parquet:131461272..292200410], [local/storage/liang/sf10/trip/part-10.parquet:292200410..350682604, local/storage/liang/sf10/trip/part-11.parquet:0..102256944], ...]}, projection=[t_tripkey, t_pickuptime, t_dropofftime, t_fare, t_distance, t_pickuploc], file_type=parquet
+

@@ -1,0 +1,38 @@
+Output: count()
+
+Aggregating
+│  Keys:
+│  Aggregates: count()
+│  Skip merging: 0
+└──Filter (WHERE)
+   │  Filter column: z_zonekey != z_zonekey
+   └──Filter (Post Join Actions)
+      │  Filter column: geometryIntersectCartesian(readWKB(t_pickuploc), readWKB(z_boundary))
+      └──Join (JOIN FillRightFirst)
+         │  t ⋈ dropoff_zone ⋈ pickup_zone
+         │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+         │  Cost: estimated 2.00
+         │  Selectivity: estimated (NDV) 1
+         │  Output rows: estimated no stats
+         │  Left: rows estimated no stats
+         │  Right: rows estimated no stats
+         │  Input (left): z_zonekey, t_pickuploc
+         │  Input (right): z_zonekey, z_boundary
+         ├──Filter (Post Join Actions)
+         │  │  Filter column: geometryIntersectCartesian(readWKB(t_dropoffloc), readWKB(z_boundary))
+         │  └──Join (JOIN FillRightFirst)
+         │     │  t ⋈ dropoff_zone
+         │     │  Type: cross | Strictness: all | Algorithm: ConstantJoin
+         │     │  Cost: estimated 1.00
+         │     │  Selectivity: estimated (NDV) 1
+         │     │  Output rows: estimated no stats
+         │     │  Left: rows estimated no stats
+         │     │  Right: rows estimated no stats
+         │     │  Input (left): t_pickuploc, t_dropoffloc
+         │     │  Input (right): z_zonekey, z_boundary
+         │     ├──ReadFromFile
+         │     │     Output: t_pickuploc, t_dropoffloc
+         │     └──ReadFromFile
+         │           Output: z_zonekey, z_boundary
+         └──ReadFromFile
+               Output: z_zonekey, z_boundary

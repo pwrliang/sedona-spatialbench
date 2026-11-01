@@ -1,0 +1,28 @@
+Sort  (cost=13096258.19..13097393.88 rows=454274 width=31)
+  Output: z.z_zonekey, z.z_name, (count(*))
+  Sort Key: (count(*)) DESC, z.z_zonekey
+  ->  GroupAggregate  (cost=13044486.40..13053571.88 rows=454274 width=31)
+        Output: z.z_zonekey, z.z_name, count(*)
+        Group Key: z.z_zonekey, z.z_name
+        ->  Sort  (cost=13044486.40..13045622.08 rows=454274 width=23)
+              Output: z.z_zonekey, z.z_name
+              Sort Key: z.z_zonekey, z.z_name
+              ->  Nested Loop  (cost=1599973.21..13001800.08 rows=454274 width=23)
+                    Output: z.z_zonekey, z.z_name
+                    ->  Limit  (cost=1599972.92..1600095.78 rows=1000 width=33)
+                          Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                          ->  Gather Merge  (cost=1599972.92..8971259.96 rows=59998848 width=33)
+                                Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                                Workers Planned: 7
+                                ->  Sort  (cost=1598972.80..1620400.96 rows=8571264 width=33)
+                                      Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                                      Sort Key: t.t_tip DESC, t.t_tripkey
+                                      ->  Parallel Seq Scan on public.trip t  (cost=0.00..1129019.64 rows=8571264 width=33)
+                                            Output: t.t_pickuploc, t.t_tip, t.t_tripkey
+                    ->  Index Scan using idx_zone_geom on public.zone z  (cost=0.29..11401.24 rows=45 width=466)
+                          Output: z.z_zonekey, z.z_gersid, z.z_country, z.z_region, z.z_name, z.z_subtype, z.z_boundary
+                          Index Cond: (st_geomfromwkb(z.z_boundary) ~ st_geomfromwkb(t.t_pickuploc))
+                          Filter: st_within(st_geomfromwkb(t.t_pickuploc), st_geomfromwkb(z.z_boundary))
+JIT:
+  Functions: 13
+  Options: Inlining true, Optimization true, Expressions true, Deforming true

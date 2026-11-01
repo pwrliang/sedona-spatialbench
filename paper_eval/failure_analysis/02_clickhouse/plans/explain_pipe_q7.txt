@@ -1,0 +1,14 @@
+(Expression)
+ExpressionTransform
+  (Limit)
+  Limit
+    (Sorting)
+    MergingSortedTransform 24 → 1
+      MergeSortingTransform × 24
+        LimitsCheckingTransform × 24
+          PartialSortingTransform × 24
+            (Expression)
+            ExpressionTransform × 24
+              (ReadFromFile)
+              Resize 11 → 24
+                File × 11 0 → 1
