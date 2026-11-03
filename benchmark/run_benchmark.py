@@ -61,8 +61,12 @@ class BenchmarkResult:
     engine: str
     time_seconds: float | None
     row_count: int | None
-    status: str  # "success", "error", "timeout"
+    status: str  # "success", "failed", "not_started"
     error_message: str | None = None
+    run_times: list[float] | None = None
+    std_dev: float | None = None
+    min_time: float | None = None
+    max_time: float | None = None
 
 
 @dataclass
@@ -89,6 +93,10 @@ class BenchmarkSuite:
                     "row_count": r.row_count,
                     "status": r.status,
                     "error_message": r.error_message,
+                    "run_times": r.run_times,
+                    "std_dev": r.std_dev,
+                    "min_time": r.min_time,
+                    "max_time": r.max_time,
                 }
                 for r in self.results
             ],
@@ -129,12 +137,22 @@ def _run_query_in_process(
             start_time = time.perf_counter()
             row_count, result = benchmark.execute_query(query_name, query_sql)
             elapsed = time.perf_counter() - start_time
-            result_queue.put({
-                "status": "success",
-                "time_seconds": round(elapsed, 2),
-                "row_count": row_count,
-                "error_message": None,
-            })
+            overhead = benchmark.get_additional_overhead(query_name)
+            total_time = elapsed + overhead
+            if total_time > 600.0:
+                result_queue.put({
+                    "status": "failed",
+                    "time_seconds": None,
+                    "row_count": None,
+                    "error_message": f"Query {query_name} with index build overhead ({overhead:.2f}s + {elapsed:.2f}s = {total_time:.2f}s) exceeded 10-minute limit",
+                })
+            else:
+                result_queue.put({
+                    "status": "success",
+                    "time_seconds": round(total_time, 2),
+                    "row_count": row_count,
+                    "error_message": None,
+                })
             if dump_csv:
                 try:
                     # Write to a temp file and atomically replace, so a process killed
@@ -148,7 +166,7 @@ def _run_query_in_process(
             benchmark.teardown()
     except Exception as e:
         result_queue.put({
-            "status": "error",
+            "status": "failed",
             "time_seconds": None,
             "row_count": None,
             "error_message": str(e),
@@ -268,6 +286,15 @@ class BaseBenchmark(ABC):
         """Execute a query and return (row_count, result)."""
         pass
 
+    @classmethod
+    def get_query_overhead(cls, query_name: str) -> float:
+        """Return additional overhead (e.g., index build time) in seconds."""
+        return 0.0
+
+    def get_additional_overhead(self, query_name: str) -> float:
+        """Return additional overhead (e.g., index build time) in seconds."""
+        return self.__class__.get_query_overhead(query_name)
+
     def dump_frame(self, result, query: str | None):
         """Convert a *timed* query result into a pandas DataFrame for dumping.
 
@@ -294,32 +321,20 @@ class BaseBenchmark(ABC):
             return BenchmarkResult(
                 query=query_name,
                 engine=self.engine_name,
-                time_seconds=timeout,
+                time_seconds=None,
                 row_count=None,
-                status="timeout",
-                error_message=str(e),
+                status="failed",
+                error_message=f"Query exceeded time limit ({timeout}s): {e}",
             )
         except Exception as e:
             elapsed = time.perf_counter() - start_time
-            # If elapsed time is close to or exceeds timeout, treat as timeout
-            # This handles cases where native code (Rust/C) throws a different exception
-            # when interrupted by SIGALRM
-            if elapsed >= timeout * 0.95:  # 95% of timeout to account for timing variance
-                return BenchmarkResult(
-                    query=query_name,
-                    engine=self.engine_name,
-                    time_seconds=timeout,
-                    row_count=None,
-                    status="timeout",
-                    error_message=f"Query timed out after {timeout}s (original error: {e})",
-                )
             return BenchmarkResult(
                 query=query_name,
                 engine=self.engine_name,
                 time_seconds=None,
                 row_count=None,
-                status="error",
-                error_message=str(e),
+                status="failed",
+                error_message=f"Query timed out or failed after {elapsed:.2f}s: {e}",
             )
 
 
@@ -336,6 +351,8 @@ class DuckDBBenchmark(BaseBenchmark):
         self._conn = duckdb.connect()
         self._conn.execute("LOAD spatial;")
         self._conn.execute("SET enable_external_file_cache = false;")
+        if "DUCKDB_THREADS" in os.environ:
+            self._conn.execute(f"SET threads = {os.environ['DUCKDB_THREADS']};")
         for table, path in self.data_paths.items():
             # DuckDB needs glob pattern for directories, add /*.parquet if path is a directory
             parquet_path = path
@@ -465,13 +482,275 @@ class PyCanopyBenchmark(BaseBenchmark):
         return len(result), result
 
 
+class PostGISBenchmark(BaseBenchmark):
+    """PostGIS benchmark runner with spatial GiST indexing (including index build time)."""
+
+    QUERY_INDEX_MAP = {
+        "q1": ["idx_trip_pickuploc"],
+        "q2": ["idx_trip_pickuploc", "idx_zone_geom"],
+        "q3": ["idx_trip_pickuploc"],
+        "q4": ["idx_zone_geom"],
+        "q5": ["idx_trip_dropoffloc"],
+        "q6": ["idx_zone_geom", "idx_trip_pickuploc"],
+        "q7": [],
+        "q8": ["idx_trip_pickuploc", "idx_building_geom"],
+        "q9": ["idx_building_geom"],
+        "q10": ["idx_zone_geom", "idx_trip_pickuploc"],
+        "q11": ["idx_trip_pickuploc", "idx_trip_dropoffloc", "idx_zone_geom"],
+        "q12": ["idx_trip_pickuploc", "idx_building_geom"],
+    }
+    _cached_index_times = None
+
+    def __init__(self, data_paths: dict[str, str], engine_name: str = "postgis"):
+        super().__init__(data_paths, engine_name)
+        self._conn = None
+        self._last_columns = None
+
+    @classmethod
+    def _load_index_times(cls) -> dict[str, float]:
+        if cls._cached_index_times is not None:
+            return cls._cached_index_times
+        try:
+            import os
+            import psycopg
+            host = os.environ.get("POSTGIS_HOST", "127.0.0.1")
+            port = os.environ.get("POSTGIS_PORT", "5433")
+            dbname = os.environ.get("POSTGIS_DB", "spatialbench")
+            user = os.environ.get("POSTGIS_USER", os.environ.get("USER", "geng.161"))
+            password = os.environ.get("POSTGIS_PASSWORD", "")
+            conn_str = f"host={host} port={port} dbname={dbname} user={user}"
+            if password:
+                conn_str += f" password={password}"
+            with psycopg.connect(conn_str) as conn:
+                with conn.cursor() as cur:
+                    cur.execute("CREATE TABLE IF NOT EXISTS _benchmark_meta (key text primary key, value text);")
+                    cur.execute("SELECT key, value FROM _benchmark_meta;")
+                    cls._cached_index_times = {}
+                    for k, v in cur.fetchall():
+                        try:
+                            cls._cached_index_times[k] = float(v)
+                        except ValueError:
+                            pass
+                    return cls._cached_index_times
+        except Exception:
+            return {}
+
+    @classmethod
+    def get_query_overhead(cls, query_name: str) -> float:
+        indexes = cls.QUERY_INDEX_MAP.get(query_name.lower(), [])
+        if not indexes:
+            return 0.0
+        times = cls._load_index_times()
+        return sum(times.get(idx, 0.0) for idx in indexes)
+
+    def setup(self) -> None:
+        import os
+        import subprocess
+        import psycopg
+
+        host = os.environ.get("POSTGIS_HOST", "127.0.0.1")
+        port = os.environ.get("POSTGIS_PORT", "5433")
+        dbname = os.environ.get("POSTGIS_DB", "spatialbench")
+        user = os.environ.get("POSTGIS_USER", os.environ.get("USER", "geng.161"))
+        password = os.environ.get("POSTGIS_PASSWORD", "")
+
+        # Check if server is running; if not, attempt to start user cluster
+        res = subprocess.run(f"/usr/lib/postgresql/12/bin/pg_isready -h {host} -p {port}", shell=True, capture_output=True)
+        if res.returncode != 0:
+            db_dir = os.environ.get("POSTGIS_DIR", "/local/scratch/liang/postgis_db")
+            if os.path.isdir(db_dir):
+                subprocess.run(f"/usr/lib/postgresql/12/bin/pg_ctl -D {db_dir} -l {db_dir}/server.log start", shell=True, check=True)
+
+        conn_str = f"host={host} port={port} dbname={dbname} user={user}"
+        if password:
+            conn_str += f" password={password}"
+
+        # Ensure tables and indexes are loaded
+        self._ensure_loaded(conn_str, host, port, dbname, user, password)
+
+        self._conn = psycopg.connect(conn_str, autocommit=True)
+        if os.environ.get("POSTGIS_MAX_PARALLEL_WORKERS"):
+            workers = os.environ["POSTGIS_MAX_PARALLEL_WORKERS"]
+            self._conn.execute(f"SET max_parallel_workers_per_gather = {workers};")
+
+    def _ensure_loaded(self, conn_str: str, host: str, port: str, dbname: str, user: str, password: str) -> None:
+        import psycopg
+        data_sig = str(self.data_paths.get("trip", ""))
+        try:
+            with psycopg.connect(conn_str) as conn:
+                with conn.cursor() as cur:
+                    cur.execute("CREATE TABLE IF NOT EXISTS _benchmark_meta (key text primary key, value text);")
+                    cur.execute("SELECT value FROM _benchmark_meta WHERE key='data_sig';")
+                    row = cur.fetchone()
+                    if row and row[0] == data_sig:
+                        cur.execute("SELECT count(*) FROM trip;")
+                        if cur.fetchone()[0] > 0:
+                            return  # Tables already populated for this dataset
+        except Exception:
+            pass
+
+        print(f"\n[PostGIS] Loading tables into PostgreSQL/PostGIS for {data_sig}...")
+        import duckdb
+        dconn = duckdb.connect()
+        dconn.execute("LOAD postgres;")
+        attach_str = f"host={host} port={port} dbname={dbname} user={user}"
+        if password:
+            attach_str += f" password={password}"
+        dconn.execute(f"ATTACH '{attach_str}' AS pg (TYPE POSTGRES);")
+
+        for table, path in self.data_paths.items():
+            parquet_path = path
+            if Path(path).is_dir():
+                parquet_path = str(Path(path) / "*.parquet")
+            dconn.execute(f"DROP TABLE IF EXISTS pg.{table};")
+            dconn.execute(f"CREATE TABLE pg.{table} AS SELECT * FROM read_parquet('{parquet_path}');")
+            print(f"  [PostGIS] Loaded {table}")
+
+        with psycopg.connect(conn_str, autocommit=True) as conn:
+            with conn.cursor() as cur:
+                print("  [PostGIS] Creating spatial GiST indexes...")
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                cur.execute("CREATE OR REPLACE FUNCTION ST_GeomFromWKB(geom geometry) RETURNS geometry AS $$ SELECT geom; $$ LANGUAGE SQL IMMUTABLE;")
+                cur.execute("CREATE TABLE IF NOT EXISTS _benchmark_meta (key text primary key, value text);")
+                indexes = [
+                    ("idx_building_geom", "CREATE INDEX IF NOT EXISTS idx_building_geom ON building USING GIST (ST_GeomFromWKB(b_boundary));"),
+                    ("idx_zone_geom", "CREATE INDEX IF NOT EXISTS idx_zone_geom ON zone USING GIST (ST_GeomFromWKB(z_boundary));"),
+                    ("idx_trip_pickuploc", "CREATE INDEX IF NOT EXISTS idx_trip_pickuploc ON trip USING GIST (ST_GeomFromWKB(t_pickuploc));"),
+                    ("idx_trip_dropoffloc", "CREATE INDEX IF NOT EXISTS idx_trip_dropoffloc ON trip USING GIST (ST_GeomFromWKB(t_dropoffloc));"),
+                ]
+                for idx_name, idx_sql in indexes:
+                    t0 = time.perf_counter()
+                    cur.execute(idx_sql)
+                    t_idx = time.perf_counter() - t0
+                    cur.execute("INSERT INTO _benchmark_meta (key, value) VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;", (idx_name, str(round(t_idx, 2))))
+                cur.execute("INSERT INTO _benchmark_meta (key, value) VALUES ('data_sig', %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;", (data_sig,))
+                cur.execute("ANALYZE;")
+        print("  [PostGIS] Setup complete.")
+
+    def teardown(self) -> None:
+        if self._conn:
+            self._conn.close()
+            self._conn = None
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        with self._conn.cursor() as cur:
+            cur.execute(query)
+            self._last_columns = [desc.name for desc in cur.description] if cur.description else []
+            result = cur.fetchall()
+            return len(result), result
+
+    def dump_frame(self, result, query: str | None):
+        import pandas as pd
+        return pd.DataFrame(result, columns=self._last_columns)
+
+
+class PostGISNoIndexBenchmark(PostGISBenchmark):
+    """PostGIS benchmark runner without spatial indexes (pure sequential scans)."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "postgis_noindex")
+
+    @classmethod
+    def get_query_overhead(cls, query_name: str) -> float:
+        return 0.0
+
+    def setup(self) -> None:
+        super().setup()
+        # Force sequential scans by disabling index scans and bitmap scans
+        self._conn.execute("SET enable_indexscan = off;")
+        self._conn.execute("SET enable_bitmapscan = off;")
+
+
+class ClickHouseBenchmark(BaseBenchmark):
+    """ClickHouse benchmark runner using clickhouse local."""
+
+    def __init__(self, data_paths: dict[str, str]):
+        super().__init__(data_paths, "clickhouse")
+        self._clickhouse_bin = None
+        self._view_defs = None
+
+    def setup(self) -> None:
+        import shutil
+        self._clickhouse_bin = shutil.which("clickhouse") or "/local/storage/liang/.anaconda3/envs/spatialbench/bin/clickhouse"
+        if not os.path.exists(self._clickhouse_bin):
+            raise FileNotFoundError(f"ClickHouse binary not found at {self._clickhouse_bin}")
+
+        views = []
+        for table, path in self.data_paths.items():
+            parquet_path = path
+            if Path(path).is_dir():
+                parquet_path = f"{path}/*.parquet"
+            views.append(f"CREATE VIEW IF NOT EXISTS {table} AS SELECT * FROM file('{parquet_path}');")
+        self._view_defs = "\n".join(views)
+
+    def teardown(self) -> None:
+        self._view_defs = None
+
+    def execute_query(self, query_name: str, query: str | None) -> tuple[int, Any]:
+        import subprocess
+        import json
+
+        sql_input = f"{self._view_defs}\n{query};\n"
+        proc = subprocess.run(
+            [self._clickhouse_bin, "local", "--multiquery", "--format", "JSONEachRow"],
+            input=sql_input,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+
+        lines = [line for line in proc.stdout.strip().split("\n") if line]
+        rows = [json.loads(line) for line in lines]
+        return len(rows), rows
+
+    def dump_frame(self, result, query: str | None):
+        import pandas as pd
+        return pd.DataFrame(result)
+
+
+def _get_clickhouse_version() -> str:
+    import shutil, subprocess
+    ch_bin = shutil.which("clickhouse") or "/local/storage/liang/.anaconda3/envs/spatialbench/bin/clickhouse"
+    try:
+        res = subprocess.run([ch_bin, "--version"], capture_output=True, text=True, check=True)
+        parts = res.stdout.strip().split()
+        for idx, p in enumerate(parts):
+            if p == "version" and idx + 1 < len(parts):
+                return parts[idx + 1]
+        return parts[-1]
+    except Exception:
+        return "26.11.1"
+
+
+def _get_postgis_version() -> str:
+    try:
+        import os, psycopg
+        host = os.environ.get("POSTGIS_HOST", "127.0.0.1")
+        port = os.environ.get("POSTGIS_PORT", "5433")
+        dbname = os.environ.get("POSTGIS_DB", "spatialbench")
+        user = os.environ.get("POSTGIS_USER", os.environ.get("USER", "geng.161"))
+        with psycopg.connect(f"host={host} port={port} dbname={dbname} user={user}") as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT PostGIS_Lib_Version();")
+                return cur.fetchone()[0]
+    except Exception:
+        return "3.0"
+
+
 def get_sql_queries(dialect: str) -> dict[str, str]:
     """Get SQL queries for a specific dialect from print_queries.py."""
-    from print_queries import DuckDBSpatialBenchBenchmark, SpatialBenchBenchmark
+    from print_queries import (
+        ClickHouseSpatialBenchBenchmark,
+        DuckDBSpatialBenchBenchmark,
+        PostGISSpatialBenchBenchmark,
+        SpatialBenchBenchmark,
+    )
 
     dialects = {
         "duckdb": DuckDBSpatialBenchBenchmark,
         "sedonadb": SpatialBenchBenchmark,
+        "postgis": PostGISSpatialBenchBenchmark,
+        "clickhouse": ClickHouseSpatialBenchBenchmark,
     }
     return dialects[dialect]().queries()
 
@@ -495,6 +774,22 @@ def run_query_isolated(
     If dump_csv is set, the timed result is also written there (reused, not re-run)
     for the correctness verify job.
     """
+    overhead = engine_class.get_query_overhead(query_name)
+    MAX_ALLOWED_TIMEOUT = 600  # Hard 10-minute limit
+    if overhead >= MAX_ALLOWED_TIMEOUT:
+        return BenchmarkResult(
+            query=query_name,
+            engine=engine_name,
+            time_seconds=None,
+            row_count=None,
+            status="failed",
+            error_message=f"Query {query_name} index build overhead ({overhead:.2f}s) exceeded 10-minute limit ({MAX_ALLOWED_TIMEOUT}s)",
+        )
+
+    effective_timeout = min(timeout, MAX_ALLOWED_TIMEOUT)
+    if overhead > 0.0:
+        effective_timeout = max(1, min(effective_timeout, int(MAX_ALLOWED_TIMEOUT - overhead)))
+
     result_queue = multiprocessing.Queue()
     process = multiprocessing.Process(
         target=_run_query_in_process,
@@ -510,17 +805,22 @@ def run_query_isolated(
             process.join(timeout=2)
 
     def _from_queue(result_data):
+        t = result_data["time_seconds"]
         return BenchmarkResult(
             query=query_name,
             engine=engine_name,
-            time_seconds=result_data["time_seconds"],
+            time_seconds=t,
             row_count=result_data["row_count"],
             status=result_data["status"],
             error_message=result_data["error_message"],
+            run_times=[t] if t is not None else [],
+            std_dev=0.0,
+            min_time=t,
+            max_time=t,
         )
 
     process.start()
-    process.join(timeout=timeout)
+    process.join(timeout=effective_timeout)
 
     if process.is_alive():
         # The query didn't signal completion within the timeout. It may, however, have
@@ -540,13 +840,18 @@ def run_query_isolated(
             return _from_queue(result_data)
 
         _kill()
+        msg = f"Query {query_name} exceeded 10-minute time limit"
+        if overhead > 0:
+            msg += f" (index overhead: {overhead:.2f}s, run timeout: {effective_timeout}s)"
+        else:
+            msg += f" ({effective_timeout}s)"
         return BenchmarkResult(
             query=query_name,
             engine=engine_name,
-            time_seconds=timeout,
+            time_seconds=None,
             row_count=None,
-            status="timeout",
-            error_message=f"Query {query_name} timed out after {timeout} seconds (process killed)",
+            status="failed",
+            error_message=f"{msg} and was killed",
         )
 
     # Process completed - get result from queue
@@ -559,7 +864,7 @@ def run_query_isolated(
             engine=engine_name,
             time_seconds=None,
             row_count=None,
-            status="error",
+            status="failed",
             error_message=f"Query {query_name} crashed (process exit code: {process.exitcode})",
         )
 
@@ -616,6 +921,21 @@ def run_benchmark(
             "class": PyCanopyBenchmark,
             "version_getter": lambda: pkg_version("pycanopy"),
             "queries_getter": lambda: {f"q{i}": None for i in range(1, QUERY_COUNT + 1)},
+        },
+        "postgis": {
+            "class": PostGISBenchmark,
+            "version_getter": lambda: _get_postgis_version(),
+            "queries_getter": lambda: get_sql_queries("postgis"),
+        },
+        "postgis_noindex": {
+            "class": PostGISNoIndexBenchmark,
+            "version_getter": lambda: _get_postgis_version(),
+            "queries_getter": lambda: get_sql_queries("postgis"),
+        },
+        "clickhouse": {
+            "class": ClickHouseBenchmark,
+            "version_getter": lambda: _get_clickhouse_version(),
+            "queries_getter": lambda: get_sql_queries("clickhouse"),
         },
     }
 
@@ -709,8 +1029,12 @@ def run_benchmark(
                         # If any subsequent run fails, just use successful runs
                         break
 
-                # Calculate average of all successful runs
+                # Calculate average and standard deviation of all successful runs
                 avg_time = round(sum(run_times) / len(run_times), 2)
+                import statistics
+                std_dev = round(statistics.stdev(run_times), 2) if len(run_times) > 1 else 0.0
+                min_time = min(run_times)
+                max_time = max(run_times)
                 result = BenchmarkResult(
                     query=query_name,
                     engine=engine,
@@ -718,9 +1042,17 @@ def run_benchmark(
                     row_count=result.row_count,
                     status="success",
                     error_message=None,
+                    run_times=run_times,
+                    std_dev=std_dev,
+                    min_time=min_time,
+                    max_time=max_time,
                 )
-                print(f"{avg_time}s avg ({len(run_times)} runs, {result.row_count} rows)")
+                print(f"{avg_time}s avg (±{std_dev}s, runs: {run_times}, {result.row_count} rows)")
             elif result.status == "success":
+                result.run_times = [result.time_seconds]
+                result.std_dev = 0.0
+                result.min_time = result.time_seconds
+                result.max_time = result.time_seconds
                 print(f"{result.time_seconds}s ({result.row_count} rows)")
             else:
                 print(f"{result.status.upper()}: {result.error_message}")
@@ -772,12 +1104,47 @@ def print_summary(results: list[BenchmarkSuite]) -> None:
 
 
 def save_results(results: list[BenchmarkSuite], output_file: str) -> None:
-    """Save results to JSON file."""
+    """Save results to JSON file, merging with existing query results if present."""
+    suites_to_save = {s.engine: s.to_dict() for s in results}
+
+    if os.path.exists(output_file):
+        try:
+            with open(output_file, "r") as f:
+                existing = json.load(f)
+            if isinstance(existing, dict) and "results" in existing:
+                for existing_suite in existing["results"]:
+                    eng = existing_suite.get("engine")
+                    if eng in suites_to_save:
+                        # Existing queries indexed by query name
+                        merged_queries = {q["query"]: q for q in existing_suite.get("results", [])}
+                        # Overwrite or add with new results
+                        for new_q in suites_to_save[eng].get("results", []):
+                            # Only overwrite if new query has an active run status, or if not previously recorded
+                            if new_q.get("status") != "not_started" or new_q["query"] not in merged_queries:
+                                merged_queries[new_q["query"]] = new_q
+
+                        def q_sort_key(item):
+                            q_name = item.get("query", "")
+                            if q_name.startswith("q") and q_name[1:].isdigit():
+                                return int(q_name[1:])
+                            return 999
+
+                        sorted_queries = sorted(merged_queries.values(), key=q_sort_key)
+                        suites_to_save[eng]["results"] = sorted_queries
+                        suites_to_save[eng]["total_time"] = round(
+                            sum(q.get("time_seconds") or 0.0 for q in sorted_queries if q.get("status") == "success"),
+                            2
+                        )
+                    else:
+                        suites_to_save[eng] = existing_suite
+        except Exception as e:
+            print(f"Warning: Failed to merge with existing {output_file}: {e}")
+
     output = {
         "benchmark": "spatialbench",
         "version": "0.1.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "results": [suite.to_dict() for suite in results],
+        "results": list(suites_to_save.values()),
     }
 
     with open(output_file, "w") as f:
@@ -792,12 +1159,12 @@ def main():
     )
     parser.add_argument("--data-dir", type=str, required=True,
                         help="Path to directory containing benchmark data (parquet files)")
-    parser.add_argument("--engines", type=str, default="duckdb,geopandas,sedonadb,spatial_polars,pycanopy",
+    parser.add_argument("--engines", type=str, default="duckdb,geopandas,sedonadb,spatial_polars,pycanopy,postgis,postgis_noindex,clickhouse",
                         help="Comma-separated list of engines to benchmark")
     parser.add_argument("--queries", type=str, default=None,
                         help="Comma-separated list of queries to run (e.g., q1,q2,q3)")
-    parser.add_argument("--timeout", type=int, default=10,
-                        help="Query timeout in seconds (default: 10)")
+    parser.add_argument("--timeout", type=int, default=600,
+                        help="Query timeout in seconds (default: 600 / 10-minute maximum limit)")
     parser.add_argument("--runs", type=int, default=3,
                         help="Number of runs per query for averaging (default: 3)")
     parser.add_argument("--output", type=str, default="benchmark_results.json",
@@ -813,8 +1180,14 @@ def main():
 
     args = parser.parse_args()
 
+    # Enforce 10-minute maximum timeout limit
+    MAX_TIMEOUT = 600
+    timeout = min(args.timeout, MAX_TIMEOUT) if args.timeout else MAX_TIMEOUT
+    if args.timeout and args.timeout > MAX_TIMEOUT:
+        print(f"[WARN] Timeout {args.timeout}s exceeds 10-minute limit ({MAX_TIMEOUT}s). Enforcing {MAX_TIMEOUT}s.")
+
     engines = [e.strip().lower() for e in args.engines.split(",")]
-    valid_engines = {"duckdb", "geopandas", "sedonadb", "spatial_polars", "pycanopy"}
+    valid_engines = {"duckdb", "geopandas", "sedonadb", "spatial_polars", "pycanopy", "postgis", "postgis_noindex", "clickhouse"}
 
     for e in engines:
         if e not in valid_engines:
@@ -843,7 +1216,7 @@ def main():
         print(f"Dumping normalized results to {result_dir}")
 
     results = [
-        run_benchmark(engine, data_paths, queries, args.timeout, args.scale_factor,
+        run_benchmark(engine, data_paths, queries, timeout, args.scale_factor,
                       args.runs, args.output, result_dir)
         for engine in engines
     ]

@@ -11,7 +11,8 @@ SF="10"
 ENGINES="$DEFAULT_ENGINES"
 QUERIES="$DEFAULT_QUERIES"
 RUNS="$DEFAULT_RUNS"
-TIMEOUT="$DEFAULT_TIMEOUT"
+TIMEOUT="${DEFAULT_TIMEOUT:-600}"
+MAX_TIMEOUT="${MAX_TIMEOUT:-600}"
 MODE="default"
 
 while [[ $# -gt 0 ]]; do
@@ -48,14 +49,37 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Enforce 10-minute hard running time limit
+if [ "$TIMEOUT" -gt "$MAX_TIMEOUT" ]; then
+    echo "[WARN] Requested timeout (${TIMEOUT}s) exceeds 10-minute limit (${MAX_TIMEOUT}s). Enforcing ${MAX_TIMEOUT}s."
+    TIMEOUT="$MAX_TIMEOUT"
+fi
+
 # Select dataset directory based on scale factor
 if [ "$SF" == "1" ]; then
-    DATA_DIR="$DATA_DIR_SF1"
+    if [ -d "$SCRIPT_DIR/$DATA_DIR_SF1" ]; then
+        DATA_DIR="$SCRIPT_DIR/$DATA_DIR_SF1"
+    elif [ -d "$DATA_DIR_SF1" ]; then
+        DATA_DIR="$DATA_DIR_SF1"
+    elif [ -d "/local/storage/liang/sedona-spatialbench/paper/benchmark-data-sf1" ]; then
+        DATA_DIR="/local/storage/liang/sedona-spatialbench/paper/benchmark-data-sf1"
+    else
+        DATA_DIR="$SCRIPT_DIR/data_sf1"
+    fi
 elif [ "$SF" == "10" ]; then
-    DATA_DIR="$DATA_DIR_SF10"
+    if [ -d "$SCRIPT_DIR/$DATA_DIR_SF10" ]; then
+        DATA_DIR="$SCRIPT_DIR/$DATA_DIR_SF10"
+    elif [ -d "$DATA_DIR_SF10" ]; then
+        DATA_DIR="$DATA_DIR_SF10"
+    elif [ -d "/local/storage/liang/sf10" ]; then
+        DATA_DIR="/local/storage/liang/sf10"
+    else
+        DATA_DIR="$SCRIPT_DIR/data_sf10"
+    fi
 else
-    echo "Custom SF: looking for directory at /local/storage/liang/sf$SF or $SCRIPT_DIR/data_sf$SF"
-    if [ -d "/local/storage/liang/sf$SF" ]; then
+    if [ -d "$SCRIPT_DIR/benchmark-data-sf$SF" ]; then
+        DATA_DIR="$SCRIPT_DIR/benchmark-data-sf$SF"
+    elif [ -d "/local/storage/liang/sf$SF" ]; then
         DATA_DIR="/local/storage/liang/sf$SF"
     else
         DATA_DIR="$SCRIPT_DIR/data_sf$SF"

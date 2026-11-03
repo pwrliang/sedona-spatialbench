@@ -415,12 +415,292 @@ LIMIT 100 -- Return only the top 100 most-isolated pickups (bounded result set)
                """
 
 
+class PostGISSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A PostGIS-specific implementation of the SpatialBench benchmark."""
+
+    def dialect(self) -> str:
+        """Return the dialect of the benchmark."""
+        return "PostGIS"
+
+    @staticmethod
+    def q5() -> str:
+        return """
+-- Q5 (PostGIS): Native ST_Collect aggregate and HAVING COUNT(*) > 5
+SELECT
+   c.c_custkey, c.c_name AS customer_name,
+   DATE_TRUNC('month', t.t_pickuptime) AS pickup_month,
+   ST_Area(ST_ConvexHull(ST_Collect(ST_GeomFromWKB(t.t_dropoffloc)))) AS monthly_travel_hull_area,
+   COUNT(*) as dropoff_count
+FROM trip t JOIN customer c ON t.t_custkey = c.c_custkey
+GROUP BY c.c_custkey, c.c_name, pickup_month
+HAVING COUNT(*) > 5
+ORDER BY monthly_travel_hull_area DESC, c.c_custkey ASC, pickup_month ASC
+LIMIT 100
+               """
+
+    @staticmethod
+    def q12() -> str:
+        return """
+-- Q12 (PostGIS): Cross join lateral KNN search
+SELECT
+   t.t_tripkey,
+   AVG(nb.distance_to_building) AS avg_distance_to_5_nearest
+FROM trip t
+CROSS JOIN LATERAL (
+   SELECT
+       ST_Distance(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(b.b_boundary)) AS distance_to_building
+   FROM building b
+   ORDER BY distance_to_building ASC
+   LIMIT 5
+) AS nb
+GROUP BY t.t_tripkey
+ORDER BY avg_distance_to_5_nearest DESC, t.t_tripkey ASC
+LIMIT 100
+               """
+
+
+class ClickHouseSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A ClickHouse-specific implementation of the SpatialBench benchmark."""
+
+    def dialect(self) -> str:
+        """Return the dialect of the benchmark."""
+        return "ClickHouse"
+
+    @staticmethod
+    def q1() -> str:
+        return """
+-- Q1 (ClickHouse): Find trips starting within 50km of Sedona city center
+SELECT
+   t.t_tripkey,
+   readWKBPoint(t.t_pickuploc).1 AS pickup_lon,
+   readWKBPoint(t.t_pickuploc).2 AS pickup_lat,
+   t.t_pickuptime,
+   L2Distance(readWKBPoint(t.t_pickuploc), (-111.7610, 34.8697)) AS distance_to_center
+FROM trip t
+WHERE L2Distance(readWKBPoint(t.t_pickuploc), (-111.7610, 34.8697)) <= 0.45
+ORDER BY distance_to_center ASC, t.t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q2() -> str:
+        return """
+-- Q2 (ClickHouse): Count trips starting within Coconino County zone
+SELECT COUNT(*) AS trip_count_in_coconino_county
+FROM trip t
+WHERE pointInPolygon(
+    readWKBPoint(t.t_pickuploc),
+    (SELECT readWKBPolygon(z_boundary) FROM zone WHERE z_name = 'Coconino County' LIMIT 1)
+)
+"""
+
+    @staticmethod
+    def q3() -> str:
+        return """
+-- Q3 (ClickHouse): Monthly trip statistics for a buffered box around Sedona
+SELECT
+   toStartOfMonth(t.t_pickuptime) AS pickup_month,
+   COUNT(t.t_tripkey) AS total_trips,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(dateDiff('second', t.t_pickuptime, t.t_dropofftime)) AS avg_duration,
+   AVG(t.t_fare) AS avg_fare
+FROM trip t
+WHERE readWKBPoint(t.t_pickuploc).1 BETWEEN -111.9510 AND -111.5710
+  AND readWKBPoint(t.t_pickuploc).2 BETWEEN 34.6897 AND 35.0497
+GROUP BY pickup_month
+ORDER BY pickup_month
+"""
+
+    @staticmethod
+    def q4() -> str:
+        return """
+-- Q4 (ClickHouse): Zone distribution of top 1000 trips by tip amount
+SELECT z.z_zonekey, z.z_name, COUNT(*) AS trip_count
+FROM (SELECT z_zonekey, z_name, readWKB(z_boundary) AS boundary FROM zone) z
+JOIN (
+    SELECT readWKB(t_pickuploc) AS pt
+    FROM trip
+    ORDER BY t_tip DESC, t_tripkey ASC
+    LIMIT 1000
+) top_trips ON geometryIntersectCartesian(top_trips.pt, z.boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY trip_count DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q5() -> str:
+        return """
+-- Q5 (ClickHouse): Monthly travel patterns for repeat customers (convex hull of dropoffs)
+SELECT
+   c.c_custkey,
+   c.c_name AS customer_name,
+   toStartOfMonth(t.t_pickuptime) AS pickup_month,
+   abs(polygonAreaCartesian(polygonConvexHullCartesian(groupArray(readWKBPoint(t.t_dropoffloc))))) AS monthly_travel_hull_area,
+   COUNT(*) AS dropoff_count
+FROM trip t
+JOIN customer c ON t.t_custkey = c.c_custkey
+GROUP BY c.c_custkey, c.c_name, pickup_month
+HAVING dropoff_count > 5
+ORDER BY monthly_travel_hull_area DESC, c.c_custkey ASC, pickup_month ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q6() -> str:
+        return """
+-- Q6 (ClickHouse): Zone statistics for trips intersecting a bounding box
+WITH filtered_zones AS (
+    SELECT z_zonekey, z_name, readWKB(z_boundary) AS boundary
+    FROM zone
+    WHERE geometryIntersectCartesian(
+        readWKT('POLYGON((-112.2110 34.4197, -111.3110 34.4197, -111.3110 35.3197, -112.2110 35.3197, -112.2110 34.4197))'),
+        readWKB(z_boundary)
+    )
+)
+SELECT
+   z.z_zonekey, z.z_name,
+   COUNT(t.t_tripkey) AS total_pickups,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(dateDiff('second', t.t_pickuptime, t.t_dropofftime)) AS avg_duration
+FROM trip t
+JOIN filtered_zones z ON geometryIntersectCartesian(readWKB(t.t_pickuploc), z.boundary)
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY total_pickups DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q7() -> str:
+        return """
+-- Q7 (ClickHouse): Route detours by comparing reported vs geometric distance
+WITH trip_lengths AS (
+   SELECT
+       t.t_tripkey,
+       t.t_distance AS reported_distance_m,
+       L2Distance(readWKBPoint(t.t_pickuploc), readWKBPoint(t.t_dropoffloc)) / 0.000009 AS line_distance_m
+   FROM trip t
+)
+SELECT
+   t.t_tripkey,
+   t.reported_distance_m,
+   t.line_distance_m,
+   if(t.line_distance_m = 0, NULL, t.reported_distance_m / t.line_distance_m) AS detour_ratio
+FROM trip_lengths t
+ORDER BY detour_ratio DESC NULLS LAST, reported_distance_m DESC, t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q8() -> str:
+        return """
+-- Q8 (ClickHouse): Nearby pickups for each building within 500m
+SELECT b.b_buildingkey, b.b_name, COUNT(*) AS nearby_pickup_count
+FROM trip t
+JOIN building b ON polygonsDistanceCartesian(readWKBPolygon(b.b_boundary), [[readWKBPoint(t.t_pickuploc)]]) <= 0.0045
+GROUP BY b.b_buildingkey, b.b_name
+ORDER BY nearby_pickup_count DESC, b.b_buildingkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q9() -> str:
+        return """
+-- Q9 (ClickHouse): Building Conflation (duplicate/overlap detection via IoU)
+WITH b1 AS (
+   SELECT b_buildingkey AS id, readWKBPolygon(b_boundary) AS geom
+   FROM building
+),
+b2 AS (
+   SELECT b_buildingkey AS id, readWKBPolygon(b_boundary) AS geom
+   FROM building
+),
+pairs AS (
+   SELECT
+       b1.id AS building_1,
+       b2.id AS building_2,
+       abs(polygonAreaCartesian(b1.geom)) AS area1,
+       abs(polygonAreaCartesian(b2.geom)) AS area2,
+       abs(polygonAreaCartesian(polygonsIntersectionCartesian(b1.geom, b2.geom))) AS overlap_area
+   FROM b1
+   JOIN b2 ON b1.id < b2.id AND polygonsIntersectCartesian(b1.geom, b2.geom)
+)
+SELECT
+   building_1,
+   building_2,
+   area1,
+   area2,
+   overlap_area,
+   if((area1 + area2 - overlap_area) = 0, 0.0, overlap_area / (area1 + area2 - overlap_area)) AS iou
+FROM pairs
+ORDER BY iou DESC, building_1 ASC, building_2 ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q10() -> str:
+        return """
+-- Q10 (ClickHouse): Zone statistics for trips starting within each zone
+SELECT
+   z.z_zonekey,
+   z.z_name AS pickup_zone,
+   AVG(dateDiff('second', t.t_pickuptime, t.t_dropofftime)) AS avg_duration,
+   AVG(t.t_distance) AS avg_distance,
+   COUNT(t.t_tripkey) AS num_trips
+FROM zone z
+LEFT JOIN trip t ON geometryIntersectCartesian(readWKB(t.t_pickuploc), readWKB(z.z_boundary))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q11() -> str:
+        return """
+-- Q11 (ClickHouse): Count trips that cross between different zones
+SELECT COUNT(*) AS cross_zone_trip_count
+FROM trip t
+JOIN zone pickup_zone ON geometryIntersectCartesian(readWKB(t.t_pickuploc), readWKB(pickup_zone.z_boundary))
+JOIN zone dropoff_zone ON geometryIntersectCartesian(readWKB(t.t_dropoffloc), readWKB(dropoff_zone.z_boundary))
+WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
+"""
+
+    @staticmethod
+    def q12() -> str:
+        return """
+-- Q12 (ClickHouse): Nearest buildings to trip pickups (KNN join)
+WITH trip_sampled AS (
+   SELECT t_tripkey, readWKBPoint(t_pickuploc) AS pt
+   FROM trip
+),
+buildings AS (
+   SELECT b_buildingkey, readWKBPolygon(b_boundary) AS boundary
+   FROM building
+)
+SELECT
+   t.t_tripkey,
+   AVG(b.dist) AS avg_distance_to_5_nearest
+FROM (
+   SELECT
+       t.t_tripkey,
+       polygonsDistanceCartesian(b.boundary, [[t.pt]]) AS dist,
+       row_number() OVER (PARTITION BY t.t_tripkey ORDER BY dist ASC) AS rn
+   FROM trip_sampled t
+   CROSS JOIN buildings b
+) ranked
+WHERE rn <= 5
+GROUP BY t_tripkey
+ORDER BY avg_distance_to_5_nearest DESC, t_tripkey ASC
+LIMIT 100
+"""
+
+
 def main():
     query_classes = {
         "SedonaSpark": SpatialBenchBenchmark,
         "Databricks": DatabricksSpatialBenchBenchmark,
         "DuckDB": DuckDBSpatialBenchBenchmark,
         "SedonaDB": SpatialBenchBenchmark,
+        "PostGIS": PostGISSpatialBenchBenchmark,
+        "ClickHouse": ClickHouseSpatialBenchBenchmark,
         "Geopandas": None,  # Special case, we will catch this below,
         "Spatial Polars": None,  # Special case, we will catch this below,
         "PyCanopy": None,  # Special case, we will catch this below,

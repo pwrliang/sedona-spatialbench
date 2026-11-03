@@ -1,0 +1,37 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T19:48:44.646368+00:00",
+  "results": [
+    {
+      "engine": "spatial_polars",
+      "version": "0.2.3",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-26T19:44:16.334249+00:00",
+      "total_time": 85.54,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 29.56,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 27.88,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 28.1,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

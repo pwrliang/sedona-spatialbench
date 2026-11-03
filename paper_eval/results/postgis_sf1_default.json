@@ -1,0 +1,23 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T20:26:15.833139+00:00",
+  "results": [
+    {
+      "engine": "postgis",
+      "version": "3.0.0",
+      "scale_factor": 1.0,
+      "timestamp": "2026-10-26T20:26:15.651867+00:00",
+      "total_time": 0.01,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.01,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

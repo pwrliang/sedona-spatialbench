@@ -5,3 +5,7 @@ Cargo.lock
 .idea
 .venv/
 site/
+__pycache__/
+*.pyc
+*.pyo
+.tmp/

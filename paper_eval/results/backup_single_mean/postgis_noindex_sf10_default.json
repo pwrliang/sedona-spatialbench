@@ -1,0 +1,100 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-27T18:42:55.730140+00:00",
+  "results": [
+    {
+      "engine": "postgis_noindex",
+      "version": "3.0.0",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-27T17:51:17.755714+00:00",
+      "total_time": 153.9,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 4.75,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q2",
+          "time_seconds": 8.79,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q3",
+          "time_seconds": 5.47,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q4",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q4 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q5",
+          "time_seconds": 125.92,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q6",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q6 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q7",
+          "time_seconds": 8.97,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null
+        },
+        {
+          "query": "q8",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q8 exceeded 10-minute time limit (600s) and was killed"
+        },
+        {
+          "query": "q9",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "lwgeom_intersection: GEOS Error: TopologyException: Input geom 1 is invalid: Self-intersection at or near point 21.952479743000001 -40.044424999999997 at 21.952479743000001 -40.044424999999997\nCONTEXT:  parallel worker"
+        },
+        {
+          "query": "q10",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "consuming input failed: server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request."
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Command '/usr/lib/postgresql/12/bin/pg_ctl -D /local/scratch/liang/postgis_db -l /local/scratch/liang/postgis_db/server.log start' returned non-zero exit status 1."
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q12 exceeded 10-minute time limit (600s) and was killed"
+        }
+      ]
+    }
+  ]
+}

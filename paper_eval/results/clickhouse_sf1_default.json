@@ -1,0 +1,23 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-26T20:43:16.140926+00:00",
+  "results": [
+    {
+      "engine": "clickhouse",
+      "version": "26.11.1.793",
+      "scale_factor": 1.0,
+      "timestamp": "2026-10-26T20:43:15.937997+00:00",
+      "total_time": 0.18,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 0.18,
+          "row_count": 94,
+          "status": "success",
+          "error_message": null
+        }
+      ]
+    }
+  ]
+}

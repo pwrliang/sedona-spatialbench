@@ -1,3 +1,6 @@
 logs/
 __pycache__/
 *.pyc
+.tmp/
+benchmark-data-*/
+hf-data/

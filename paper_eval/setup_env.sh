@@ -32,6 +32,7 @@ packages = [
     ("polars", "Polars Core"),
     ("pyarrow", "Apache Arrow"),
     ("shapely", "Shapely (GEOS Wrapper)"),
+    ("psycopg", "Psycopg (PostgreSQL / PostGIS Driver)"),
     ("matplotlib", "Matplotlib (Plotting & Visualization)")
 ]
 
@@ -52,6 +53,29 @@ con = duckdb.connect()
 con.execute("INSTALL spatial; LOAD spatial;")
 print("  [OK] DuckDB spatial extension verified")
 EOF
+
+$PYTHON_EXEC - << 'EOF'
+import os, psycopg
+host = os.environ.get("POSTGIS_HOST", "127.0.0.1")
+port = os.environ.get("POSTGIS_PORT", "5433")
+dbname = os.environ.get("POSTGIS_DB", "spatialbench")
+user = os.environ.get("POSTGIS_USER", os.environ.get("USER", "geng.161"))
+try:
+    with psycopg.connect(f"host={host} port={port} dbname={dbname} user={user}") as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT PostGIS_Version();")
+            ver = cur.fetchone()[0]
+            print(f"  [OK] PostGIS extension verified: {ver}")
+except Exception as e:
+    print(f"  [WARN] PostGIS check: {e}")
+EOF
+
+if command -v clickhouse &> /dev/null; then
+    ch_ver=$(clickhouse --version | head -n 1)
+    echo "  [OK] ClickHouse binary verified: $ch_ver"
+else
+    echo "  [WARN] ClickHouse binary not found in PATH"
+fi
 
 echo ""
 echo "--- Checking Dataset Directories ---"

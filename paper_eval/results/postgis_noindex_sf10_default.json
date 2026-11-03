@@ -1,0 +1,172 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-10-28T00:56:41.367462+00:00",
+  "results": [
+    {
+      "engine": "postgis_noindex",
+      "version": "3.0.0",
+      "scale_factor": 10.0,
+      "timestamp": "2026-10-27T23:33:55.113321+00:00",
+      "total_time": 623.61,
+      "results": [
+        {
+          "query": "q1",
+          "time_seconds": 2.1,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            2.17,
+            2.07,
+            2.07
+          ],
+          "std_dev": 0.06,
+          "min_time": 2.07,
+          "max_time": 2.17
+        },
+        {
+          "query": "q2",
+          "time_seconds": 1.88,
+          "row_count": 1,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            1.91,
+            1.85,
+            1.87
+          ],
+          "std_dev": 0.03,
+          "min_time": 1.85,
+          "max_time": 1.91
+        },
+        {
+          "query": "q3",
+          "time_seconds": 2.53,
+          "row_count": 79,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            2.42,
+            2.55,
+            2.63
+          ],
+          "std_dev": 0.11,
+          "min_time": 2.42,
+          "max_time": 2.63
+        },
+        {
+          "query": "q4",
+          "time_seconds": 527.84,
+          "row_count": 243,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            531.33,
+            525.72,
+            526.46
+          ],
+          "std_dev": 3.05,
+          "min_time": 525.72,
+          "max_time": 531.33
+        },
+        {
+          "query": "q5",
+          "time_seconds": 84.31,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            84.37,
+            84.18,
+            84.37
+          ],
+          "std_dev": 0.11,
+          "min_time": 84.18,
+          "max_time": 84.37
+        },
+        {
+          "query": "q6",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q6 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q7",
+          "time_seconds": 4.95,
+          "row_count": 100,
+          "status": "success",
+          "error_message": null,
+          "run_times": [
+            4.96,
+            4.95,
+            4.93
+          ],
+          "std_dev": 0.02,
+          "min_time": 4.93,
+          "max_time": 4.96
+        },
+        {
+          "query": "q8",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q8 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q9",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "lwgeom_intersection: GEOS Error: TopologyException: Input geom 1 is invalid: Self-intersection at or near point 21.952479743000001 -40.044424999999997 at 21.952479743000001 -40.044424999999997",
+          "run_times": [],
+          "std_dev": 0.0,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q10",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q10 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q11",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q11 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        },
+        {
+          "query": "q12",
+          "time_seconds": null,
+          "row_count": null,
+          "status": "failed",
+          "error_message": "Query q12 exceeded 10-minute time limit (600s) and was killed",
+          "run_times": null,
+          "std_dev": null,
+          "min_time": null,
+          "max_time": null
+        }
+      ]
+    }
+  ]
+}
