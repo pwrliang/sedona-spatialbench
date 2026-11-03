@@ -387,6 +387,45 @@ SpatiaLite Failure Matrix (SF1):
 
 ---
 
+### 2.11 Apache Sedona (17-Node Cluster: SF1, SF10, and SF100 Evaluation)
+
+Apache Sedona (v1.9.1 on Spark 3.5.9) was evaluated on a 17-node AWS EC2 cluster (1 Master + 16 Workers, 128 cores, 477 GB usable executor memory, HDFS 3.3.6 distributed storage across 16 DataNodes) across three scale factors: SF1 (6M trips), SF10 (60M trips), and SF100 (600M trips, 4.5M zones, 152,877 buildings, 41.2 GB Parquet).
+
+```
+Apache Sedona Cluster Failure & Bottleneck Matrix:
+  ├── Scale Factor 1  : Q10 (Timeout), Q11 (Timeout)
+  ├── Scale Factor 10 : Q10 (FAILED: Broadcast maxResultSize 1024MB exceeded), Q11 (Timeout)
+  └── Scale Factor 100 (Out-of-the-Box Default): 
+        ├── Timeout (>600s)                 : Q2 (600M row unindexed polygon intersection)
+        ├── Spark maxResultSize Exception   : Q10 (Broadcast 4.5M zone table exceeded 1024MB)
+        ├── Worker Disk Quota Spill (OOM)   : Q8, Q11, Q12 (Unindexed Cartesian intermediate spills)
+        ├── Shuffle Fetch Failure           : Q5 Run 3 (Executor network timeout under heavy GC)
+        └── Exceptional Scaling Successes   : Q1 (5.40s), Q3 (5.93s), Q4 (26.47s), Q6 (217.45s), Q7 (8.51s), Q9 (7.93s)
+```
+
+#### A. Extreme Throughput on Massive Parallel Scans (Q1, Q3, Q7, Q9)
+On large-scale scans across 600,000,000 fact rows:
+- **Q1 (Point-in-Radius Scan):** 5.40s mean (warm runs: 4.16s, 4.13s), demonstrating 145 million points/sec aggregate scanning bandwidth across the 128 cores.
+- **Q3 (BBox Filter + Monthly Aggregation):** 5.93s on 600M rows (warm runs: 5.72s, 5.69s).
+- **Q4 (Top-1000 Trips Joined with 4.5M Zones):** 26.47s across the cluster.
+- **Q6 (Zone BBox Filter + Point-in-Polygon Join):** 217.45s across 600M trips and filtered zones.
+- **Q7 (Detour Ratio Trajectory Calculation):** 8.51s on 600M rows (calculating 600 million `ST_MakeLine` and `ST_Length` geometric expressions in parallel).
+- **Q9 (Building Conflation IoU):** 7.93s on 152,877 buildings (warm run: 2.43s).
+
+#### B. Catalyst Broadcast Optimizer Trap at Scale (Q10)
+- In Q10 (`zone LEFT JOIN trip ON ST_Within(trip.pickuploc, zone.boundary)`), Spark Catalyst attempts to broadcast the left dimension table (`zone`).
+- At SF1 and SF10, `zone` is relatively small, but at SF100, `zone` contains 4,547,100 complex polygons ($>5.1$ GB uncompressed WKB).
+- Spark's default `spark.driver.maxResultSize` is 1024 MiB (1.0 GiB). The serialized broadcast exchange of 11 tasks totaled 1102.9 MiB, immediately aborting the stage with:
+  `Total size of serialized results of 11 tasks (1102.9 MiB) is bigger than spark.driver.maxResultSize (1024.0 MiB)`.
+- **Mitigation:** Increasing `spark.driver.maxResultSize = 8g` and configuring Sedona's spatial partitioning prevents driver broadcast memory exhaustion.
+
+#### C. Unindexed Cartesian Spill & Local Disk Exhaustion (Q8, Q11, Q12)
+- At SF100, `trip` has 600M rows and `building` has 152,877 rows. Without spatial indexing, evaluating `ST_DWithin` requires evaluating $600\text{M} \times 152\text{k} \approx 9.2 \times 10^{13}$ geometric distance checks.
+- When Spark executes `BroadcastNestedLoopJoin` or unindexed shuffle joins without spatial partitioning, intermediate shuffle blocks spill to worker local EBS root volumes (`/tmp/spark-local`), generating $>30$ GB per node and triggering `java.io.IOException: Disk quota exceeded`.
+- **Mitigation:** Official Sedona guidelines mandate enabling Sedona's 2D KDB-Tree grid partitioning (`spark.sedona.join.gridtype = kdbtree`, `spark.sedona.join.numpartition = 256`) and partition R-Tree indexing (`spark.sedona.join.index = true`), which bounds geometric comparisons strictly to overlapping spatial grid cells.
+
+---
+
 ## 3. Key Takeaways for Spatial Database Research (VLDB)
 
 1. **Spatial Join Optimization Must Not Be an Afterthought in Relational Cost Models:**
