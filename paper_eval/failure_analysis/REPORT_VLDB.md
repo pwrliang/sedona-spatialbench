@@ -343,19 +343,22 @@ MySQL 8.0 natively supports OpenGIS spatial extensions, spatial R-Tree indexing 
 
 ```
 MySQL 8.0 Failure Matrix (SF1):
-  ├── Timeout (>600s, hard cutoff) : Q2, Q8, Q9, Q10, Q11, Q12
-  ├── Strict GIS Syntax Error 3037 : Q4, Q6
-  └── Succeeded queries            : Q1 (6.70s), Q3 (9.27s), Q5 (28.66s), Q7 (19.75s)
+  ├── Timeout (>600s, hard cutoff)   : Q2, Q8, Q12
+  ├── Disk Space Exhaustion (Errno 28): Q11 (>200 GB temporary file overflow)
+  ├── Strict GIS Syntax Error 3037   : Q4, Q6, Q10
+  └── Succeeded queries              : Q1 (6.70s), Q3 (9.27s), Q5 (28.66s), Q7 (19.06s), Q9 (536.16s)
 ```
 
 * **Q2 Failure Mechanism (Subquery Spatial Predicate Scan):**
   Query: `SELECT COUNT(*) FROM trip WHERE ST_Intersects(t_pickuploc, (SELECT z_boundary FROM zone WHERE z_name = 'Coconino County'))`.
   Although MySQL has a `SPATIAL INDEX` on `trip(t_pickuploc)`, MySQL's query optimizer evaluates the scalar subquery `(SELECT z_boundary ...)` dynamically at runtime. MySQL cannot push down a dynamic geometry result into an index range scan on the outer table.
   Consequently, MySQL falls back to a single-threaded table scan evaluating `ST_Intersects` on all 6,000,000 rows sequentially against the complex 170 KB Coconino County polygon. In single-threaded CPU execution, evaluating 6M complex polygon containment tests requires ~1,400 seconds, causing a timeout at 600s.
-* **Strict GIS Validity Error 3037 (Q4 & Q6):**
+* **Strict GIS Validity Error 3037 (Q4, Q6, Q10):**
   MySQL's `ST_GeomFromWKB` enforces strict OGC topological validity checks. When encountering zone boundaries with self-intersecting boundary rings or collinear spikes, MySQL terminates query execution immediately with `ERROR 3037 (22023): Invalid GIS data provided to function st_geomfromwkb`. Unlike DuckDB or PostGIS (which either ignore or crash during downstream GEOS operations), MySQL halts at the parsing phase.
-* **Spatial Join Failures (Q8, Q9, Q10, Q11):**
-  MySQL's query optimizer does not support Block Nested Loop with spatial R-tree joins. While it can use an index for simple `WHERE` clauses, multi-table spatial joins (`trip t JOIN zone z ON ST_Within(t.t_pickuploc, z.z_boundary)`) degrade into unindexed Nested Loop Joins ($O(|R| \times |S|)$), leading to immediate timeouts on million-row tables.
+* **Cartesian Spooling Disk Exhaustion (Q11):**
+  In chained spatial joins (`trip` $\bowtie$ `zone1` $\bowtie$ `zone2`), MySQL lacks spatial join pushdown and attempts to materialize the intermediate join products onto disk temporary files (`/local/scratch/liang/tmp/MYfd=177`). This unbounded Cartesian spooling rapidly exhausted over 200 GiB of local scratch disk space, raising `OS errno 28 - No space left on device`.
+* **Single-Threaded Building Conflation (Q9):**
+  On Q9 (self-join on building footprints with IoU overlap), MySQL succeeded but required **$536.16\text{s}$ ($8.9\text{ minutes}$)** on SF1. Evaluating 20,000 buildings via single-threaded nested loop without bounding-box pre-filtering illustrates the performance degradation of unaccelerated Cartesian joins.
 
 ---
 
@@ -365,11 +368,11 @@ SpatiaLite provides spatial extension capabilities to SQLite via virtual R-Tree 
 
 ```
 SpatiaLite Failure Matrix (SF1):
-  ├── Timeout (>600s, hard cutoff) : Q4, Q6, Q8, Q9, Q10, Q11, Q12
-  └── Succeeded queries            : Q1 (3.79s), Q2 (220.72s), Q3 (4.06s), Q5, Q7
+  ├── Timeout (>600s, hard cutoff) : Q4, Q6, Q8, Q10, Q11, Q12
+  └── Succeeded queries            : Q1 (3.79s), Q2 (220.72s), Q3 (4.06s), Q5 (10.26s), Q7 (3.95s), Q9 (108.90s)
 ```
 
-* **Optimizer Inability to Push Down Spatial Joins (Q4 & Heavy Joins):**
+* **Optimizer Inability to Push Down Spatial Joins (Q4, Q6, Q8, Q10, Q11, Q12):**
   SQLite's query planner treats functions like `ST_Within(a, b)` and `ST_Intersects(a, b)` as opaque scalar user-defined functions (UDFs). It has no built-in knowledge that `ST_Within` can be accelerated by checking the bounding box of `idx_zone_z_boundary`.
   In order to utilize an R-tree in SpatiaLite, queries must be manually rewritten with vendor-proprietary SQL syntax:
   ```sql
@@ -379,6 +382,8 @@ SpatiaLite Failure Matrix (SF1):
   )
   ```
   Under standard ANSI SQL spatial join syntax, SpatiaLite executes an exhaustive Cartesian nested loop over $6,000,000 \times 156,000 = 9.36 \times 10^{11}$ pairs, exhausting the 600s timeout on all spatial join queries.
+* **Efficient Scalar Processing on Independent Layers (Q1, Q3, Q5, Q7, Q9):**
+  When queries operate on single tables without unindexed joins (e.g. Q1 range scan in 3.79s, Q3 monthly stats in 4.06s, Q5 convex hull in 10.26s, and Q7 detour ratio in 3.95s), SpatiaLite's low-overhead C implementation is extremely fast and competitive with vectorized engines. On Q9, SpatiaLite processed 20,000 building IoU checks in 108.90s, nearly $5\times$ faster than MySQL.
 
 ---
 

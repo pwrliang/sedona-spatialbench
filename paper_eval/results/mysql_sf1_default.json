@@ -1,27 +1,165 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-11-03T20:19:52.686867+00:00",
+  "generated_at": "2026-11-03T21:24:57.025737+00:00",
   "engine": "mysql",
   "scale_factor": 1.0,
-  "total_time": 607.09,
+  "total_time": 3897.04,
   "results": [
     {
       "query": "q1",
       "engine": "mysql",
-      "time_seconds": 7.076,
+      "time_seconds": 6.698,
       "row_count": 94,
       "status": "success",
       "error_message": null,
       "run_times": [
-        7.0762
+        6.7362,
+        6.6825,
+        6.676
       ],
-      "std_dev": 0.0,
-      "min_time": 7.0762,
-      "max_time": 7.0762
+      "std_dev": 0.033,
+      "min_time": 6.676,
+      "max_time": 6.7362
     },
     {
       "query": "q2",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q3",
+      "engine": "mysql",
+      "time_seconds": 9.27,
+      "row_count": 22,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        9.1013,
+        9.4071,
+        9.3008
+      ],
+      "std_dev": 0.155,
+      "min_time": 9.1013,
+      "max_time": 9.4071
+    },
+    {
+      "query": "q4",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "(3037, 'Invalid GIS data provided to function st_geomfromwkb.')",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q5",
+      "engine": "mysql",
+      "time_seconds": 28.657,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        28.6475,
+        28.2778,
+        29.0472
+      ],
+      "std_dev": 0.385,
+      "min_time": 28.2778,
+      "max_time": 29.0472
+    },
+    {
+      "query": "q6",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "(3037, 'Invalid GIS data provided to function st_geomfromwkb.')",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q7",
+      "engine": "mysql",
+      "time_seconds": 19.059,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        19.7449,
+        18.6023,
+        18.8311
+      ],
+      "std_dev": 0.605,
+      "min_time": 18.6023,
+      "max_time": 19.7449
+    },
+    {
+      "query": "q8",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q9",
+      "engine": "mysql",
+      "time_seconds": 536.16,
+      "row_count": 37,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        534.4391,
+        537.2366,
+        536.8031
+      ],
+      "std_dev": 1.506,
+      "min_time": 534.4391,
+      "max_time": 537.2366
+    },
+    {
+      "query": "q10",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "(3037, 'Invalid GIS data provided to function st_geomfromwkb.')",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q11",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "(3, \"Error writing file '/local/scratch/liang/tmp/MYfd=177' (OS errno 28 - No space left on device)\")",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q12",
       "engine": "mysql",
       "time_seconds": null,
       "row_count": null,
