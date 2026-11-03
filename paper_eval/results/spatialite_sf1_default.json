@@ -1,10 +1,10 @@
 {
   "benchmark": "spatialbench",
   "version": "0.1.0",
-  "generated_at": "2026-11-03T20:25:00+00:00",
+  "generated_at": "2026-11-03T21:41:30.839189+00:00",
   "engine": "spatialite",
   "scale_factor": 1.0,
-  "total_time": 680.0,
+  "total_time": 3969.43,
   "results": [
     {
       "query": "q1",
@@ -53,6 +53,126 @@
       "std_dev": 0.025,
       "min_time": 4.045,
       "max_time": 4.089
+    },
+    {
+      "query": "q4",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q5",
+      "engine": "spatialite",
+      "time_seconds": 10.263,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        10.2669,
+        10.231,
+        10.2916
+      ],
+      "std_dev": 0.03,
+      "min_time": 10.231,
+      "max_time": 10.2916
+    },
+    {
+      "query": "q6",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q7",
+      "engine": "spatialite",
+      "time_seconds": 3.948,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        3.9567,
+        3.9505,
+        3.9364
+      ],
+      "std_dev": 0.01,
+      "min_time": 3.9364,
+      "max_time": 3.9567
+    },
+    {
+      "query": "q8",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q9",
+      "engine": "spatialite",
+      "time_seconds": 108.9,
+      "row_count": 37,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        108.9763,
+        108.7755,
+        108.9492
+      ],
+      "std_dev": 0.109,
+      "min_time": 108.7755,
+      "max_time": 108.9763
+    },
+    {
+      "query": "q10",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q11",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q12",
+      "engine": "spatialite",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
     }
   ]
 }

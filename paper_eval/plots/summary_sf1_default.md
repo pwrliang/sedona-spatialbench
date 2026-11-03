@@ -12,7 +12,7 @@
 | Q8 | 327.81s (±0.47) | FAILED | 2.53s (±0.04) | 1.83s (±0.13) | 4.92s (±0.31) | FAILED | 42.56s (±0.41) | FAILED | 4.82s (±0.05) | FAILED | FAILED |
 | Q9 | FAILED | FAILED | FAILED | 0.07s (±0.01) | 2.70s (±0.13) | FAILED | 0.29s (±0.04) | 1.37s (±2.03) | 0.05s (±0.03) | 108.90s (±0.11) | 536.16s (±1.51) |
 | Q10 | FAILED | FAILED | FAILED | 10.60s (±0.47) | FAILED | FAILED | 83.87s (±0.68) | FAILED | 39.17s (±6.16) | FAILED | FAILED |
-| Q11 | FAILED | FAILED | FAILED | 21.84s (±2.39) | FAILED | FAILED | 227.02s (±75.01) | FAILED | 82.13s (±53.34) | N/A | FAILED |
-| Q12 | FAILED | FAILED | FAILED | 43.58s (±0.29) | 52.10s (±2.55) | FAILED | 358.46s (±18.71) | FAILED | FAILED | N/A | FAILED |
+| Q11 | FAILED | FAILED | FAILED | 21.84s (±2.39) | FAILED | FAILED | 227.02s (±75.01) | FAILED | 82.13s (±53.34) | FAILED | FAILED |
+| Q12 | FAILED | FAILED | FAILED | 43.58s (±0.29) | 52.10s (±2.55) | FAILED | 358.46s (±18.71) | FAILED | FAILED | FAILED | FAILED |
 | **Total Time** | **1682.19s** | **623.61s** | **40.22s** | **101.43s** | **263.01s** | **17.50s** | **985.04s** | **387.14s** | **257.95s** | **351.68s** | **599.84s** |
 | **Geom. Mean** | 99.15s | 11.40s | 3.27s | 2.62s | 8.32s | 1.43s | 37.70s | 35.77s | 8.50s | 15.70s | 28.31s |
