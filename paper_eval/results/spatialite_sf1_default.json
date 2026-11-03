@@ -1,0 +1,58 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-11-03T20:25:00+00:00",
+  "engine": "spatialite",
+  "scale_factor": 1.0,
+  "total_time": 680.0,
+  "results": [
+    {
+      "query": "q1",
+      "engine": "spatialite",
+      "time_seconds": 3.788,
+      "row_count": 94,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.465,
+        3.441,
+        3.459
+      ],
+      "std_dev": 0.586,
+      "min_time": 3.441,
+      "max_time": 4.465
+    },
+    {
+      "query": "q2",
+      "engine": "spatialite",
+      "time_seconds": 220.724,
+      "row_count": 1,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        222.346,
+        219.949,
+        219.877
+      ],
+      "std_dev": 1.406,
+      "min_time": 219.877,
+      "max_time": 222.346
+    },
+    {
+      "query": "q3",
+      "engine": "spatialite",
+      "time_seconds": 4.06,
+      "row_count": 22,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.089,
+        4.048,
+        4.045
+      ],
+      "std_dev": 0.025,
+      "min_time": 4.045,
+      "max_time": 4.089
+    }
+  ]
+}

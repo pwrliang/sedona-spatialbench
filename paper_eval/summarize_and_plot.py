@@ -38,10 +38,14 @@ ENGINE_ORDER = [
     "postgis_noindex",
     "duckdb",
     "sedonadb",
+    "sedona_cluster",
+    "apache_sedona",
     "clickhouse",
     "spatial_polars",
     "geopandas",
-    "apache_sedona",
+    "dask_geopandas",
+    "spatialite",
+    "mysql",
     "trino"
 ]
 
@@ -50,11 +54,15 @@ ENGINE_COLORS = {
     "postgis_noindex": "#85b6d9",# PostGIS Light Steel Blue
     "duckdb": "#ff7f0e",         # Orange
     "sedonadb": "#1f77b4",       # SedonaDB Royal Blue
+    "sedona_cluster": "#6a3d9a", # Distributed Sedona Cluster Purple
     "clickhouse": "#8c564b",     # Brown
     "spatial_polars": "#2ca02c", # Polaris Green
     "geopandas": "#d62728",      # Red
+    "dask_geopandas": "#e377c2", # Dask Pink
+    "spatialite": "#17becf",     # SpatiaLite Teal
+    "mysql": "#bcbd22",          # MySQL Olive Yellow
     "apache_sedona": "#9467bd",  # Purple
-    "trino": "#17becf"           # Teal
+    "trino": "#7f7f7f"           # Gray
 }
 
 
@@ -63,11 +71,15 @@ ENGINE_HATCHES = {
     "postgis_noindex": "\\",
     "duckdb": "xx",
     "sedonadb": "..",
+    "sedona_cluster": "oo",
     "clickhouse": "++",
     "spatial_polars": "**",
     "geopandas": "--",
+    "dask_geopandas": "||",
+    "spatialite": "//",
+    "mysql": "\\",
     "apache_sedona": "oo",
-    "trino": "||"
+    "trino": ".."
 }
 
 ENGINE_LABELS = {
@@ -75,9 +87,13 @@ ENGINE_LABELS = {
     "postgis_noindex": "PostGIS (No Index)",
     "duckdb": "DuckDB",
     "sedonadb": "SedonaDB",
+    "sedona_cluster": "Apache Sedona (Cluster)",
     "clickhouse": "ClickHouse",
     "spatial_polars": "Polaris (Spatial Polars)",
     "geopandas": "GeoPandas",
+    "dask_geopandas": "Dask-GeoPandas",
+    "spatialite": "SpatiaLite",
+    "mysql": "MySQL 8.0",
     "apache_sedona": "Apache Sedona",
     "trino": "Trino"
 }
@@ -99,7 +115,14 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
                 content = json.load(f)
 
             if isinstance(content, dict) and "results" in content:
-                for suite in content["results"]:
+                raw_results = content["results"]
+                if raw_results and isinstance(raw_results, list) and isinstance(raw_results[0], dict) and "results" in raw_results[0]:
+                    suites = raw_results
+                else:
+                    top_engine = content.get("engine", "")
+                    suites = [{"engine": top_engine, "results": raw_results}]
+
+                for suite in suites:
                     engine = suite.get("engine", "")
                     if not engine:
                         continue

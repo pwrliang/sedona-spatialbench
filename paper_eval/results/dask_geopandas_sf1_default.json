@@ -1,0 +1,198 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-11-03T20:16:42.139571+00:00",
+  "engine": "dask_geopandas",
+  "scale_factor": 1.0,
+  "total_time": 1374.11,
+  "results": [
+    {
+      "query": "q1",
+      "engine": "dask_geopandas",
+      "time_seconds": 4.369,
+      "row_count": 94,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.6797,
+        4.2262,
+        4.2012
+      ],
+      "std_dev": 0.269,
+      "min_time": 4.2012,
+      "max_time": 4.6797
+    },
+    {
+      "query": "q2",
+      "engine": "dask_geopandas",
+      "time_seconds": 8.136,
+      "row_count": 1,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        16.0009,
+        4.1426,
+        4.263
+      ],
+      "std_dev": 6.812,
+      "min_time": 4.1426,
+      "max_time": 16.0009
+    },
+    {
+      "query": "q3",
+      "engine": "dask_geopandas",
+      "time_seconds": 5.572,
+      "row_count": 22,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        6.5188,
+        5.1257,
+        5.0728
+      ],
+      "std_dev": 0.82,
+      "min_time": 5.0728,
+      "max_time": 6.5188
+    },
+    {
+      "query": "q4",
+      "engine": "dask_geopandas",
+      "time_seconds": 5.109,
+      "row_count": 258,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        5.311,
+        5.232,
+        4.7825
+      ],
+      "std_dev": 0.285,
+      "min_time": 4.7825,
+      "max_time": 5.311
+    },
+    {
+      "query": "q5",
+      "engine": "dask_geopandas",
+      "time_seconds": 27.491,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        28.0258,
+        27.2504,
+        27.1979
+      ],
+      "std_dev": 0.464,
+      "min_time": 27.1979,
+      "max_time": 28.0258
+    },
+    {
+      "query": "q6",
+      "engine": "dask_geopandas",
+      "time_seconds": 10.603,
+      "row_count": 3,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        8.9899,
+        13.1077,
+        9.7125
+      ],
+      "std_dev": 2.199,
+      "min_time": 8.9899,
+      "max_time": 13.1077
+    },
+    {
+      "query": "q7",
+      "engine": "dask_geopandas",
+      "time_seconds": 70.505,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        71.6735,
+        69.5952,
+        70.2453
+      ],
+      "std_dev": 1.063,
+      "min_time": 69.5952,
+      "max_time": 71.6735
+    },
+    {
+      "query": "q8",
+      "engine": "dask_geopandas",
+      "time_seconds": 4.82,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.7764,
+        4.8063,
+        4.8761
+      ],
+      "std_dev": 0.051,
+      "min_time": 4.7764,
+      "max_time": 4.8761
+    },
+    {
+      "query": "q9",
+      "engine": "dask_geopandas",
+      "time_seconds": 0.052,
+      "row_count": 37,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        0.0811,
+        0.0397,
+        0.0365
+      ],
+      "std_dev": 0.025,
+      "min_time": 0.0365,
+      "max_time": 0.0811
+    },
+    {
+      "query": "q10",
+      "engine": "dask_geopandas",
+      "time_seconds": 39.168,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        44.4364,
+        32.3887,
+        40.6775
+      ],
+      "std_dev": 6.164,
+      "min_time": 32.3887,
+      "max_time": 44.4364
+    },
+    {
+      "query": "q11",
+      "engine": "dask_geopandas",
+      "time_seconds": 82.127,
+      "row_count": 1,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        47.6752,
+        55.1392,
+        143.568
+      ],
+      "std_dev": 53.34,
+      "min_time": 47.6752,
+      "max_time": 143.568
+    },
+    {
+      "query": "q12",
+      "engine": "dask_geopandas",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    }
+  ]
+}

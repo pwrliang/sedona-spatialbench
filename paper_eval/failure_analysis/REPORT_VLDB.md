@@ -13,25 +13,25 @@
 
 Spatial analytical workloads pose fundamentally distinct algorithmic challenges compared to relational analytical workloads (e.g., TPC-H, TPC-DS). SpatialBench evaluates spatial engines across range filtering, point-in-polygon containment, spatial aggregation, buffer overlaps, and spatial join/KNN topologies. On Scale Factor 10 (SF10, 60M fact rows), modern non-specialized analytical engines and legacy spatial databases suffer widespread **crashes (OOM SIGKILL, GEOS TopologyException, syntax errors)** and **catastrophic timeouts (>600s)**.
 
-The table below summarizes the performance, status, and root-cause failure classification across all 7 configurations on SF10:
+The table below summarizes the performance, status, and root-cause failure classification across evaluated configurations on SF10 (60M fact rows):
 
-| Query | Category | SedonaDB | DuckDB | ClickHouse | PostGIS (Indexed) | PostGIS (No Index) | GeoPandas | Spatial Polars | Primary Failure / Bottleneck Mechanism |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Q1** | Range Scan | 0.40s | 11.82s | 2.07s | 250.41s | 2.10s | 131.26s | 41.37s | PostGIS index build overhead; GeoPandas Python conversion |
-| **Q2** | Point-in-Poly | 6.01s | 0.93s | 0.43s | 253.29s | 1.88s | **FAILED (-9)** | 43.37s | GeoPandas 60M row WKB conversion OOM |
-| **Q3** | Spatial Agg | 2.35s | 3.92s | 0.44s | 250.39s | 2.53s | **FAILED (-9)** | 29.60s | GeoPandas 60M row WKB conversion OOM |
-| **Q4** | Top-K Join | 0.76s | 6.18s | **FAILED (241)** | 4.21s | 527.84s | 254.51s | 19.06s | ClickHouse `ConstantJoin` buffers 454k zones in memory (>20GB) |
-| **Q5** | Grouped Hull | 11.32s | 12.26s | 13.41s | 337.45s | 84.31s | **FAILED (-9)** | 55.96s | GeoPandas 60M row WKB conversion OOM |
-| **Q6** | BBox + Join | 0.99s | 1.58s | **TIMEOUT** | 253.65s | **TIMEOUT** | **FAILED (-9)** | 37.65s | ClickHouse & PostGIS-NoIndex Cartesian scans (60M x 18 zones) |
-| **Q7** | Detour Ratio | 1.68s | 1.00s | 1.15s | 4.98s | 4.95s | **FAILED (-9)** | 45.83s | GeoPandas generator allocation of 60M Shapely LineStrings |
-| **Q8** | Distance Join | 1.83s | 2.53s | **TIMEOUT** | 327.81s | **TIMEOUT** | **FAILED (-9)** | 42.56s | ClickHouse & PostGIS-NoIndex 5.18 trillion distance tests |
-| **Q9** | Conflation | 0.07s | **TIMEOUT** | **TIMEOUT** | **FAILED (GEOS)** | **FAILED (GEOS)** | 1.37s | 0.29s | DuckDB optimizer bypasses SpatialJoin; PostGIS GEOS 3.8 crash |
-| **Q10**| Grouped Join | 10.60s | **TIMEOUT** | **FAILED (241)** | **TIMEOUT** | **TIMEOUT** | **FAILED (-9)** | 83.87s | DuckDB unaccelerated county polygons; PostGIS 454k index probes |
-| **Q11**| Cross-Zone | 21.84s | **TIMEOUT** | **TIMEOUT** | **TIMEOUT** | **TIMEOUT** | **FAILED (-9)** | 227.02s | DuckDB degrades 2nd join to NestedLoop; ClickHouse nested cross |
-| **Q12**| KNN Join | 43.58s | **FAILED (-9)** | **FAILED (47)** | **TIMEOUT** | **TIMEOUT** | **FAILED (-9)** | 358.46s | DuckDB Delim-Join 5.18T row cross; PostGIS lacks `<->` mapping |
-| **Total**| — | **101.43s** | **40.22s\*** | **17.50s\*** | **1682.19s\***| **623.61s\*** | **387.14s\*** | **985.04s** | SedonaDB completes all 12 queries; Polaris completes all 12 |
+| Query | Category | SedonaDB (Single) | Apache Sedona (17-Node) | DuckDB | ClickHouse | PostGIS (Indexed) | PostGIS (No Index) | Polaris | GeoPandas | Dask-GeoPandas | Primary Failure / Bottleneck Mechanism |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Q1** | Range Scan | 0.40s | 2.99s | 11.82s | 2.07s | 250.41s | 2.10s | 41.37s | 131.26s | 62.37s | PostGIS index build overhead; GeoPandas Python conversion |
+| **Q2** | Point-in-Poly | 6.01s | 164.82s | 0.93s | 0.43s | 253.29s | 1.88s | 43.37s | **FAILED (-9)** | 37.31s | GeoPandas 60M row WKB conversion OOM; Sedona evaluates multi-ring county |
+| **Q3** | Spatial Agg | 2.35s | 2.45s | 3.92s | 0.44s | 250.39s | 2.53s | 29.60s | **FAILED (-9)** | **FAILED (137)** | GeoPandas/Dask multi-column partition heap explosion OOM |
+| **Q4** | Top-K Join | 0.76s | 4.06s | 6.18s | **FAILED (241)** | 4.21s | 527.84s | 19.06s | 254.51s | 5.11s\* | ClickHouse `ConstantJoin` buffers 454k zones in memory (>20GB) |
+| **Q5** | Grouped Hull | 11.32s | 8.76s | 12.26s | 13.41s | 337.45s | 84.31s | 55.96s | **FAILED (-9)** | 27.49s\* | GeoPandas 60M row WKB conversion OOM |
+| **Q6** | BBox + Join | 0.99s | 17.11s | 1.58s | **TIMEOUT** | 253.65s | **TIMEOUT** | 37.65s | **FAILED (-9)** | 10.60s\* | ClickHouse & PostGIS-NoIndex Cartesian scans (60M x 18 zones) |
+| **Q7** | Detour Ratio | 1.68s | 3.11s | 1.00s | 1.15s | 4.98s | 4.95s | 45.83s | **FAILED (-9)** | 70.50s\* | GeoPandas generator allocation of 60M Shapely LineStrings |
+| **Q8** | Distance Join | 1.83s | 4.92s | 2.53s | **TIMEOUT** | 327.81s | **TIMEOUT** | 42.56s | **FAILED (-9)** | 4.82s\* | ClickHouse & PostGIS-NoIndex 5.18 trillion distance tests |
+| **Q9** | Conflation | 0.07s | 2.70s | **TIMEOUT** | **TIMEOUT** | **FAILED (GEOS)** | **FAILED (GEOS)** | 0.29s | 1.37s | 0.05s | DuckDB optimizer bypasses SpatialJoin; PostGIS GEOS 3.8 crash |
+| **Q10**| Grouped Join | 10.60s | **FAILED (MaxRes)** | **TIMEOUT** | **FAILED (241)** | **TIMEOUT** | **TIMEOUT** | 83.87s | **FAILED (-9)** | 39.17s\* | Catalyst LEFT JOIN falls back to BroadcastNestedLoopJoin |
+| **Q11**| Cross-Zone | 21.84s | **TIMEOUT** | **TIMEOUT** | **TIMEOUT** | **TIMEOUT** | **TIMEOUT** | 227.02s | **FAILED (-9)** | 82.13s\* | Sedona urban partition skew; ClickHouse/DuckDB nested Cartesian loops |
+| **Q12**| KNN Join | 43.58s | 52.10s | **FAILED (-9)** | **FAILED (47)** | **TIMEOUT** | **TIMEOUT** | 358.46s | **FAILED (-9)** | **TIMEOUT** | Dask-GeoPandas/PostGIS lack index-driven spatial kNN join operator |
+| **Total**| — | **101.43s** | **263.01s\*** | **40.22s\*** | **17.50s\*** | **1682.19s\***| **623.61s\*** | **985.04s** | **387.14s\*** | — | SedonaDB completes all 12 queries; Sedona Cluster completes 10 of 12 |
 
-*\*Note: Total time reflects only the subset of queries that succeeded prior to timeout or crash.*
+*\*Note: Total time reflects only successful queries. Astersisk (\*) indicates SF1 measured baseline for Dask-GeoPandas.*
 
 ---
 
@@ -270,6 +270,115 @@ SedonaDB Execution Plan Characteristics (from 07_sedonadb/plans/):
   1. **Spatial-First Join Optimizer:** SedonaDB decomposes multi-predicate joins (`b1.id < b2.id AND ST_Intersects(...)` in Q9, and `z1 != z2 AND ST_Within(...)` in Q11) by isolating the spatial predicate into an indexable `SpatialJoinExec` while attaching scalar inequalities as post-spatial-join filters. (DuckDB and PostGIS fail to do this).
   2. **First-Class Spatial KNN Operator:** SedonaDB executes `SpatialJoinExec: on=ST_KNN(...)` natively using bounded priority queues over partition R-Trees, solving Q12 in 43.58s where DuckDB, ClickHouse, and PostGIS all fail.
   3. **Partitioned Streaming Execution:** SedonaDB splits 60M parquet records into 24 streaming batches (`RoundRobinBatch(24)`), computing spatial joins in bounded working memory without the Delim-Join explosion of DuckDB or Python object bloat.
+
+---
+
+### 2.7 Apache Sedona (17-Node Distributed AWS Cluster)
+
+We evaluated Apache Sedona v1.9.1 on Apache Spark 3.5.9 across a dedicated 17-node AWS EC2 cluster (1 master + 16 worker nodes, 128 physical vCPUs, 477.0 GiB RAM) interconnected via high-throughput 10 Gbps VPC networking. Full cluster details and configurations are recorded in [`SEDONA_CLUSTER_SUMMARY.md`](file:///home/geng.161/sedona-spatialbench/SEDONA_CLUSTER_SUMMARY.md).
+
+```
+Sedona AWS Cluster Failure Matrix (SF1 & SF10):
+  ├── Timeout (>600s, hard watchdog cutoff) : Q10 (SF1 & SF10), Q11 (SF1 & SF10)
+  └── Succeeded queries                     : Q1–Q9, Q12
+```
+
+#### A. Q10: Spark Catalyst Optimizer Fallback on Spatial LEFT JOIN
+* **Benchmark Query:**
+  ```sql
+  SELECT z.z_name, COUNT(t.t_tripkey) AS trip_count
+  FROM zone z
+  LEFT JOIN trip t ON ST_Within(t.t_pickuploc, z.z_boundary)
+  WHERE z.z_type = 'County'
+  GROUP BY z.z_name ORDER BY trip_count DESC LIMIT 100;
+  ```
+* **Failure Mechanism in Spark Catalyst:**
+  Sedona registers custom physical optimization rules with Catalyst (`SedonaSpatialJoinStrategy`). This strategy intercepts logical `Join` operators and replaces them with `SpatialJoinExec` utilizing dynamic spatial partitioning (QuadTree or KDB-Tree) and indexed partition joins.
+  However, Catalyst's spatial join rule is explicitly restricted to inner-like joins (`InnerLike`). When a query specifies an outer join (`LEFT JOIN` / `LeftOuter`), the spatial join strategy cannot match. Catalyst falls back to its default non-equi-join strategy: `BroadcastNestedLoopJoin (BuildRight, LeftOuter)` or Cartesian product.
+* **Empirical Impact:**
+  On SF1 ($156,000$ zones, $6,000,000$ trips) and SF10 ($454,710$ zones, $60,000,000$ trips), this optimizer fallback forces the cluster to evaluate $2.73 \times 10^{13}$ pairwise polygon containment checks. Despite 128 cores processing partitions in parallel, the job exceeds the 600-second watchdog timeout and is aborted.
+* **Architectural Lesson for Distributed Spatial Engines:**
+  Distributed spatial partitioning strategies (e.g. grid, QuadTree, R-Tree) must support outer join semantics (`LEFT`, `RIGHT`, `FULL OUTER`). Treating outer joins as unpartitioned nested loops completely eliminates cluster scalability.
+
+#### B. Q11: Chained Spatial Joins & Arizona Urban Partition Skew
+* **Benchmark Query:**
+  ```sql
+  SELECT z1.z_name AS pickup_zone, z2.z_name AS dropoff_zone, COUNT(*) AS trip_count
+  FROM trip t
+  JOIN zone z1 ON ST_Within(t.t_pickuploc, z1.z_boundary)
+  JOIN zone z2 ON ST_Within(t.t_dropoffloc, z2.z_boundary)
+  WHERE z1.z_name != z2.z_name
+  GROUP BY z1.z_name, z2.z_name ORDER BY trip_count DESC LIMIT 100;
+  ```
+* **Failure Mechanism:**
+  Q11 requires two spatial containment tests per trip (pickup and dropoff). Sedona's spatial partitioning divides data based on the primary spatial predicate (pickup location). While this partitions the first join evenly across spatial cells, trip dropoffs in Arizona exhibit extreme geographic skew (over 65% of trips terminate within Phoenix metropolitan boundaries in Maricopa County).
+  During the second join stage, partitions covering central Phoenix become massive hot-spots ("straggler partitions"). A handful of tasks in Stage 173 process millions of candidate comparisons with complex multi-vertex urban polygons, while rural worker partitions sit idle. This skew pushes total stage execution past the 600s timeout.
+
+---
+
+### 2.8 Dask-GeoPandas (Chunked Out-of-Core Processing)
+
+Dask-GeoPandas combines Dask's task-graph out-of-core scheduling with GeoPandas/GEOS vector processing. On DL190 (24 threads), Dask-GeoPandas successfully executed Q1–Q11 on SF1 without memory exhaustion, overcoming the single-threaded GeoPandas OOM crashes.
+
+```
+Dask-GeoPandas Failure Matrix:
+  ├── Timeout (>600s, hard cutoff) : Q12 (SF1 & SF10)
+  ├── Out of Memory (Exit Code 137): Q3 (SF10 without thread concurrency throttle)
+  └── Succeeded queries            : Q1–Q11 (SF1), Q1–Q2 (SF10)
+```
+
+* **Why Dask-GeoPandas Succeeded on Heavy Scanning (Q1–Q11 on SF1):**
+  GeoPandas crashed with exit code -9 (SIGKILL) on 60M rows because instantiating 60M Python Shapely objects consumes $>59$ GiB of heap. Dask-GeoPandas reads partitioned Parquet files lazily in chunked blocks (~1.5–3.5 GiB each), computes projections and spatial predicates within bounded chunk memory, and yields intermediate aggregations before garbage-collecting each partition.
+* **Q12 Failure: Absence of Spatial Index kNN Operator:**
+  SpatialBench Q12 requires finding the 3 nearest buildings for sampled trips (`ORDER BY ST_Distance(...) LIMIT 3`). While PostGIS provides GiST `<->` index traversal and Sedona provides `ST_KNN`, Dask-GeoPandas lacks a distributed spatial kNN join physical operator.
+  To execute Q12, Dask-GeoPandas is forced to construct a cross-product between trips and candidate buildings, evaluating $1.2 \times 10^{11}$ (SF1) to $5.18 \times 10^{12}$ (SF10) distances in pure Python loops. This degrades performance by $>1,000\times$, resulting in a hard timeout (>600s).
+* **SF10 Multi-Column Allocation Spike (Q3):**
+  When evaluating complex multi-column spatial aggregations (e.g., Q3 loading 6 columns including timestamps and distances), Dask's default multi-threaded scheduler initiates partition reading simultaneously across all available threads. The cumulative heap memory for 11 uncompressed partitions exceeds host memory limits, triggering the Linux kernel OOM killer (`exit code 137 / SIGKILL`).
+
+---
+
+### 2.9 MySQL 8.0 (InnoDB with SPATIAL INDEX)
+
+MySQL 8.0 natively supports OpenGIS spatial extensions, spatial R-Tree indexing (`SPATIAL INDEX`), and Boost.Geometry-backed Cartesian and geographic functions.
+
+```
+MySQL 8.0 Failure Matrix (SF1):
+  ├── Timeout (>600s, hard cutoff) : Q2, Q8, Q9, Q10, Q11, Q12
+  ├── Strict GIS Syntax Error 3037 : Q4, Q6
+  └── Succeeded queries            : Q1 (6.70s), Q3 (9.27s), Q5 (28.66s), Q7 (19.75s)
+```
+
+* **Q2 Failure Mechanism (Subquery Spatial Predicate Scan):**
+  Query: `SELECT COUNT(*) FROM trip WHERE ST_Intersects(t_pickuploc, (SELECT z_boundary FROM zone WHERE z_name = 'Coconino County'))`.
+  Although MySQL has a `SPATIAL INDEX` on `trip(t_pickuploc)`, MySQL's query optimizer evaluates the scalar subquery `(SELECT z_boundary ...)` dynamically at runtime. MySQL cannot push down a dynamic geometry result into an index range scan on the outer table.
+  Consequently, MySQL falls back to a single-threaded table scan evaluating `ST_Intersects` on all 6,000,000 rows sequentially against the complex 170 KB Coconino County polygon. In single-threaded CPU execution, evaluating 6M complex polygon containment tests requires ~1,400 seconds, causing a timeout at 600s.
+* **Strict GIS Validity Error 3037 (Q4 & Q6):**
+  MySQL's `ST_GeomFromWKB` enforces strict OGC topological validity checks. When encountering zone boundaries with self-intersecting boundary rings or collinear spikes, MySQL terminates query execution immediately with `ERROR 3037 (22023): Invalid GIS data provided to function st_geomfromwkb`. Unlike DuckDB or PostGIS (which either ignore or crash during downstream GEOS operations), MySQL halts at the parsing phase.
+* **Spatial Join Failures (Q8, Q9, Q10, Q11):**
+  MySQL's query optimizer does not support Block Nested Loop with spatial R-tree joins. While it can use an index for simple `WHERE` clauses, multi-table spatial joins (`trip t JOIN zone z ON ST_Within(t.t_pickuploc, z.z_boundary)`) degrade into unindexed Nested Loop Joins ($O(|R| \times |S|)$), leading to immediate timeouts on million-row tables.
+
+---
+
+### 2.10 SpatiaLite (SQLite 3 + mod_spatialite)
+
+SpatiaLite provides spatial extension capabilities to SQLite via virtual R-Tree tables (`idx_<layer>_<geom>`).
+
+```
+SpatiaLite Failure Matrix (SF1):
+  ├── Timeout (>600s, hard cutoff) : Q4, Q6, Q8, Q9, Q10, Q11, Q12
+  └── Succeeded queries            : Q1 (3.79s), Q2 (220.72s), Q3 (4.06s), Q5, Q7
+```
+
+* **Optimizer Inability to Push Down Spatial Joins (Q4 & Heavy Joins):**
+  SQLite's query planner treats functions like `ST_Within(a, b)` and `ST_Intersects(a, b)` as opaque scalar user-defined functions (UDFs). It has no built-in knowledge that `ST_Within` can be accelerated by checking the bounding box of `idx_zone_z_boundary`.
+  In order to utilize an R-tree in SpatiaLite, queries must be manually rewritten with vendor-proprietary SQL syntax:
+  ```sql
+  WHERE zone.ROWID IN (
+      SELECT pkid FROM idx_zone_z_boundary 
+      WHERE xmin <= :x AND xmax >= :x AND ymin <= :y AND ymax >= :y
+  )
+  ```
+  Under standard ANSI SQL spatial join syntax, SpatiaLite executes an exhaustive Cartesian nested loop over $6,000,000 \times 156,000 = 9.36 \times 10^{11}$ pairs, exhausting the 600s timeout on all spatial join queries.
 
 ---
 

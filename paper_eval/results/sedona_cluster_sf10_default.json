@@ -1,0 +1,198 @@
+{
+  "benchmark": "SpatialBench",
+  "scale_factor": "10",
+  "engine": "sedona_cluster",
+  "timestamp": "2026-11-03T20:41:14.797195+00:00",
+  "cluster": {
+    "master": "spark://master:7077",
+    "workers": 16,
+    "total_cores": 128,
+    "spark_version": "3.5.9"
+  },
+  "results": [
+    {
+      "query": "q1",
+      "engine": "sedona_cluster",
+      "time_seconds": 2.993,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.5558,
+        2.2758,
+        2.147
+      ],
+      "std_dev": 1.355,
+      "min_time": 2.147,
+      "max_time": 4.5558
+    },
+    {
+      "query": "q2",
+      "engine": "sedona_cluster",
+      "time_seconds": 164.818,
+      "row_count": 1,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        167.3567,
+        165.4241,
+        161.6721
+      ],
+      "std_dev": 2.89,
+      "min_time": 161.6721,
+      "max_time": 167.3567
+    },
+    {
+      "query": "q3",
+      "engine": "sedona_cluster",
+      "time_seconds": 2.452,
+      "row_count": 79,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        3.2527,
+        2.2222,
+        1.8824
+      ],
+      "std_dev": 0.714,
+      "min_time": 1.8824,
+      "max_time": 3.2527
+    },
+    {
+      "query": "q4",
+      "engine": "sedona_cluster",
+      "time_seconds": 4.056,
+      "row_count": 243,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.5033,
+        3.6286,
+        4.0362
+      ],
+      "std_dev": 0.438,
+      "min_time": 3.6286,
+      "max_time": 4.5033
+    },
+    {
+      "query": "q5",
+      "engine": "sedona_cluster",
+      "time_seconds": 8.757,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        10.2836,
+        8.0281,
+        7.9595
+      ],
+      "std_dev": 1.322,
+      "min_time": 7.9595,
+      "max_time": 10.2836
+    },
+    {
+      "query": "q6",
+      "engine": "sedona_cluster",
+      "time_seconds": 17.112,
+      "row_count": 3,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        18.7598,
+        17.6662,
+        14.9095
+      ],
+      "std_dev": 1.984,
+      "min_time": 14.9095,
+      "max_time": 18.7598
+    },
+    {
+      "query": "q7",
+      "engine": "sedona_cluster",
+      "time_seconds": 3.113,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        3.4239,
+        2.768,
+        3.1469
+      ],
+      "std_dev": 0.329,
+      "min_time": 2.768,
+      "max_time": 3.4239
+    },
+    {
+      "query": "q8",
+      "engine": "sedona_cluster",
+      "time_seconds": 4.918,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        5.1938,
+        4.9814,
+        4.5801
+      ],
+      "std_dev": 0.312,
+      "min_time": 4.5801,
+      "max_time": 5.1938
+    },
+    {
+      "query": "q9",
+      "engine": "sedona_cluster",
+      "time_seconds": 2.698,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        2.844,
+        2.5928,
+        2.6562
+      ],
+      "std_dev": 0.131,
+      "min_time": 2.5928,
+      "max_time": 2.844
+    },
+    {
+      "query": "q10",
+      "engine": "sedona_cluster",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "An error occurred while calling o181.collectToPython.\n: org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 103 tasks (1029.3 MiB) is bigger than spark.driver.maxResultSize (1024.0 MiB)\n\tat org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2898)\n\tat org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2834)\n\tat org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2833)\n\tat scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)\n\tat scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)\n\tat scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2833)\n\tat org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1253)\n\tat org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1253)\n\tat scala.Option.foreach(Option.scala:407)\n\tat org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1253)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3102)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3036)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3025)\n\tat org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:995)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2393)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2414)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2433)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2458)\n\tat org.apache.spark.rdd.RDD.$anonfun$collect$1(RDD.scala:1049)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n\tat org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n\tat org.apache.spark.rdd.RDD.withScope(RDD.scala:410)\n\tat org.apache.spark.rdd.RDD.collect(RDD.scala:1048)\n\tat org.apache.spark.sql.execution.SparkPlan.executeCollectIterator(SparkPlan.scala:455)\n\tat org.apache.spark.sql.execution.exchange.BroadcastExchangeExec.$anonfun$relationFuture$1(BroadcastExchangeExec.scala:140)\n\tat org.apache.spark.sql.execution.SQLExecution$.$anonfun$withThreadLocalCaptured$2(SQLExecution.scala:224)\n\tat org.apache.spark.JobArtifactSet$.withActiveJobArtifactState(JobArtifactSet.scala:94)\n\tat org.apache.spark.sql.execution.SQLExecution$.$anonfun$withThreadLocalCaptured$1(SQLExecution.scala:219)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q11",
+      "engine": "sedona_cluster",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "failed",
+      "error_message": "An error occurred while calling o186.collectToPython",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q12",
+      "engine": "sedona_cluster",
+      "time_seconds": 52.096,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        54.494,
+        52.3711,
+        49.4217
+      ],
+      "std_dev": 2.547,
+      "min_time": 49.4217,
+      "max_time": 54.494
+    }
+  ]
+}

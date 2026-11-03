@@ -693,6 +693,421 @@ LIMIT 100
 """
 
 
+class SpatiaLiteSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A SpatiaLite-specific implementation of the SpatialBench benchmark."""
+
+    def dialect(self) -> str:
+        return "SpatiaLite"
+
+    @staticmethod
+    def q1() -> str:
+        return """
+-- Q1 (SpatiaLite): Find trips starting within 50km of Sedona city center
+SELECT
+   t.t_tripkey,
+   ST_X(GeomFromWKB(t.t_pickuploc, 4326)) AS pickup_lon,
+   ST_Y(GeomFromWKB(t.t_pickuploc, 4326)) AS pickup_lat,
+   t.t_pickuptime,
+   ST_Distance(GeomFromWKB(t.t_pickuploc, 4326), MakePoint(-111.7610, 34.8697, 4326)) AS distance_to_center
+FROM trip t
+WHERE ST_Distance(GeomFromWKB(t.t_pickuploc, 4326), MakePoint(-111.7610, 34.8697, 4326)) <= 0.45
+ORDER BY distance_to_center ASC, t.t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q2() -> str:
+        return """
+-- Q2 (SpatiaLite): Count trips starting within Coconino County zone
+SELECT COUNT(*) AS trip_count_in_coconino_county
+FROM trip t
+WHERE ST_Intersects(GeomFromWKB(t.t_pickuploc, 4326), (SELECT GeomFromWKB(z.z_boundary, 4326) FROM zone z WHERE z.z_name = 'Coconino County' LIMIT 1))
+"""
+
+    @staticmethod
+    def q3() -> str:
+        return """
+-- Q3 (SpatiaLite): Monthly trip statistics for a buffered box around Sedona
+SELECT
+   strftime('%Y-%m-01', t.t_pickuptime) AS pickup_month,
+   COUNT(t.t_tripkey) AS total_trips,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(strftime('%s', t.t_dropofftime) - strftime('%s', t.t_pickuptime)) AS avg_duration,
+   AVG(t.t_fare) AS avg_fare
+FROM trip t
+WHERE ST_Distance(
+   GeomFromWKB(t.t_pickuploc, 4326),
+   GeomFromText('POLYGON((-111.9060 34.7347, -111.6160 34.7347, -111.6160 35.0047, -111.9060 35.0047, -111.9060 34.7347))', 4326)
+) <= 0.045
+GROUP BY pickup_month
+ORDER BY pickup_month
+"""
+
+    @staticmethod
+    def q4() -> str:
+        return """
+-- Q4 (SpatiaLite): Zone distribution of top 1000 trips by tip amount
+SELECT z.z_zonekey, z.z_name, COUNT(*) AS trip_count
+FROM zone z
+JOIN (
+   SELECT t.t_pickuploc
+   FROM trip t
+   ORDER BY t.t_tip DESC, t.t_tripkey ASC
+   LIMIT 1000
+) top_trips ON ST_Within(GeomFromWKB(top_trips.t_pickuploc, 4326), GeomFromWKB(z.z_boundary, 4326))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY trip_count DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q5() -> str:
+        return """
+-- Q5 (SpatiaLite): Monthly travel patterns for repeat customers
+SELECT
+   c.c_custkey,
+   c.c_name AS customer_name,
+   strftime('%Y-%m-01', t.t_pickuptime) AS pickup_month,
+   ST_Area(ST_ConvexHull(Collect(GeomFromWKB(t.t_dropoffloc, 4326)))) AS monthly_travel_hull_area,
+   COUNT(*) AS dropoff_count
+FROM trip t
+JOIN customer c ON t.t_custkey = c.c_custkey
+GROUP BY c.c_custkey, c.c_name, pickup_month
+HAVING dropoff_count > 5
+ORDER BY monthly_travel_hull_area DESC, c.c_custkey ASC, pickup_month ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q6() -> str:
+        return """
+-- Q6 (SpatiaLite): Zone statistics for trips intersecting a bounding box
+SELECT
+   z.z_zonekey, z.z_name,
+   COUNT(t.t_tripkey) AS total_pickups,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(strftime('%s', t.t_dropofftime) - strftime('%s', t.t_pickuptime)) AS avg_duration
+FROM trip t, zone z
+WHERE ST_Intersects(GeomFromText('POLYGON((-112.2110 34.4197, -111.3110 34.4197, -111.3110 35.3197, -112.2110 35.3197, -112.2110 34.4197))', 4326), GeomFromWKB(z.z_boundary, 4326))
+  AND ST_Within(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(z.z_boundary, 4326))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY total_pickups DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q7() -> str:
+        return """
+-- Q7 (SpatiaLite): Detect route detours
+WITH trip_lengths AS (
+   SELECT
+       t.t_tripkey,
+       CAST(t.t_distance AS REAL) AS reported_distance_m,
+       ST_Length(MakeLine(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(t.t_dropoffloc, 4326))) / 0.000009 AS line_distance_m
+   FROM trip t
+)
+SELECT
+   t.t_tripkey,
+   t.reported_distance_m,
+   t.line_distance_m,
+   t.reported_distance_m / NULLIF(t.line_distance_m, 0) AS detour_ratio
+FROM trip_lengths t
+ORDER BY detour_ratio DESC, reported_distance_m DESC, t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q8() -> str:
+        return """
+-- Q8 (SpatiaLite): Nearby pickups within 500m of buildings
+SELECT b.b_buildingkey, b.b_name, COUNT(*) AS nearby_pickup_count
+FROM trip t
+JOIN building b ON ST_Distance(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(b.b_boundary, 4326)) <= 0.0045
+GROUP BY b.b_buildingkey, b.b_name
+ORDER BY nearby_pickup_count DESC, b.b_buildingkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q9() -> str:
+        return """
+-- Q9 (SpatiaLite): Building Conflation via IoU
+WITH pairs AS (
+   SELECT
+       b1.b_buildingkey AS building_1,
+       b2.b_buildingkey AS building_2,
+       ST_Area(GeomFromWKB(b1.b_boundary, 4326)) AS area1,
+       ST_Area(GeomFromWKB(b2.b_boundary, 4326)) AS area2,
+       ST_Area(ST_Intersection(GeomFromWKB(b1.b_boundary, 4326), GeomFromWKB(b2.b_boundary, 4326))) AS overlap_area
+   FROM building b1
+   JOIN building b2 ON b1.b_buildingkey < b2.b_buildingkey
+                   AND ST_Intersects(GeomFromWKB(b1.b_boundary, 4326), GeomFromWKB(b2.b_boundary, 4326))
+)
+SELECT
+   building_1, building_2, area1, area2, overlap_area,
+   CASE
+       WHEN overlap_area = 0 THEN 0.0
+       WHEN (area1 + area2 - overlap_area) = 0 THEN 1.0
+       ELSE overlap_area / (area1 + area2 - overlap_area)
+   END AS iou
+FROM pairs
+ORDER BY iou DESC, building_1 ASC, building_2 ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q10() -> str:
+        return """
+-- Q10 (SpatiaLite): Zone stats for trips starting within each zone
+SELECT
+   z.z_zonekey, z.z_name AS pickup_zone,
+   AVG(strftime('%s', t.t_dropofftime) - strftime('%s', t.t_pickuptime)) AS avg_duration,
+   AVG(t.t_distance) AS avg_distance,
+   COUNT(t.t_tripkey) AS num_trips
+FROM zone z
+LEFT JOIN trip t ON ST_Within(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(z.z_boundary, 4326))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC, z.z_zonekey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q11() -> str:
+        return """
+-- Q11 (SpatiaLite): Count trips that cross between different zones
+SELECT COUNT(*) AS cross_zone_trip_count
+FROM trip t
+JOIN zone pickup_zone ON ST_Within(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(pickup_zone.z_boundary, 4326))
+JOIN zone dropoff_zone ON ST_Within(GeomFromWKB(t.t_dropoffloc, 4326), GeomFromWKB(dropoff_zone.z_boundary, 4326))
+WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
+"""
+
+    @staticmethod
+    def q12() -> str:
+        return """
+-- Q12 (SpatiaLite): Rank trip pickups by average distance to their 5 nearest buildings
+SELECT
+   t.t_tripkey,
+   (
+       SELECT AVG(nb.distance_to_building)
+       FROM (
+           SELECT ST_Distance(GeomFromWKB(t.t_pickuploc, 4326), GeomFromWKB(b.b_boundary, 4326)) AS distance_to_building
+           FROM building b
+           ORDER BY distance_to_building ASC
+           LIMIT 5
+       ) nb
+   ) AS avg_distance_to_5_nearest
+FROM trip t
+ORDER BY avg_distance_to_5_nearest DESC, t.t_tripkey ASC
+LIMIT 100
+"""
+
+
+class MySQLSpatialBenchBenchmark(SpatialBenchBenchmark):
+    """A MySQL 8.0-specific implementation of the SpatialBench benchmark."""
+
+    def dialect(self) -> str:
+        return "MySQL"
+
+    @staticmethod
+    def q1() -> str:
+        return """
+-- Q1 (MySQL): Find trips starting within 50km of Sedona city center
+SELECT
+   t.t_tripkey,
+   ST_X(ST_GeomFromWKB(t.t_pickuploc)) AS pickup_lon,
+   ST_Y(ST_GeomFromWKB(t.t_pickuploc)) AS pickup_lat,
+   t.t_pickuptime,
+   ST_Distance(ST_GeomFromWKB(t.t_pickuploc), ST_PointFromText('POINT(-111.7610 34.8697)')) AS distance_to_center
+FROM trip t
+WHERE ST_Distance(ST_GeomFromWKB(t.t_pickuploc), ST_PointFromText('POINT(-111.7610 34.8697)')) <= 0.45
+ORDER BY distance_to_center ASC, t.t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q2() -> str:
+        return """
+-- Q2 (MySQL): Count trips starting within Coconino County zone
+SELECT COUNT(*) AS trip_count_in_coconino_county
+FROM trip t
+WHERE ST_Intersects(ST_GeomFromWKB(t.t_pickuploc), (SELECT ST_GeomFromWKB(z.z_boundary) FROM zone z WHERE z.z_name = 'Coconino County' LIMIT 1))
+"""
+
+    @staticmethod
+    def q3() -> str:
+        return """
+-- Q3 (MySQL): Monthly trip statistics for a buffered box around Sedona
+SELECT
+   DATE_FORMAT(t.t_pickuptime, '%Y-%m-01') AS pickup_month,
+   COUNT(t.t_tripkey) AS total_trips,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(TIMESTAMPDIFF(SECOND, t.t_pickuptime, t.t_dropofftime)) AS avg_duration,
+   AVG(t.t_fare) AS avg_fare
+FROM trip t
+WHERE ST_Distance(
+   ST_GeomFromWKB(t.t_pickuploc),
+   ST_GeomFromText('POLYGON((-111.9060 34.7347, -111.6160 34.7347, -111.6160 35.0047, -111.9060 35.0047, -111.9060 34.7347))')
+) <= 0.045
+GROUP BY pickup_month
+ORDER BY pickup_month
+"""
+
+    @staticmethod
+    def q4() -> str:
+        return """
+-- Q4 (MySQL): Zone distribution of top 1000 trips by tip amount
+SELECT z.z_zonekey, z.z_name, COUNT(*) AS trip_count
+FROM zone z
+JOIN (
+   SELECT t.t_pickuploc
+   FROM trip t
+   ORDER BY t.t_tip DESC, t.t_tripkey ASC
+   LIMIT 1000
+) top_trips ON ST_Within(ST_GeomFromWKB(top_trips.t_pickuploc), ST_GeomFromWKB(z.z_boundary))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY trip_count DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q5() -> str:
+        return """
+-- Q5 (MySQL): Monthly travel patterns for repeat customers
+SELECT
+   c.c_custkey,
+   c.c_name AS customer_name,
+   DATE_FORMAT(t.t_pickuptime, '%Y-%m-01') AS pickup_month,
+   ST_Area(ST_ConvexHull(ST_GeomFromText(CONCAT('MULTIPOINT(', GROUP_CONCAT(CONCAT(ST_X(ST_GeomFromWKB(t.t_dropoffloc)), ' ', ST_Y(ST_GeomFromWKB(t.t_dropoffloc))) SEPARATOR ','), ')')))) AS monthly_travel_hull_area,
+   COUNT(*) AS dropoff_count
+FROM trip t
+JOIN customer c ON t.t_custkey = c.c_custkey
+GROUP BY c.c_custkey, c.c_name, pickup_month
+HAVING dropoff_count > 5
+ORDER BY monthly_travel_hull_area DESC, c.c_custkey ASC, pickup_month ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q6() -> str:
+        return """
+-- Q6 (MySQL): Zone statistics for trips intersecting a bounding box
+SELECT
+   z.z_zonekey, z.z_name,
+   COUNT(t.t_tripkey) AS total_pickups,
+   AVG(t.t_distance) AS avg_distance,
+   AVG(TIMESTAMPDIFF(SECOND, t.t_pickuptime, t.t_dropofftime)) AS avg_duration
+FROM trip t, zone z
+WHERE ST_Intersects(ST_GeomFromText('POLYGON((-112.2110 34.4197, -111.3110 34.4197, -111.3110 35.3197, -112.2110 35.3197, -112.2110 34.4197))'), ST_GeomFromWKB(z.z_boundary))
+  AND ST_Within(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(z.z_boundary))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY total_pickups DESC, z.z_zonekey ASC
+"""
+
+    @staticmethod
+    def q7() -> str:
+        return """
+-- Q7 (MySQL): Detect route detours
+WITH trip_lengths AS (
+   SELECT
+       t.t_tripkey,
+       CAST(t.t_distance AS DOUBLE) AS reported_distance_m,
+       ST_Length(LineString(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(t.t_dropoffloc))) / 0.000009 AS line_distance_m
+   FROM trip t
+)
+SELECT
+   t.t_tripkey,
+   t.reported_distance_m,
+   t.line_distance_m,
+   t.reported_distance_m / NULLIF(t.line_distance_m, 0) AS detour_ratio
+FROM trip_lengths t
+ORDER BY detour_ratio DESC, reported_distance_m DESC, t_tripkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q8() -> str:
+        return """
+-- Q8 (MySQL): Nearby pickups within 500m of buildings
+SELECT b.b_buildingkey, b.b_name, COUNT(*) AS nearby_pickup_count
+FROM trip t
+JOIN building b ON ST_Distance(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(b.b_boundary)) <= 0.0045
+GROUP BY b.b_buildingkey, b.b_name
+ORDER BY nearby_pickup_count DESC, b.b_buildingkey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q9() -> str:
+        return """
+-- Q9 (MySQL): Building Conflation via IoU
+WITH pairs AS (
+   SELECT
+       b1.b_buildingkey AS building_1,
+       b2.b_buildingkey AS building_2,
+       ST_Area(ST_GeomFromWKB(b1.b_boundary)) AS area1,
+       ST_Area(ST_GeomFromWKB(b2.b_boundary)) AS area2,
+       ST_Area(ST_Intersection(ST_GeomFromWKB(b1.b_boundary), ST_GeomFromWKB(b2.b_boundary))) AS overlap_area
+   FROM building b1
+   JOIN building b2 ON b1.b_buildingkey < b2.b_buildingkey
+                   AND ST_Intersects(ST_GeomFromWKB(b1.b_boundary), ST_GeomFromWKB(b2.b_boundary))
+)
+SELECT
+   building_1, building_2, area1, area2, overlap_area,
+   CASE
+       WHEN overlap_area = 0 THEN 0.0
+       WHEN (area1 + area2 - overlap_area) = 0 THEN 1.0
+       ELSE overlap_area / (area1 + area2 - overlap_area)
+   END AS iou
+FROM pairs
+ORDER BY iou DESC, building_1 ASC, building_2 ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q10() -> str:
+        return """
+-- Q10 (MySQL): Zone stats for trips starting within each zone
+SELECT
+   z.z_zonekey, z.z_name AS pickup_zone,
+   AVG(TIMESTAMPDIFF(SECOND, t.t_pickuptime, t.t_dropofftime)) AS avg_duration,
+   AVG(t.t_distance) AS avg_distance,
+   COUNT(t.t_tripkey) AS num_trips
+FROM zone z
+LEFT JOIN trip t ON ST_Within(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(z.z_boundary))
+GROUP BY z.z_zonekey, z.z_name
+ORDER BY avg_duration DESC, z.z_zonekey ASC
+LIMIT 100
+"""
+
+    @staticmethod
+    def q11() -> str:
+        return """
+-- Q11 (MySQL): Count trips that cross between different zones
+SELECT COUNT(*) AS cross_zone_trip_count
+FROM trip t
+JOIN zone pickup_zone ON ST_Within(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(pickup_zone.z_boundary))
+JOIN zone dropoff_zone ON ST_Within(ST_GeomFromWKB(t.t_dropoffloc), ST_GeomFromWKB(dropoff_zone.z_boundary))
+WHERE pickup_zone.z_zonekey != dropoff_zone.z_zonekey
+"""
+
+    @staticmethod
+    def q12() -> str:
+        return """
+-- Q12 (MySQL): Rank trip pickups by average distance to their 5 nearest buildings
+SELECT
+   t.t_tripkey,
+   AVG(nb.distance_to_building) AS avg_distance_to_5_nearest
+FROM trip t
+CROSS JOIN LATERAL (
+   SELECT ST_Distance(ST_GeomFromWKB(t.t_pickuploc), ST_GeomFromWKB(b.b_boundary)) AS distance_to_building
+   FROM building b
+   ORDER BY distance_to_building ASC
+   LIMIT 5
+) AS nb
+GROUP BY t.t_tripkey
+ORDER BY avg_distance_to_5_nearest DESC, t.t_tripkey ASC
+LIMIT 100
+"""
+
+
 def main():
     query_classes = {
         "SedonaSpark": SpatialBenchBenchmark,
@@ -701,7 +1116,10 @@ def main():
         "SedonaDB": SpatialBenchBenchmark,
         "PostGIS": PostGISSpatialBenchBenchmark,
         "ClickHouse": ClickHouseSpatialBenchBenchmark,
+        "SpatiaLite": SpatiaLiteSpatialBenchBenchmark,
+        "MySQL": MySQLSpatialBenchBenchmark,
         "Geopandas": None,  # Special case, we will catch this below,
+        "Dask-GeoPandas": None,  # Special case
         "Spatial Polars": None,  # Special case, we will catch this below,
         "PyCanopy": None,  # Special case, we will catch this below,
     }

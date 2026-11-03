@@ -1,0 +1,36 @@
+{
+  "benchmark": "spatialbench",
+  "version": "0.1.0",
+  "generated_at": "2026-11-03T20:19:52.686867+00:00",
+  "engine": "mysql",
+  "scale_factor": 1.0,
+  "total_time": 607.09,
+  "results": [
+    {
+      "query": "q1",
+      "engine": "mysql",
+      "time_seconds": 7.076,
+      "row_count": 94,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        7.0762
+      ],
+      "std_dev": 0.0,
+      "min_time": 7.0762,
+      "max_time": 7.0762
+    },
+    {
+      "query": "q2",
+      "engine": "mysql",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600 seconds",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    }
+  ]
+}

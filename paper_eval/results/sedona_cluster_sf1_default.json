@@ -1,0 +1,198 @@
+{
+  "benchmark": "SpatialBench",
+  "scale_factor": "1",
+  "engine": "sedona_cluster",
+  "timestamp": "2026-11-03T20:17:02.902790+00:00",
+  "cluster": {
+    "master": "spark://master:7077",
+    "workers": 16,
+    "total_cores": 128,
+    "spark_version": "3.5.9"
+  },
+  "results": [
+    {
+      "query": "q1",
+      "engine": "sedona_cluster",
+      "time_seconds": 2.076,
+      "row_count": 94,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        3.6386,
+        1.2698,
+        1.3198
+      ],
+      "std_dev": 1.353,
+      "min_time": 1.2698,
+      "max_time": 3.6386
+    },
+    {
+      "query": "q2",
+      "engine": "sedona_cluster",
+      "time_seconds": 110.434,
+      "row_count": 1,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        115.0403,
+        106.618,
+        109.6448
+      ],
+      "std_dev": 4.266,
+      "min_time": 106.618,
+      "max_time": 115.0403
+    },
+    {
+      "query": "q3",
+      "engine": "sedona_cluster",
+      "time_seconds": 1.575,
+      "row_count": 22,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        1.8765,
+        1.5914,
+        1.2556
+      ],
+      "std_dev": 0.311,
+      "min_time": 1.2556,
+      "max_time": 1.8765
+    },
+    {
+      "query": "q4",
+      "engine": "sedona_cluster",
+      "time_seconds": 4.176,
+      "row_count": 258,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        4.1053,
+        4.1585,
+        4.2656
+      ],
+      "std_dev": 0.082,
+      "min_time": 4.1053,
+      "max_time": 4.2656
+    },
+    {
+      "query": "q5",
+      "engine": "sedona_cluster",
+      "time_seconds": 5.459,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        5.9908,
+        5.2933,
+        5.0915
+      ],
+      "std_dev": 0.472,
+      "min_time": 5.0915,
+      "max_time": 5.9908
+    },
+    {
+      "query": "q6",
+      "engine": "sedona_cluster",
+      "time_seconds": 5.066,
+      "row_count": 3,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        5.6795,
+        5.1201,
+        4.3972
+      ],
+      "std_dev": 0.643,
+      "min_time": 4.3972,
+      "max_time": 5.6795
+    },
+    {
+      "query": "q7",
+      "engine": "sedona_cluster",
+      "time_seconds": 1.396,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        1.4164,
+        1.3775,
+        1.3938
+      ],
+      "std_dev": 0.02,
+      "min_time": 1.3775,
+      "max_time": 1.4164
+    },
+    {
+      "query": "q8",
+      "engine": "sedona_cluster",
+      "time_seconds": 1.76,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        1.7062,
+        1.7941,
+        1.7796
+      ],
+      "std_dev": 0.047,
+      "min_time": 1.7062,
+      "max_time": 1.7941
+    },
+    {
+      "query": "q9",
+      "engine": "sedona_cluster",
+      "time_seconds": 0.721,
+      "row_count": 37,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        0.7602,
+        0.7342,
+        0.6684
+      ],
+      "std_dev": 0.047,
+      "min_time": 0.6684,
+      "max_time": 0.7602
+    },
+    {
+      "query": "q10",
+      "engine": "sedona_cluster",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600s (BroadcastNestedLoopJoin on LEFT JOIN)",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q11",
+      "engine": "sedona_cluster",
+      "time_seconds": null,
+      "row_count": null,
+      "status": "timeout",
+      "error_message": "Query timed out after 600s (chained multi-way spatial join with urban skew)",
+      "run_times": [],
+      "std_dev": null,
+      "min_time": null,
+      "max_time": null
+    },
+    {
+      "query": "q12",
+      "engine": "sedona_cluster",
+      "time_seconds": 28.519,
+      "row_count": 100,
+      "status": "success",
+      "error_message": null,
+      "run_times": [
+        29.8001,
+        27.5618,
+        28.1949
+      ],
+      "std_dev": 1.154,
+      "min_time": 27.5618,
+      "max_time": 29.8001
+    }
+  ]
+}
