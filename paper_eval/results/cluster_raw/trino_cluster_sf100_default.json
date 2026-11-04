@@ -1,0 +1,104 @@
+[
+  {
+    "query": "q1",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 4.4443,
+    "mean": 4.4443,
+    "min": 4.4443,
+    "max": 4.4443
+  },
+  {
+    "query": "q2",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 79.5066,
+    "mean": 79.5066,
+    "min": 79.5066,
+    "max": 79.5066
+  },
+  {
+    "query": "q3",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 4.9887,
+    "mean": 4.9887,
+    "min": 4.9887,
+    "max": 4.9887
+  },
+  {
+    "query": "q4",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 22.0887,
+    "mean": 22.0887,
+    "min": 22.0887,
+    "max": 22.0887
+  },
+  {
+    "query": "q5",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 9.5312,
+    "mean": 9.5312,
+    "min": 9.5312,
+    "max": 9.5312
+  },
+  {
+    "query": "q6",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 81.3945,
+    "mean": 81.3945,
+    "min": 81.3945,
+    "max": 81.3945
+  },
+  {
+    "query": "q7",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 6.2398,
+    "mean": 6.2398,
+    "min": 6.2398,
+    "max": 6.2398
+  },
+  {
+    "query": "q8",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 91.9671,
+    "mean": 91.9671,
+    "min": 91.9671,
+    "max": 91.9671
+  },
+  {
+    "query": "q9",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 5.4282,
+    "mean": 5.4282,
+    "min": 5.4282,
+    "max": 5.4282
+  },
+  {
+    "query": "q10",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query 20261104_014401_00040_hze8z failed: Query exceeded per-node memory limit of 15GB [Allocated: 5.13GB, Delta: 11.62GB, Top Consumers: {SpatialIndexBuilderOperator=5.12GB, PagePartitioner=398.13kB, TaskOutputOperator=256B}]"
+  },
+  {
+    "query": "q11",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query 20261104_014514_00042_hze8z failed: Java heap space"
+  },
+  {
+    "query": "q12",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query 20261104_014713_00044_hze8z failed: Java heap space"
+  }
+]

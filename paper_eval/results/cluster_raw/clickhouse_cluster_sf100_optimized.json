@@ -1,0 +1,96 @@
+[
+  {
+    "query": "q1",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 13.496,
+    "mean": 13.496,
+    "min": 13.496,
+    "max": 13.496
+  },
+  {
+    "query": "q2",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 11.806,
+    "mean": 11.806,
+    "min": 11.806,
+    "max": 11.806
+  },
+  {
+    "query": "q3",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 18.9,
+    "mean": 18.9,
+    "min": 18.9,
+    "max": 18.9
+  },
+  {
+    "query": "q4",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q5",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 327.282,
+    "mean": 327.282,
+    "min": 327.282,
+    "max": 327.282
+  },
+  {
+    "query": "q6",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q7",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 35.966,
+    "mean": 35.966,
+    "min": 35.966,
+    "max": 35.966
+  },
+  {
+    "query": "q8",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q9",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q10",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "0.001\n0.000\n0.000\n0.000\n0.000\n0.000\n169.196\nReceived exception from server (version 26.10.3):\nCode: 75. DB::Exception: Received from localhost:9010. DB::Exception: Cannot write to file /var/lib/clickhouse/tmp/tmp6ebc67aa-ac77-4bd3-8f73-a26058f28f74: , errno: 28, strerror: No space left on device: While executing BlockNestedLoopBuild. (CANNOT_WRITE_TO_FILE_DESCRIPTOR)\n(query: -- Q10 (ClickHouse): Zone statistics for trips starting within each zone\nSELECT\n   z.z_zonekey,\n   z.z_name AS pickup_zone,\n   AVG(dateDiff('second', t.t_pickuptime, t.t_dropofftime)) AS avg_duration,\n   AVG(t.t_distance) AS avg_distance,\n   COUNT(t.t_tripkey) AS num_trips\nFROM zone z\nLEFT JOIN trip t ON geometryIntersectCartesian(readWKB(t.t_pickuploc), readWKB(z.z_boundary))\nGROUP BY z.z_zonekey, z.z_name\nORDER BY avg_duration DESC NULLS LAST, z.z_zonekey ASC\nLIMIT 100;)"
+  },
+  {
+    "query": "q11",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q12",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "0.001\n0.000\n0.000\n0.000\n0.000\n0.000\n168.680\nReceived exception from server (version 26.10.3):\nCode: 241. DB::Exception: Received from localhost:9010. DB::Exception: (total) memory limit exceeded: would use 22.53 GiB (attempt to allocate chunk of 8.00 MiB), current RSS: 22.53 GiB, maximum: 22.54 GiB. OvercommitTracker decision: Query was selected to stop by OvercommitTracker. Untracked memory across all threads: -15.05 MiB: while executing 'FUNCTION polygonsDistanceCartesian(__table4.boundary :: 2, array(array(__table2.pt)) :: 1) -> polygonsDistanceCartesian(__table4.boundary, array(array(__table2.pt))) Float64 : 3'. (MEMORY_LIMIT_EXCEEDED)\n(query: -- Q12 (ClickHouse): Nearest buildings to trip pickups (KNN join)\nWITH trip_sampled AS (\n   SELECT t_tripkey, readWKBPoint(t_pickuploc) AS pt\n   FROM trip\n),\nbuildings AS (\n   SELECT b_buildingkey, readWKBPolygon(b_boundary) AS boundary\n   FROM building\n)\nSELECT\n   ranked.t_tripkey,\n   AVG(ranked.dist) AS avg_distance_to_5_nearest\nFROM (\n   SELECT\n       t.t_tripkey,\n       polygonsDistanceCartesian(b.boundary, [[t.pt]]) AS dist,\n       row_number() OVER (PARTITION BY t.t_tripkey ORDER BY dist ASC) AS rn\n   FROM trip_sampled t\n   CROSS JOIN buildings b\n) ranked\nWHERE rn <= 5\nGROUP BY t_tripkey\nORDER BY avg_distance_to_5_nearest DESC, t_tripkey ASC\nLIMIT 100;)"
+  }
+]

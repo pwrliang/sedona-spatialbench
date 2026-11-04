@@ -1,0 +1,26 @@
+{
+  "Standard Parquet (Unordered)": {
+    "total_row_groups": 20,
+    "row_groups_skipped": 0,
+    "row_groups_scanned": 20,
+    "pruning_ratio_pct": 0.0,
+    "bytes_scanned_mb": 63.39,
+    "scan_latency_ms": 15.6
+  },
+  "GeoParquet 1.1": {
+    "total_row_groups": 20,
+    "row_groups_skipped": 0,
+    "row_groups_scanned": 20,
+    "pruning_ratio_pct": 0.0,
+    "bytes_scanned_mb": 63.39,
+    "scan_latency_ms": 12.05
+  },
+  "Spatially Z-Ordered Parquet": {
+    "total_row_groups": 20,
+    "row_groups_skipped": 17,
+    "row_groups_scanned": 3,
+    "pruning_ratio_pct": 85.0,
+    "bytes_scanned_mb": 9.51,
+    "scan_latency_ms": 1.98
+  }
+}

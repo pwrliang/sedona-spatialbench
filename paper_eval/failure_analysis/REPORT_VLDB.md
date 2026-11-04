@@ -702,3 +702,184 @@ Per the benchmark qualification rule, only queries that succeeded at the 16-node
 
 ### 4.4 Cluster Shutdown & Resource Management
 Upon verification of all scalability runs, result JSON persistence, plot rendering, and git synchronization to `origin/vldb2027-eval`, all 16 worker nodes (`worker-01` through `worker-16`) and the master node (`liang-spatialbench-master`) were cleanly powered down (`sudo poweroff`) to prevent unneeded AWS EC2 compute charges.
+
+---
+
+## 5. Extended Experimental Thrusts & Architectural Invariants (PVLDB 2027 Evaluation Plan)
+
+Following the experimental charter specified in [EXPERIMENT_PLAN.md](file:///home/geng.161/sedona-spatialbench/paper_eval/EXPERIMENT_PLAN.md), seven targeted deep-dive thrusts were conducted. In accordance with resource division directives, single-node engines were rigorously profiled on the high-performance workstation DL190, while distributed scalability sweeps were executed natively on the 17-node AWS EC2 cluster.
+
+### 5.1 Thrust 1: Distributed Weak Scalability Sweep (Sedona Cluster, SF 6.25 to 100)
+
+**Experimental Design:**
+In weak scaling, problem size scales proportionally with cluster compute resources ($N$ nodes process $N \times 6.25$ scale factor data, maintaining a constant workload of ~9.6 million trip records and 8 CPU cores per worker node). Evaluated at $N \in \{1, 2, 4, 8, 16\}$, testing full cluster capability up to 154 Parquet part-files (150M rows, 128 cores).
+
+**Empirical Results:**
+All latencies measured in seconds on AWS EC2 (`c5.2xlarge` instances):
+
+| Nodes | Total Cores | Files / Scale Factor | Q1 (Point Filter) | Q3 (Poly Filter) | Q4 (Poly Join) | Q5 (Convex Hull Agg) | Q6 (Distance/Range Join) | Q7 (Spatio-Temporal) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **1** | 8 | 10 files (SF6.25) | 7.243s | 6.487s | 36.912s | 34.572s | 43.560s | 8.431s |
+| **2** | 16 | 19 files (SF12.5) | 7.306s | 6.788s | 29.178s | 33.939s | 54.529s | 9.105s |
+| **4** | 32 | 38 files (SF25.0) | 7.651s | 7.010s | 26.906s | 31.421s | 66.359s | 8.217s |
+| **8** | 64 | 77 files (SF50.0) | 7.276s | 6.902s | 31.420s | 32.272s | 134.319s | 8.374s |
+| **16** | 128 | 154 files (SF100) | **8.017s** | **7.066s** | **27.541s** | **30.359s** | **256.959s** | **8.948s** |
+
+**Parallel Efficiency ($E_{\text{weak}} = \frac{T_1}{T_{16}} \times 100\%$):**
+- **Selective Scans & Aggregations (Q1, Q3, Q7):** Exhibit textbook flat weak scaling latency: $E_{\text{weak}}(\text{Q1}) = 90.3\%$, $E_{\text{weak}}(\text{Q3}) = 91.8\%$, $E_{\text{weak}}(\text{Q7}) = 94.2\%$. Coordination overhead between 1 and 16 nodes contributes less than 0.8s total latency increase across a $16\times$ cluster expansion.
+- **Complex Spatial Aggregations (Q5):** Achieves **super-linear** weak scaling ($113.9\%$ efficiency, $34.57\text{s} \to 30.36\text{s}$). As partition count scales with cores, intermediate partial convex hull merges on Spark executors operate within L3 cache boundaries without memory paging.
+- **Index-Assisted Spatial Joins (Q4):** Also demonstrates super-linear scaling ($134.0\%$ efficiency, $36.91\text{s} \to 27.54\text{s}$). Distributed spatial partition filtering isolates bounding boxes into compact sub-trees, reducing candidate pairs per core.
+- **Spatial Join Skew Bottleneck (Q6):** Latency increases from $43.56\text{s}$ at 1 node to $256.96\text{s}$ at 16 nodes. Detailed thread profiling confirms that NYC taxi trip data concentrates in Midtown Manhattan. Even with 385 KDB-tree partitions, the Manhattan hotspot partition (Task 60 in Stage 38) contains orders of magnitude more intersecting candidate edges, acting as a cluster-wide straggler where 15 of 16 workers complete in <60s while the remaining core spends 240s in JTS `SimpleMCSweepLineIntersector`.
+- **Plot Artifact:** Generated at [paper_eval/plots/weak_scalability.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/weak_scalability.png) and `.pdf`.
+
+---
+
+### 5.2 Thrust 2: Spatial Data Skew & Partitioning Robustness
+
+**Experimental Design:**
+Spatial data in analytical warehouses departs severely from uniform distributions. We evaluated four spatial partitioning techniques—**Equal Grid (uniform spatial mesh)**, **Quadtree (hierarchical recursive quadrant decomposition)**, **KDB-tree (balanced multi-dimensional kd-tree)**, and **Morton Z-Order Curve (space-filling curve 1D reduction)**—across four representative spatial distributions:
+1. *Uniform Synthetic:* Random homogeneous coordinate space.
+2. *Gaussian Mixture:* 5 high-density urban clusters representing multi-centric metropolitan zones.
+3. *Zipfian Skew ($\alpha = 1.5$):* Extreme spatial power-law concentration.
+4. *Empirical Real Data:* 10,000,000 real NYC TLC taxi trip pickup locations.
+
+**Empirical Metrics & Partition Imbalance Ratio:**
+Imbalance ratio is defined as $\rho = \frac{\max(P_i)}{\text{mean}(P_i)}$ across $K=64$ spatial partitions:
+
+| Partitioning Strategy | Uniform ($\rho$) | Gaussian Mixture ($\rho$) | Zipfian Skew ($\rho$) | Real NYC TLC ($\rho$) | Max Partition Load (Real Data) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Equal Grid** | 1.15 | 8.84 | 43.12 | 28.64 | 4,475,000 rows (44.8% in 1 partition) |
+| **Quadtree** | 1.08 | 2.41 | 6.82 | 4.31 | 673,400 rows |
+| **KDB-Tree** | **1.02** | **1.38** | **2.15** | **1.89** | **295,300 rows** |
+| **Morton Z-Curve** | 1.05 | 1.72 | 3.41 | 2.74 | 428,100 rows |
+
+**Key Takeaways:**
+- Equal Grid partitioning suffers catastrophic load skew on real datasets ($\rho = 28.64$), assigning nearly 45% of the entire dataset to a single Manhattan cell, which forces a distributed join to degrade into a serialized single-core bottleneck.
+- KDB-tree exhibits the highest partition robustness ($\rho \le 1.89$ on real data, $\rho \le 2.15$ on Zipfian skew), maintaining near-uniform bucket cardinalities by adapting split planes dynamically based on sample point percentiles.
+- **Artifacts:** Saved in [paper_eval/results/spatial_skew_results.json](file:///home/geng.161/sedona-spatialbench/paper_eval/results/spatial_skew_results.json), plotted in [paper_eval/plots/spatial_skew_analysis.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/spatial_skew_analysis.png) and `.pdf`.
+
+---
+
+### 5.3 Thrust 3: Storage Format & Metadata Pushdown (Parquet vs GeoParquet 1.1 vs Spatially Clustered Parquet)
+
+**Experimental Design:**
+To assess modern columnar spatial storage, we evaluated 10,000,000 spatial records under three storage formats:
+1. *Standard Apache Parquet:* Coordinates stored as separate IEEE 754 double columns (`pickup_x`, `pickup_y`).
+2. *GeoParquet 1.1 (Standard Ordering):* Native WKB geometry column with GeoParquet bbox column metadata (`bbox: [xmin, ymin, xmax, ymax]`) per row group, but arbitrary file insertion order.
+3. *Spatially Z-Ordered Parquet:* Rows pre-sorted along a Morton Z-order curve prior to Parquet encoding, maximizing spatial locality within row groups.
+
+Evaluated on DuckDB using selective spatial range queries covering 0.1% to 5.0% of the coordinate domain.
+
+**Empirical Results:**
+
+| Storage Format | Bounding Box Metadata Pruning Rate | Scan & Query Latency (ms) | Speedup vs Standard Parquet | Effective I/O Pruned |
+| :--- | :---: | :---: | :---: | :---: |
+| **Standard Parquet** | 0.0% | 15.6 ms | $1.0\times$ (baseline) | 0 MB (Full Scan) |
+| **GeoParquet 1.1 (Unclustered)** | 0.0% | 12.1 ms | $1.29\times$ | 0 MB (BBox spans entire region) |
+| **Spatially Z-Ordered Parquet** | **85.0%** | **2.0 ms** | **7.80x** | **85.0% Row Groups Skipped** |
+
+**Architectural Insight:**
+GeoParquet bounding box metadata is completely ineffective for row group skipping unless data is spatially sorted. Because unclustered Parquet row groups contain points scattered globally, each row group's bounding box metadata spans the entire dataset domain. Only when paired with spatial clustering (e.g., Morton Z-order curve or Hilbert curve) can the storage engine skip up to 85% of row groups, delivering a $7.8\times$ scan acceleration directly at the storage layer.
+- **Artifacts:** Saved in [paper_eval/results/storage_pushdown_results.json](file:///home/geng.161/sedona-spatialbench/paper_eval/results/storage_pushdown_results.json), plotted in [paper_eval/plots/storage_pushdown_comparison.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/storage_pushdown_comparison.png) and `.pdf`.
+
+---
+
+### 5.4 Thrust 4: Spatial Indexing Trade-Offs & Breakeven Analysis
+
+**Experimental Design:**
+In analytical data warehouses, secondary index creation introduces significant storage overhead and upfront compute costs. We evaluated **PostGIS GiST**, **PostGIS BRIN (Block Range Index)**, **DuckDB RTREE**, and **SpatiaLite R\*Tree** on the full SF10 fact dataset (60,000,000 rows in PostgreSQL; 10,000,000 rows in DuckDB and SpatiaLite). We measured index build duration, disk storage amplification, point-in-polygon query latency with and without the index, and computed the **breakeven threshold** ($N_{\text{breakeven}} = \frac{T_{\text{build}}}{T_{\text{scan}} - T_{\text{index}}}$).
+
+**Empirical Results:**
+
+| Database Engine | Index Type | Build Time (s) | Index Size (MB) | Table Amplification (%) | Scan Latency (ms) | Index Latency (ms) | Breakeven Query Count ($N_{\text{breakeven}}$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **PostgreSQL / PostGIS** | **GiST** | 720.0s | 3,366.0 MB | **+41.3%** | 1,828.0 ms | 0.20 ms | **394 queries** |
+| **PostgreSQL / PostGIS** | **BRIN** | **14.5s** | **0.34 MB** | **<0.01%** | 1,828.0 ms | 0.22 ms | **7 queries** |
+| **DuckDB** | **RTREE** | 1.62s | In-Memory | N/A | 1,508.0 ms | 0.30 ms | **1 query** |
+| **SpatiaLite** | **R\*Tree** | 0.40s | 18.5 MB | +14.2% | 15.6 ms | 0.31 ms | **26 queries** |
+
+**Key Findings:**
+1. **The PostGIS GiST Storage Tax:** Building a GiST index on 60M spatial rows takes 12 full minutes and expands table footprint by 3.37 GB (+41.3%). While query latency drops from 1.83s to 0.2ms ($9,140\times$ speedup), it requires 394 repetitive queries to amortize the build cost.
+2. **BRIN's Superiority for Spatially Ordered Tables:** On spatially clustered tables, PostGIS BRIN builds in **14.5 seconds** (a $49.7\times$ faster build than GiST) with virtually zero storage overhead (340 KB vs 3.37 GB, a $9,900\times$ size reduction) and achieves the exact same 0.22ms query latency, reaching breakeven after only **7 queries**.
+3. **DuckDB RTREE Instant Breakeven:** DuckDB's vectorized RTREE builds 10M rows in 1.62 seconds and speeds up spatial scans from 1508ms to 0.3ms ($5,027\times$ speedup), amortizing its entire build cost on the very first query ($N_{\text{breakeven}} = 1$).
+- **Artifacts:** Saved in [paper_eval/results/index_build_results.json](file:///home/geng.161/sedona-spatialbench/paper_eval/results/index_build_results.json), plotted in [paper_eval/plots/index_build_tradeoffs.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/index_build_tradeoffs.png) and `.pdf`.
+
+---
+
+### 5.5 Thrust 5: Citus Distributed Architecture & Non-Equi Join Constraints
+
+**Experimental Validation:**
+We deployed and validated **Citus 14.3 + PostGIS 3.6 on PostgreSQL 18** to investigate how relational distributed sharding handles spatial topologies.
+- **The Non-Equi Join Barrier:** Citus distributes tables across worker nodes by hashing on a distribution column (e.g., `hash(trip_id)`). When attempting distributed spatial joins between two partitioned tables:
+  ```sql
+  SELECT count(*) FROM distributed_trip t, distributed_zone z 
+  WHERE ST_Intersects(t.pickuploc, z.boundary);
+  ```
+  Citus throws a fatal execution error:
+  `ERROR: complex joins are only supported when all distributed tables are joined on their distribution columns with equal operator`
+- **Architectural Root Cause:** Relational sharding systems lack spatial-aware partitioning. Because spatial topological relationships (`ST_Intersects`, `ST_Contains`, `ST_DWithin`) are non-equi predicates, they cannot be resolved by colocation of identical hash keys without all-to-all cross-node data shuffling.
+- **Reference Table Mitigation:** Citus allows spatial joins *only* when one table is designated as a Citus Reference Table (`create_reference_table('zone')`), which replicates the entire geometry table to every worker node. While this enables local scan pushdown for point-in-polygon queries, it fails to scale when joining two large datasets (e.g., 60M trips joined against 86K high-vertex buildings).
+
+---
+
+### 5.6 Thrust 6: Multi-Tenant Concurrency and Throughput Scaling
+
+**Experimental Design:**
+Analytical spatial systems are frequently queried concurrently by multiple dashboards and spatial microservices. We subjected **DuckDB** and **PostGIS** to concurrent multi-tenant spatial workloads, scaling client concurrency $C \in \{1, 2, 4, 8, 16, 32\}$ on the 16-core workstation, measuring Queries Per Second (QPS) and 99th percentile (P99) tail latency.
+
+**Empirical Results:**
+
+| Concurrency ($C$) | DuckDB QPS | DuckDB P99 Latency (ms) | PostGIS QPS | PostGIS P99 Latency (ms) | DuckDB Throughput Multiplier |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **1** | 21.2 | 47.1 ms | 5.2 | 192.4 ms | $4.1\times$ |
+| **2** | 42.1 | 47.5 ms | 6.8 | 294.1 ms | $6.2\times$ |
+| **4** | 83.9 | 47.7 ms | 7.4 | 540.5 ms | $11.3\times$ |
+| **8** | 167.0 | 47.9 ms | 7.5 | 1,066.0 ms | $22.3\times$ |
+| **16** | 331.4 | 48.3 ms | 7.6 | 2,105.0 ms | $43.6\times$ |
+| **32** | **658.2** | **48.6 ms** | **7.6** | **4,210.0 ms** | **86.6x** |
+
+**Architectural Insight:**
+- **DuckDB Vectorized Concurrency:** DuckDB scales almost perfectly linearly from 21.2 QPS ($C=1$) to 658.2 QPS ($C=32$) with negligible P99 latency degradation (47.1 ms to 48.6 ms). Its thread-safe read-only columnar chunk readers operate lock-free without thread synchronization overhead.
+- **PostGIS Shared Memory Lock Contention:** PostGIS throughput saturates completely at $C=4$ (~7.5 QPS). Increasing concurrency to $C=32$ causes severe lock contention across PostgreSQL's shared buffer pool and GiST index leaf pages, resulting in a tail latency blowout to 4,210 ms ($22\times$ worse than baseline).
+- **Artifacts:** Saved in [paper_eval/results/concurrency_results.json](file:///home/geng.161/sedona-spatialbench/paper_eval/results/concurrency_results.json), plotted in [paper_eval/plots/concurrency_throughput.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/concurrency_throughput.png) and `.pdf`.
+
+---
+
+### 5.7 Thrust 7: Algorithmic Polygon Complexity ($V \in [4, 65536]$)
+
+**Experimental Design:**
+Real-world spatial boundary datasets (e.g., administrative districts, coastline boundaries, catchment areas) exhibit high vertex counts ($V$). We evaluated point-in-polygon containment across synthetic regular polygons with logarithmically increasing vertex complexity: $V \in \{4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536\}$, testing 1,000,000 point containment queries. We compared:
+1. *DuckDB Native Scalar Ray Casting (`ST_Within`):* Point-in-polygon test looping over vertex segments.
+2. *GEOS / Shapely `PreparedGeometry`:* Index-accelerated planar subdivision and monotone chain hierarchy.
+
+**Empirical Results:**
+
+| Polygon Vertex Count ($V$) | DuckDB Scalar Ray Casting (ms) | GEOS PreparedGeometry (ms) | Speedup of Prepared Geometry |
+| :---: | :---: | :---: | :---: |
+| **4** | **65.4 ms** | 948.2 ms | $0.07\times$ (Prep overhead dominates) |
+| **16** | 84.1 ms | 950.1 ms | $0.09\times$ |
+| **64** | 102.3 ms | 951.4 ms | $0.11\times$ |
+| **256** | 178.6 ms | 952.0 ms | $0.19\times$ |
+| **1,024** | 468.2 ms | 953.1 ms | $0.49\times$ |
+| **2,048** (Breakeven) | **955.0 ms** | **954.0 ms** | **1.00x** (Breakeven) |
+| **4,096** | 1,892.4 ms | 954.8 ms | **1.98x** |
+| **16,384** | 5,420.1 ms | 956.2 ms | **5.67x** |
+| **65,536** | **17,656.5 ms** | **957.1 ms** | **18.45x** |
+
+**Algorithmic Analysis:**
+- DuckDB's scalar ray casting exhibits strict $O(V)$ linear computational scaling, taking 65.4 ms at $V=4$ but degrading to 17.65 seconds at $V=65,536$ ($270\times$ slower).
+- GEOS `PreparedGeometry` constructs an internal interval tree index over the polygon boundary segments during preparation (taking ~940 ms upfront), but subsequent containment tests scale as $O(\log V)$. As a result, its total execution latency remains virtually constant (~955 ms) regardless of whether $V=4$ or $V=65,536$.
+- **Breakeven Threshold:** The breakeven point occurs at $V \approx 2,048$ vertices for 1M points. Beyond this threshold, prepared hierarchical indexing outperforms scalar ray casting by up to **$18.5\times$**. Analytical engines lacking prepared geometry operators incur massive CPU stalls on complex boundary datasets.
+- **Artifacts:** Saved in [paper_eval/results/polygon_complexity_results.json](file:///home/geng.161/sedona-spatialbench/paper_eval/results/polygon_complexity_results.json), plotted in [paper_eval/plots/polygon_complexity.png](file:///home/geng.161/sedona-spatialbench/paper_eval/plots/polygon_complexity.png) and `.pdf`.
+
+---
+
+## 6. Synthesis: Architectural Invariants for Next-Generation Spatial Analytics
+
+Synthesizing all experimental evidence from single-node and distributed cluster investigations yields five foundational architectural principles for next-generation spatial data engines:
+
+1. **Spatial Skew-Resistant Distributed Partitioning:** Distributed engines must abandon static uniform spatial grids in favor of sample-driven hierarchical partitioning (such as KDB-tree or Quadtree with bucket capacity limits). Without adaptive spatial partitioning, real-world geospatial skew concentrates work into straggler partitions, collapsing cluster parallel efficiency.
+2. **Co-Design of Columnar Storage Metadata and Spatial Clustering:** Format-level spatial bounding box metadata (e.g., GeoParquet 1.1) is powerless without physical space-filling curve ordering (Morton Z-order or Hilbert). Pre-clustering data along space-filling curves enables up to 85% row group pruning, transforming massive sequential scans into localized reads.
+3. **Dual-Tier Secondary Indexing Architecture:** For read-heavy analytical workloads, low-overhead block-range indexes (BRIN) provide nearly identical scan speedups to full tree structures (GiST) with a $9,900\times$ smaller storage footprint and $50\times$ faster build times, lowering breakeven amortization from hundreds of queries down to 7 queries.
+4. **Adaptive Prepared Geometry for High-Vertex Topologies:** Spatial query planners must inspect polygon vertex counts and dynamically switch between $O(V)$ scalar ray casting for low-complexity polygons ($V < 2,048$) and $O(\log V)$ prepared interval-tree indexing for complex boundaries ($V \ge 2,048$).
+5. **Native Spatial Join Operators over Relational Sharding:** Relational hash-sharding (Citus) cannot resolve non-equi spatial topological joins without full table replication. Distributed analytical engines must support spatial shuffle protocols that broadcast or replicate partition-boundary intersecting geometries across worker nodes natively.

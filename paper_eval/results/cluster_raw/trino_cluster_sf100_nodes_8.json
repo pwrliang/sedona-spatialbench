@@ -1,0 +1,65 @@
+[
+  {
+    "query": "q1",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 6.7353,
+    "run_1": 6.7353
+  },
+  {
+    "query": "q2",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 125.4032,
+    "run_1": 125.4032
+  },
+  {
+    "query": "q3",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 4.5591,
+    "run_1": 4.5591
+  },
+  {
+    "query": "q4",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 24.7667,
+    "run_1": 24.7667
+  },
+  {
+    "query": "q5",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 12.6597,
+    "run_1": 12.6597
+  },
+  {
+    "query": "q6",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 140.0899,
+    "run_1": 140.0899
+  },
+  {
+    "query": "q7",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 6.5626,
+    "run_1": 6.5626
+  },
+  {
+    "query": "q8",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 158.5361,
+    "run_1": 158.5361
+  },
+  {
+    "query": "q9",
+    "nodes": 8,
+    "status": "SUCCESS",
+    "mean": 3.6721,
+    "run_1": 3.6721
+  }
+]

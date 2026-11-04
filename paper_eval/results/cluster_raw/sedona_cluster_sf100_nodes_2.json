@@ -1,0 +1,30 @@
+[
+  {
+    "query": "q1",
+    "nodes": 2,
+    "status": "SUCCESS",
+    "mean": 28.4642,
+    "run_1": 28.4642
+  },
+  {
+    "query": "q3",
+    "nodes": 2,
+    "status": "SUCCESS",
+    "mean": 33.8752,
+    "run_1": 33.8752
+  },
+  {
+    "query": "q4",
+    "nodes": 2,
+    "status": "SUCCESS",
+    "mean": 32.6853,
+    "run_1": 32.6853
+  },
+  {
+    "query": "q7",
+    "nodes": 2,
+    "status": "SUCCESS",
+    "mean": 50.0134,
+    "run_1": 50.0134
+  }
+]

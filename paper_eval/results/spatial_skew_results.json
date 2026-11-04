@@ -1,0 +1,122 @@
+{
+  "Uniform (Baseline)": {
+    "Uniform Grid": {
+      "cv": 0.0047,
+      "straggler_ratio": 1.0085,
+      "max_partition": 31515,
+      "min_partition": 30906,
+      "num_partitions": 64
+    },
+    "Quadtree": {
+      "cv": 0.0047,
+      "straggler_ratio": 1.0085,
+      "max_partition": 31515,
+      "min_partition": 30906,
+      "num_partitions": 64
+    },
+    "KDB-Tree": {
+      "cv": 0.0,
+      "straggler_ratio": 1.0,
+      "max_partition": 31250,
+      "min_partition": 31250,
+      "num_partitions": 64
+    },
+    "Morton Z-Curve": {
+      "cv": 0.0047,
+      "straggler_ratio": 1.0085,
+      "max_partition": 31515,
+      "min_partition": 30906,
+      "num_partitions": 64
+    }
+  },
+  "Gaussian Clustered (10 Hotspots)": {
+    "Uniform Grid": {
+      "cv": 2.3773,
+      "straggler_ratio": 11.7025,
+      "max_partition": 365704,
+      "min_partition": 0,
+      "num_partitions": 64
+    },
+    "Quadtree": {
+      "cv": 1.8626,
+      "straggler_ratio": 7.8626,
+      "max_partition": 365704,
+      "min_partition": 0,
+      "num_partitions": 43
+    },
+    "KDB-Tree": {
+      "cv": 0.0,
+      "straggler_ratio": 1.0,
+      "max_partition": 31250,
+      "min_partition": 31250,
+      "num_partitions": 64
+    },
+    "Morton Z-Curve": {
+      "cv": 2.3773,
+      "straggler_ratio": 11.7025,
+      "max_partition": 365704,
+      "min_partition": 0,
+      "num_partitions": 64
+    }
+  },
+  "Zipfian Power-Law (\u03b1=1.5)": {
+    "Uniform Grid": {
+      "cv": 3.8196,
+      "straggler_ratio": 29.1379,
+      "max_partition": 910558,
+      "min_partition": 1283,
+      "num_partitions": 64
+    },
+    "Quadtree": {
+      "cv": 2.4159,
+      "straggler_ratio": 12.7478,
+      "max_partition": 910558,
+      "min_partition": 6071,
+      "num_partitions": 28
+    },
+    "KDB-Tree": {
+      "cv": 0.0,
+      "straggler_ratio": 1.0,
+      "max_partition": 31250,
+      "min_partition": 31250,
+      "num_partitions": 64
+    },
+    "Morton Z-Curve": {
+      "cv": 3.8196,
+      "straggler_ratio": 29.1379,
+      "max_partition": 910558,
+      "min_partition": 1283,
+      "num_partitions": 64
+    }
+  },
+  "Empirical Real-World (SF1)": {
+    "Uniform Grid": {
+      "cv": 5.9479,
+      "straggler_ratio": 45.6387,
+      "max_partition": 713104,
+      "min_partition": 0,
+      "num_partitions": 64
+    },
+    "Quadtree": {
+      "cv": 3.3919,
+      "straggler_ratio": 15.6883,
+      "max_partition": 713104,
+      "min_partition": 0,
+      "num_partitions": 22
+    },
+    "KDB-Tree": {
+      "cv": 0.0,
+      "straggler_ratio": 1.0,
+      "max_partition": 15625,
+      "min_partition": 15625,
+      "num_partitions": 64
+    },
+    "Morton Z-Curve": {
+      "cv": 7.8017,
+      "straggler_ratio": 62.9237,
+      "max_partition": 983183,
+      "min_partition": 0,
+      "num_partitions": 64
+    }
+  }
+}

@@ -9,3 +9,5 @@ __pycache__/
 *.pyc
 *.pyo
 .tmp/
+paper_eval/data_storage_pushdown/
+

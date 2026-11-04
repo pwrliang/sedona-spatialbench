@@ -1,0 +1,38 @@
+{
+  "PostGIS GiST": {
+    "build_time_s": 720.0,
+    "index_size_mb": 3366.29,
+    "amplification_pct": 41.3,
+    "unindexed_query_ms": 1827.0,
+    "indexed_query_ms": 0.16,
+    "speedup_factor": 11767.7,
+    "n_breakeven": 394
+  },
+  "PostGIS BRIN": {
+    "build_time_s": 14.48,
+    "index_size_mb": 0.34,
+    "amplification_pct": 0.0,
+    "unindexed_query_ms": 1827.0,
+    "indexed_query_ms": 0.21,
+    "speedup_factor": 8864.5,
+    "n_breakeven": 7
+  },
+  "DuckDB RTREE": {
+    "build_time_s": 1.62,
+    "index_size_mb": 115.0,
+    "amplification_pct": 14.5,
+    "unindexed_query_ms": 1508.16,
+    "indexed_query_ms": 0.34,
+    "speedup_factor": 4429.8,
+    "n_breakeven": 1
+  },
+  "SpatiaLite R*Tree": {
+    "build_time_s": 0.4,
+    "index_size_mb": 18.46,
+    "amplification_pct": 586.96,
+    "unindexed_query_ms": 15.47,
+    "indexed_query_ms": 0.02,
+    "speedup_factor": 742.0,
+    "n_breakeven": 26
+  }
+}
