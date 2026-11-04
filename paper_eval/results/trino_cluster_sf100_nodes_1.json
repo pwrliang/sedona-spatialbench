@@ -1,0 +1,65 @@
+[
+  {
+    "query": "q1",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 19.3119,
+    "run_1": 19.3119
+  },
+  {
+    "query": "q2",
+    "nodes": 1,
+    "status": "TIMEOUT",
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q3",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 45.807,
+    "run_1": 45.807
+  },
+  {
+    "query": "q4",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 77.1909,
+    "run_1": 77.1909
+  },
+  {
+    "query": "q5",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 156.9445,
+    "run_1": 156.9445
+  },
+  {
+    "query": "q6",
+    "nodes": 1,
+    "status": "TIMEOUT",
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q7",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 90.6997,
+    "run_1": 90.6997
+  },
+  {
+    "query": "q8",
+    "nodes": 1,
+    "status": "TIMEOUT",
+    "mean": null,
+    "error": "Query timed out after 600 seconds"
+  },
+  {
+    "query": "q9",
+    "nodes": 1,
+    "status": "SUCCESS",
+    "mean": 6.3591,
+    "run_1": 6.3591
+  }
+]
