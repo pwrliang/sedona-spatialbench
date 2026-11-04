@@ -1,0 +1,96 @@
+[
+  {
+    "query": "q1",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 12.9256,
+    "mean": 12.9256,
+    "min": 12.9256,
+    "max": 12.9256
+  },
+  {
+    "query": "q2",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o73.collectToPython"
+  },
+  {
+    "query": "q3",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 42.1641,
+    "mean": 42.1641,
+    "min": 42.1641,
+    "max": 42.1641
+  },
+  {
+    "query": "q4",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o84.collectToPython"
+  },
+  {
+    "query": "q5",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 8.6513,
+    "mean": 8.6513,
+    "min": 8.6513,
+    "max": 8.6513
+  },
+  {
+    "query": "q6",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o95.collectToPython"
+  },
+  {
+    "query": "q7",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 13.0558,
+    "mean": 13.0558,
+    "min": 13.0558,
+    "max": 13.0558
+  },
+  {
+    "query": "q8",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o106.collectToPython"
+  },
+  {
+    "query": "q9",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o112.collectToPython"
+  },
+  {
+    "query": "q10",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o118.collectToPython"
+  },
+  {
+    "query": "q11",
+    "status": "TIMEOUT",
+    "iterations": 1,
+    "mean": null,
+    "error": "An error occurred while calling o124.collectToPython"
+  },
+  {
+    "query": "q12",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 47.9883,
+    "mean": 47.9883,
+    "min": 47.9883,
+    "max": 47.9883
+  }
+]

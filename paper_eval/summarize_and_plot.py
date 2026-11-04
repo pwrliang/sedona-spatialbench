@@ -34,12 +34,15 @@ QUERY_CATEGORIES = [
 ]
 
 ENGINE_ORDER = [
-    "postgis",
-    "postgis_noindex",
-    "duckdb",
-    "sedonadb",
     "sedona_cluster",
     "apache_sedona",
+    "trino_cluster",
+    "geomesa_cluster",
+    "clickhouse_cluster",
+    "sedonadb",
+    "duckdb",
+    "postgis",
+    "postgis_noindex",
     "clickhouse",
     "spatial_polars",
     "geopandas",
@@ -50,16 +53,19 @@ ENGINE_ORDER = [
 ]
 
 ENGINE_COLORS = {
+    "sedona_cluster": "#6a3d9a", # Distributed Sedona Cluster Purple
+    "trino_cluster": "#1f77b4",  # Trino SIMD Steel Blue
+    "geomesa_cluster": "#2ca02c",# GeoMesa Forest Green
+    "clickhouse_cluster": "#d62728", # ClickHouse Cluster Red
     "postgis": "#336791",        # PostGIS Slate Blue
     "postgis_noindex": "#85b6d9",# PostGIS Light Steel Blue
     "duckdb": "#ff7f0e",         # Orange
-    "sedonadb": "#1f77b4",       # SedonaDB Royal Blue
-    "sedona_cluster": "#6a3d9a", # Distributed Sedona Cluster Purple
+    "sedonadb": "#17becf",       # SedonaDB Teal
     "clickhouse": "#8c564b",     # Brown
-    "spatial_polars": "#2ca02c", # Polaris Green
-    "geopandas": "#d62728",      # Red
+    "spatial_polars": "#98df8a", # Polaris Light Green
+    "geopandas": "#ff9896",      # GeoPandas Salmon
     "dask_geopandas": "#e377c2", # Dask Pink
-    "spatialite": "#17becf",     # SpatiaLite Teal
+    "spatialite": "#c5b0d5",     # SpatiaLite Light Purple
     "mysql": "#bcbd22",          # MySQL Olive Yellow
     "apache_sedona": "#9467bd",  # Purple
     "trino": "#7f7f7f"           # Gray
@@ -67,11 +73,14 @@ ENGINE_COLORS = {
 
 
 ENGINE_HATCHES = {
+    "sedona_cluster": "oo",
+    "trino_cluster": "..",
+    "geomesa_cluster": "//",
+    "clickhouse_cluster": "++",
     "postgis": "//",
     "postgis_noindex": "\\",
     "duckdb": "xx",
     "sedonadb": "..",
-    "sedona_cluster": "oo",
     "clickhouse": "++",
     "spatial_polars": "**",
     "geopandas": "--",
@@ -83,11 +92,14 @@ ENGINE_HATCHES = {
 }
 
 ENGINE_LABELS = {
+    "sedona_cluster": "Apache Sedona (Cluster)",
+    "trino_cluster": "Trino (Cluster)",
+    "geomesa_cluster": "GeoMesa (Cluster)",
+    "clickhouse_cluster": "ClickHouse (Cluster)",
     "postgis": "PostGIS (Indexed)",
     "postgis_noindex": "PostGIS (No Index)",
     "duckdb": "DuckDB",
     "sedonadb": "SedonaDB",
-    "sedona_cluster": "Apache Sedona (Cluster)",
     "clickhouse": "ClickHouse",
     "spatial_polars": "Polaris (Spatial Polars)",
     "geopandas": "GeoPandas",
@@ -114,7 +126,26 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
             with open(file_path, "r") as f:
                 content = json.load(f)
 
-            if isinstance(content, dict) and "results" in content:
+            if isinstance(content, list):
+                # Infer engine name from file name (e.g. clickhouse_cluster_sf100_default.json -> clickhouse_cluster)
+                base = fname.split(f"_sf{scale_factor}")[0]
+                engine = base
+                if engine not in data:
+                    data[engine] = {}
+                for q_item in content:
+                    q = q_item.get("query", "").lower()
+                    status = str(q_item.get("status", "")).lower()
+                    t = q_item.get("mean")
+                    if q:
+                        if status == "success" and t is not None:
+                            data[engine][q] = {
+                                "mean": float(t),
+                                "std": 0.0,
+                                "runs": [float(t)]
+                            }
+                        elif status in ("failed", "timeout", "error"):
+                            data[engine][q] = "TIMEOUT" if status == "timeout" else "FAILED"
+            elif isinstance(content, dict) and "results" in content:
                 raw_results = content["results"]
                 if raw_results and isinstance(raw_results, list) and isinstance(raw_results[0], dict) and "results" in raw_results[0]:
                     suites = raw_results
@@ -132,7 +163,9 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
                     for q_item in suite.get("results", []):
                         q = q_item.get("query", "").lower()
                         t = q_item.get("time_seconds")
-                        status = q_item.get("status", "")
+                        if t is None:
+                            t = q_item.get("mean")
+                        status = str(q_item.get("status", "")).lower()
                         run_times = q_item.get("run_times")
                         std_dev = q_item.get("std_dev")
                         if q:
@@ -143,7 +176,7 @@ def load_results(results_dir: str, scale_factor: str, mode: str):
                                     "runs": [float(r) for r in run_times] if run_times else [float(t)]
                                 }
                             elif status in ("failed", "timeout", "error"):
-                                data[engine][q] = "FAILED"
+                                data[engine][q] = "TIMEOUT" if status == "timeout" else "FAILED"
         except Exception as e:
             print(f"[WARN] Failed to parse {file_path}: {e}")
 
@@ -189,6 +222,8 @@ def generate_markdown_summary(data, output_file: str, sf: str, mode: str):
                 totals[e] += val
                 valid_counts[e] += 1
                 log_sums[e] += np.log(max(val, 1e-6))
+            elif val == "TIMEOUT":
+                row.append("TIMEOUT")
             elif val == "FAILED":
                 row.append("FAILED")
             else:

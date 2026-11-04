@@ -1,0 +1,104 @@
+[
+  {
+    "query": "q1",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 5.1776,
+    "mean": 5.1776,
+    "min": 5.1776,
+    "max": 5.1776
+  },
+  {
+    "query": "q2",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 83.1515,
+    "mean": 83.1515,
+    "min": 83.1515,
+    "max": 83.1515
+  },
+  {
+    "query": "q3",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 5.8085,
+    "mean": 5.8085,
+    "min": 5.8085,
+    "max": 5.8085
+  },
+  {
+    "query": "q4",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 21.7483,
+    "mean": 21.7483,
+    "min": 21.7483,
+    "max": 21.7483
+  },
+  {
+    "query": "q5",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 9.8351,
+    "mean": 9.8351,
+    "min": 9.8351,
+    "max": 9.8351
+  },
+  {
+    "query": "q6",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 79.3523,
+    "mean": 79.3523,
+    "min": 79.3523,
+    "max": 79.3523
+  },
+  {
+    "query": "q7",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 6.4302,
+    "mean": 6.4302,
+    "min": 6.4302,
+    "max": 6.4302
+  },
+  {
+    "query": "q8",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 95.8022,
+    "mean": 95.8022,
+    "min": 95.8022,
+    "max": 95.8022
+  },
+  {
+    "query": "q9",
+    "status": "SUCCESS",
+    "iterations": 1,
+    "run_1": 5.7954,
+    "mean": 5.7954,
+    "min": 5.7954,
+    "max": 5.7954
+  },
+  {
+    "query": "q10",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "SET SESSION\nSET SESSION\nSET SESSION\nSET SESSION\nQuery 20261104_020014_00079_nphex failed: Query exceeded per-node memory limit of 15GB [Allocated: 5.13GB, Delta: 11.62GB, Top Consumers: {SpatialIndexBuilderOperator=5.12GB, PagePartitioner=490kB, ExchangeOperator=336B}]"
+  },
+  {
+    "query": "q11",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "SET SESSION\nSET SESSION\nSET SESSION\nSET SESSION\nQuery 20261104_020133_00084_nphex failed: Java heap space"
+  },
+  {
+    "query": "q12",
+    "status": "FAILED",
+    "iterations": 1,
+    "mean": null,
+    "error": "SET SESSION\nSET SESSION\nSET SESSION\nSET SESSION\nQuery 20261104_020349_00089_nphex failed: Encountered too many errors talking to a worker node. The node may have crashed or be under too much load. This is probably a transient issue, so please retry your query in a few minutes. (http://172.31.1.231:8085/v1/task/20261104_020349_00089_nphex.0.0.0/results/0/0 - 7 failures, failure duration 60.21s, total failed request time 70.21s)"
+  }
+]
