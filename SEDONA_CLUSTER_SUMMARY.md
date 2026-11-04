@@ -18,7 +18,7 @@ This document provides full technical context for the distributed **Apache Sedon
 
 | Alias / Hostname | Instance ID | Role | Private IP | Public IP | Cores | Memory |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `master` / `liang-spatialbench-master` | `i-002698c50f470a889` | Spark Master | `172.31.0.26` | `18.117.187.114` | 8 | 32 GB |
+| `master` / `liang-spatialbench-master` | `i-002698c50f470a889` | Spark Master | `172.31.0.26` | `3.149.230.198` | 8 | 32 GB |
 | `worker-01` | `i-0445259963aa20ba8` | Spark Worker | `172.31.10.184` | `16.59.135.156` | 8 | 30.5 GB |
 | `worker-02` | `i-01e14e1b1062497ec` | Spark Worker | `172.31.9.222` | `13.58.233.156` | 8 | 30.5 GB |
 | `worker-03` | `i-0dc78ca484f0c0ca0` | Spark Worker | `172.31.14.179` | `3.148.204.104` | 8 | 30.5 GB |
@@ -45,7 +45,7 @@ This document provides full technical context for the distributed **Apache Sedon
 - **Sudo Permissions**: Full passwordless `sudo` on all nodes.
 - **SSH Command from Local**:
   ```bash
-  ssh -i ~/.ssh/liang_aws.pem ubuntu@18.117.187.114
+  ssh -i ~/.ssh/liang_aws.pem ubuntu@3.149.230.198
   ```
 - **Internal Passwordless SSH Mesh**:
   - The private key is installed on every node at `/home/ubuntu/.ssh/id_rsa` (`0600`).
@@ -113,7 +113,7 @@ The external development machine **`dl190`** (`cse-dnc196862d.coeit.osu.edu`, us
 - **SSH Config Entry (`~/.ssh/config` on `dl190`)**:
   ```ssh-config
   Host sedona-master liang-spatialbench-master
-      HostName 18.117.187.114
+      HostName 3.149.230.198
       User ubuntu
       IdentityFile ~/.ssh/liang_aws.pem
       IdentityFile ~/.ssh/id_rsa
@@ -165,7 +165,7 @@ From the master node (`ubuntu@master`):
 - **Web UI URL**: `http://172.31.0.26:8080` (or `http://master:8080`)
 - **To view Web UI in local browser**:
   ```bash
-  ssh -N -L 8080:localhost:8080 -i ~/.ssh/liang_aws.pem ubuntu@18.117.187.114
+  ssh -N -L 8080:localhost:8080 -i ~/.ssh/liang_aws.pem ubuntu@3.149.230.198
   ```
   Then open `http://localhost:8080` in your browser.
 

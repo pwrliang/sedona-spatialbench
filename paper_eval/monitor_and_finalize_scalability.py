@@ -10,7 +10,7 @@ import sys
 import time
 from pathlib import Path
 
-MASTER_HOST = "18.117.187.114"
+MASTER_HOST = "3.149.230.198"
 SSH_KEY = os.path.expanduser("~/.ssh/id_rsa")
 REPO_DIR = Path("/home/geng.161/sedona-spatialbench")
 RESULTS_DIR = REPO_DIR / "paper_eval" / "results"
